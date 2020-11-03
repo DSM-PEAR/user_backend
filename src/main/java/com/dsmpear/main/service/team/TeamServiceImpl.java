@@ -1,0 +1,63 @@
+package com.dsmpear.main.service.team;
+
+import com.dsmpear.main.domain.team.dto.request.TeamRequest;
+import com.dsmpear.main.domain.user.entity.User;
+import com.dsmpear.main.domain.user.entity.UserRepository;
+import com.dsmpear.main.entity.member.MemberRepository;
+import com.dsmpear.main.entity.team.TeamRepository;
+import com.dsmpear.main.exceptions.UserNotFoundException;
+import com.dsmpear.main.global.security.auth.AuthenticationFacade;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+
+@Service
+@RequiredArgsConstructor
+public class TeamServiceImpl implements TeamService{
+
+    private final TeamRepository teamRepository;
+    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
+    private final AuthenticationFacade authenticationFacade;
+
+    @Override
+    public void addTeam(TeamRequest teamRequest) {
+
+        User user=userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
+
+        Team team=teamRepository.save(
+          Team.builder()
+                  .userEmail(user.getEmail())
+                  .name(teamRequest.getName())
+          .build()
+        );
+
+        memberRepository.save(
+                Member.builder()
+                        .teamId(team.getId())
+                        .userEmail(user.getEmail())
+                .build()
+        );
+    }
+
+    @Override
+    public void modifyTeam(Integer teamId, TeamRequest teamRequest) {
+
+    }
+
+    @Override
+    public void deleteTeam(Integer teamId) {
+        User user=userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
+
+        //접근자가 멤버인지 찾기
+        // if(!user.getEmail().equals(memberRepository.findAllByTeamId(teamId)))
+
+        Team team=teamRepository.findById(teamId)
+                .orElseThrow(TeamNotFoundException::new);
+
+        memberRepository.deleteAllByTeamId(teamId);
+        teamRepository.delete(team);
+    }
+}
