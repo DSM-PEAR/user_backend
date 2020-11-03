@@ -1,10 +1,8 @@
-package com.dsmpear.main.domain.auth.exceptions;
+package com.dsmpear.main.exceptions;
 
-import com.dsmpear.main.global.error.exception.BusinessException;
-import com.dsmpear.main.global.error.exception.ErrorCode;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-public class InvalidTokenException extends BusinessException {
-    public InvalidTokenException() {
-        super(ErrorCode.INVALID_TOKEN);
-    }
+@ResponseStatus(value=HttpStatus.FORBIDDEN,reason = "Invalid Token Exception")
+public class InvalidTokenException extends RuntimeException{
 }

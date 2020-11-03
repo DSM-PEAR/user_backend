@@ -1,4 +1,4 @@
-package com.dsmpear.main.global.security.auth;
+package com.dsmpear.main.security.auth;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -1,7 +1,7 @@
-package com.dsmpear.main.global.security.auth;
+package com.dsmpear.main.security.auth;
 
-import com.dsmpear.main.domain.auth.exceptions.UserNotFoundException;
-import com.dsmpear.main.domain.user.entity.UserRepository;
+import com.dsmpear.main.entity.user.UserRepository;
+import com.dsmpear.main.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

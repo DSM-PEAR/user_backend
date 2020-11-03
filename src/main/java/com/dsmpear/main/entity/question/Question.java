@@ -1,4 +1,4 @@
-package com.dsmpear.main.domain.questions.entity;
+package com.dsmpear.main.entity.question;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
