@@ -1,10 +1,7 @@
-package com.dsmpear.main.domain.auth.exceptions;
+package com.dsmpear.main.exceptions;
 
-import com.dsmpear.main.global.error.exception.BusinessException;
-import com.dsmpear.main.global.error.exception.ErrorCode;
-
-public class UserNotFoundException extends BusinessException {
+public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException() {
-        super("User Not Found!!!", ErrorCode.BAD_REQUEST);
+        super("User Not Found!!!");
     }
 }

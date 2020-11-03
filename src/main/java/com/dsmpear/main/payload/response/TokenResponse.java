@@ -1,4 +1,4 @@
-package com.dsmpear.main.domain.auth.dto.response;
+package com.dsmpear.main.payload.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

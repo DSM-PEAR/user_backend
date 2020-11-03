@@ -1,6 +1,6 @@
-package com.dsmpear.main.global.security.auth;
+package com.dsmpear.main.security.auth;
 
-import com.dsmpear.main.domain.user.entity.User;
+import com.dsmpear.main.entity.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
