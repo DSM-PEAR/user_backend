@@ -1,12 +1,13 @@
 package com.dsmpear.main.service.team;
 
 import com.dsmpear.main.domain.team.dto.request.TeamRequest;
-import com.dsmpear.main.domain.user.entity.User;
-import com.dsmpear.main.domain.user.entity.UserRepository;
-import com.dsmpear.main.entity.member.MemberRepository;
+import com.dsmpear.main.entity.team.Team;
 import com.dsmpear.main.entity.team.TeamRepository;
+import com.dsmpear.main.entity.user.User;
+import com.dsmpear.main.entity.user.UserRepository;
+import com.dsmpear.main.exceptions.TeamNotFoundException;
 import com.dsmpear.main.exceptions.UserNotFoundException;
-import com.dsmpear.main.global.security.auth.AuthenticationFacade;
+import com.dsmpear.main.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,6 @@ public class TeamServiceImpl implements TeamService{
 
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
-    private final MemberRepository memberRepository;
     private final AuthenticationFacade authenticationFacade;
 
     @Override
@@ -33,12 +33,12 @@ public class TeamServiceImpl implements TeamService{
           .build()
         );
 
-        memberRepository.save(
+        /*memberRepository.save(
                 Member.builder()
                         .teamId(team.getId())
                         .userEmail(user.getEmail())
                 .build()
-        );
+        );*/
     }
 
     @Override
@@ -57,7 +57,7 @@ public class TeamServiceImpl implements TeamService{
         Team team=teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
 
-        memberRepository.deleteAllByTeamId(teamId);
+        //memberRepository.deleteAllByTeamId(teamId);
         teamRepository.delete(team);
     }
 }
