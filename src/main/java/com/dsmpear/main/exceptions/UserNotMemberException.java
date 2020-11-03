@@ -1,10 +1,7 @@
-package com.dsmpear.main.domain.team.exceptions;
+package com.dsmpear.main.exceptions;
 
-import com.dsmpear.main.global.error.exception.BusinessException;
-import com.dsmpear.main.global.error.exception.ErrorCode;
-
-public class UserNotMemberException extends BusinessException {
+public class UserNotMemberException extends RuntimeException {
     public UserNotMemberException(){
-        super(ErrorCode.USER_NOT_MEMBER);
+        super("User is Not Member!!");
     }
 }
