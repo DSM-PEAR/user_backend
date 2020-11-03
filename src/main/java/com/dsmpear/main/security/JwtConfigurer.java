@@ -1,4 +1,4 @@
-package com.dsmpear.main.global.security;
+package com.dsmpear.main.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;

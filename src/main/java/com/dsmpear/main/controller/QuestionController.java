@@ -1,4 +1,4 @@
-package com.dsmpear.main.domain.questions.controller;
+package com.dsmpear.main.controller;
 
 import com.dsmpear.main.domain.questions.dto.request.QuestionRequest;
 import com.dsmpear.main.domain.questions.service.QuestionService;

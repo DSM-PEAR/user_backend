@@ -1,4 +1,4 @@
-package com.dsmpear.main.global.security;
+package com.dsmpear.main.security;
 
 import com.dsmpear.main.domain.auth.exceptions.InvalidTokenException;
 import com.dsmpear.main.global.security.auth.AuthDetails;

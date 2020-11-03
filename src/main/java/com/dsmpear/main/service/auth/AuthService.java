@@ -1,4 +1,4 @@
-package com.dsmpear.main.domain.auth.service;
+package com.dsmpear.main.service.auth;
 
 import com.dsmpear.main.domain.auth.dto.request.SignInRequest;
 import com.dsmpear.main.domain.auth.dto.response.AccessTokenResponse;

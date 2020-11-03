@@ -1,4 +1,4 @@
-package com.dsmpear.main.global.security.auth;
+package com.dsmpear.main.security.auth;
 
 import com.dsmpear.main.domain.user.entity.User;
 import lombok.AllArgsConstructor;

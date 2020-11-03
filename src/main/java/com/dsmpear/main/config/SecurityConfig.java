@@ -1,4 +1,4 @@
-package com.dsmpear.main.global.config;
+package com.dsmpear.main.config;
 
 import com.dsmpear.main.global.security.JwtConfigurer;
 import com.dsmpear.main.global.security.JwtTokenProvider;

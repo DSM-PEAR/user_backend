@@ -1,4 +1,4 @@
-package com.dsmpear.main.domain.auth.entity.refreshtoken;
+package com.dsmpear.main.entity.refreshtoken;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
