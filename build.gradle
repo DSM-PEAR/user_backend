@@ -1,0 +1,64 @@
+buildscript {
+    repositories { jcenter() }
+    dependencies {
+    }
+}
+
+plugins {
+    id 'org.springframework.boot' version '2.3.4.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+    id 'jacoco'
+}
+
+group = 'com.dsm-pear'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // spring boot starter
+    implementation 'org.springframework.boot:spring-boot-starter'
+    // spring boot starter web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    // spring security
+    compile 'org.springframework.security:spring-security-web:4.2.2.RELEASE'
+    compile 'org.springframework.security:spring-security-config:4.2.2.RELEASE'
+    // Database
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    runtimeOnly 'mysql:mysql-connector-java'
+    testImplementation 'com.h2database:h2'
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.2'
+    // lombok
+    compile "org.projectlombok:lombok:1.18.8"
+    annotationProcessor("org.projectlombok:lombok:1.18.8")
+    // validation (For using @Valid Annotation)
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // jackson (JSON Object)
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
+    // junit (Test Code)
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test
+    implementation 'junit:junit:4.12'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation 'org.springframework.security:spring-security-test'
+    testCompile("org.mockito:mockito-all:1.10.19")
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        xml.destination file("${buildDir}/reports/jacoco/report.xml")
+        html.enabled true
+        csv.enabled false
+    }
+}
