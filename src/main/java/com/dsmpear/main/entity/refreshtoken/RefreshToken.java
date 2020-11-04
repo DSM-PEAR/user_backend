@@ -1,4 +1,4 @@
-package com.dsmpear.main.domain.auth.entity.refreshtoken;
+package com.dsmpear.main.entity.refreshtoken;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
