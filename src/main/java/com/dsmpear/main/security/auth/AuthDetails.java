@@ -2,12 +2,14 @@ package com.dsmpear.main.security.auth;
 
 import com.dsmpear.main.entity.user.User;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Getter
 @AllArgsConstructor
 public class AuthDetails implements UserDetails {
     private User user;
