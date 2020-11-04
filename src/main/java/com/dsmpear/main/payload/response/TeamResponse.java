@@ -1,10 +1,10 @@
-package com.dsmpear.main.domain.team.dto.response;
+package com.dsmpear.main.payload.response;
 
-import com.dsmpear.main.domain.member.dto.response.MemberResponse;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
+
 
 @Getter
 @Builder
