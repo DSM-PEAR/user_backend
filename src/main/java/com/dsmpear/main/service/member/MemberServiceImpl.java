@@ -42,14 +42,16 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public void deleteMember(Integer userEmail) {
+    public void deleteMember(String userEmail) {
+        //요청한 user가 팀 멤버인지 확인하기
         User user=userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotMemberException::new);
-        
+
         Member member=memberRepository.findByUserEmail(user.getEmail())
                 .orElseThrow(MemberNotFoundException::new);
 
         teamRepository.findById(member.getTeamId())
+                .filter(team -> user.getEmail().equals(userEmail))
                 .orElseThrow(TeamNotFoundException::new);
 
         memberRepository.delete(member);

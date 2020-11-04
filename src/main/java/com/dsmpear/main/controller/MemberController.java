@@ -1,4 +1,24 @@
 package com.dsmpear.main.controller;
 
+import com.dsmpear.main.payload.request.MemberRequest;
+import com.dsmpear.main.service.member.MemberService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/member")
 public class MemberController {
+
+    private MemberService memberService;
+
+    @PostMapping
+    public void setMember(@RequestBody MemberRequest memberRequest){
+        memberService.setMember(memberRequest);
+    }
+
+    @DeleteMapping
+    public void deleteMember(@RequestParam String userEmail){
+        memberService.deleteMember(userEmail);
+    }
 }
