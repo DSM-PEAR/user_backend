@@ -44,6 +44,7 @@ public class EmailConfig {
         javaMailSender.setPort(port);
 
         javaMailSender.setJavaMailProperties(getMailProperties());
+        javaMailSender.setDefaultEncoding("UTF-8");
     }
 
     private Properties getMailProperties() {
