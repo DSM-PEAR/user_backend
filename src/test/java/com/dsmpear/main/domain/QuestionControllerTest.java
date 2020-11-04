@@ -1,6 +1,6 @@
 package com.dsmpear.main.domain;
 
-import com.dsmpear.main.domain.questions.dto.request.QuestionRequest;
+import com.dsmpear.main.payload.request.QuestionRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

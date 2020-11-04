@@ -1,15 +1,15 @@
-package com.dsmpear.main.domain.auth.service;
+package com.dsmpear.main.service.auth;
 
-import com.dsmpear.main.domain.auth.dto.response.AccessTokenResponse;
-import com.dsmpear.main.domain.auth.entity.refreshtoken.RefreshToken;
-import com.dsmpear.main.domain.auth.entity.refreshtoken.RefreshTokenRepository;
-import com.dsmpear.main.domain.auth.dto.request.SignInRequest;
-import com.dsmpear.main.domain.auth.dto.response.TokenResponse;
-import com.dsmpear.main.domain.auth.exceptions.InvalidTokenException;
-import com.dsmpear.main.domain.auth.exceptions.UserNotFoundException;
-import com.dsmpear.main.domain.user.entity.User;
-import com.dsmpear.main.domain.user.entity.UserRepository;
-import com.dsmpear.main.global.security.JwtTokenProvider;
+import com.dsmpear.main.entity.refreshtoken.RefreshToken;
+import com.dsmpear.main.entity.refreshtoken.RefreshTokenRepository;
+import com.dsmpear.main.entity.user.User;
+import com.dsmpear.main.entity.user.UserRepository;
+import com.dsmpear.main.exceptions.InvalidTokenException;
+import com.dsmpear.main.exceptions.UserNotFoundException;
+import com.dsmpear.main.payload.request.SignInRequest;
+import com.dsmpear.main.payload.response.AccessTokenResponse;
+import com.dsmpear.main.payload.response.TokenResponse;
+import com.dsmpear.main.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;

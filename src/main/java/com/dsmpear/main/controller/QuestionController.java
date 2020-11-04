@@ -1,7 +1,7 @@
-package com.dsmpear.main.domain.questions.controller;
+package com.dsmpear.main.controller;
 
-import com.dsmpear.main.domain.questions.dto.request.QuestionRequest;
-import com.dsmpear.main.domain.questions.service.QuestionService;
+import com.dsmpear.main.payload.request.QuestionRequest;
+import com.dsmpear.main.service.question.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

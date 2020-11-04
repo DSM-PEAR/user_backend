@@ -1,10 +1,9 @@
-package com.dsmpear.main.domain.team.exceptions;
+package com.dsmpear.main.exceptions;
 
-import com.dsmpear.main.global.error.exception.BusinessException;
-import com.dsmpear.main.global.error.exception.ErrorCode;
 
-public class UserNotMemberException extends BusinessException {
-    public UserNotMemberException(){
-        super(ErrorCode.USER_NOT_MEMBER);
-    }
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(value = HttpStatus.FORBIDDEN,reason = "User is Not a Member of the Team")
+public class UserNotMemberException extends RuntimeException {
 }
