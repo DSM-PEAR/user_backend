@@ -5,4 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value=HttpStatus.FORBIDDEN,reason = "Invalid Token Exception")
 public class InvalidTokenException extends RuntimeException{
+    public InvalidTokenException() {
+        super("INVALID_TOKEN");
+    }
 }
