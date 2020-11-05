@@ -2,6 +2,7 @@ package com.dsmpear.main.service.user;
 
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
+import com.dsmpear.main.exceptions.InvalidEmailAddressException;
 import com.dsmpear.main.exceptions.UserIsAlreadyRegisteredException;
 import com.dsmpear.main.payload.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void register(RegisterRequest request) {
+        if (!request.isValidAddress("dsm.hs.kr"))
+            throw new InvalidEmailAddressException();
+
         Optional<User> user = userRepository.findByEmail(request.getEmail());
         if (user.isPresent())
             throw new UserIsAlreadyRegisteredException();
@@ -26,7 +30,7 @@ public class UserServiceImpl implements UserService {
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .name(request.getName())
-                    .auth_status(false)
+                    .authStatus(false)
                     .build()
         );
     }

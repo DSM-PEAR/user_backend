@@ -20,9 +20,9 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    @Column
-    private String self_intro;
+    @Column(name = "self_intro")
+    private String selfIntro;
 
-    @Column(nullable = false)
-    private Boolean auth_status;
+    @Column(name = "auth_status", nullable = false)
+    private Boolean authStatus;
 }

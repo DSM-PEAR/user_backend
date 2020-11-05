@@ -95,6 +95,6 @@ public class JwtTokenProvider {
 
     public boolean isEmailAuthenticated(String token) {
         AuthDetails authDetails = authDetailsService.loadUserByUsername(getEmail(token));
-        return authDetails.getUser().getAuth_status();
+        return authDetails.getAuthStatus();
     }
 }

@@ -1,6 +1,5 @@
 package com.dsmpear.main.config;
 
-import lombok.Builder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,10 +28,10 @@ public class EmailConfig {
     @Value("${mail.smtp.socketFactory.fallback}")
     private boolean fallback;
 
-    @Value("${AdminMail.id}")
+    @Value("${adminMail.id}")
     private String id;
 
-    @Value("${AdminMail.password}")
+    @Value("${adminMail.password}")
     private String password;
 
     @Bean
@@ -45,6 +44,7 @@ public class EmailConfig {
 
         javaMailSender.setJavaMailProperties(getMailProperties());
         javaMailSender.setDefaultEncoding("UTF-8");
+        return javaMailSender;
     }
 
     private Properties getMailProperties() {
