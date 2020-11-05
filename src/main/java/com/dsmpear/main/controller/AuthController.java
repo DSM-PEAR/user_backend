@@ -12,7 +12,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
-public class TokenController {
+public class AuthController {
     private final AuthService authService;
 
     @PostMapping

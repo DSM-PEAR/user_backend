@@ -1,4 +1,4 @@
-package com.dsmpear.main.domain;
+package com.dsmpear.main;
 
 import com.dsmpear.main.entity.refreshtoken.RefreshTokenRepository;
 import com.dsmpear.main.entity.user.User;
@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TokenControllerTest {
+public class AuthControllerTest {
     @Autowired
     private WebApplicationContext context;
 
