@@ -31,7 +31,7 @@ public class JwtTokenProviderTest {
     @DisplayName("validateToken test")
     public void testValidateToken() {
         Throwable exception = assertThrows(InvalidTokenException.class, () -> {
-            throw new InvalidTokenException();
+            jwtTokenProvider.validateToken("asdf");
         });
 
         assertEquals(exception.getMessage(), "INVALID_TOKEN");
