@@ -48,6 +48,8 @@ public class AuthControllerTest {
                 User.builder()
                 .email("aaaa@dsm.hs.kr")
                 .password(passwordEncoder.encode("1111"))
+                .authStatus(true)
+                .name("aaaa")
                 .build()
         );
     }
