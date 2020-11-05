@@ -1,8 +1,8 @@
 package com.dsmpear.main.security;
 
-import com.dsmpear.main.domain.auth.exceptions.InvalidTokenException;
-import com.dsmpear.main.global.security.auth.AuthDetails;
-import com.dsmpear.main.global.security.auth.AuthDetailsService;
+import com.dsmpear.main.exceptions.InvalidTokenException;
+import com.dsmpear.main.security.auth.AuthDetails;
+import com.dsmpear.main.security.auth.AuthDetailsService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;

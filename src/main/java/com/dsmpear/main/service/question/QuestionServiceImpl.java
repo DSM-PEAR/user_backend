@@ -1,8 +1,8 @@
 package com.dsmpear.main.service.question;
 
-import com.dsmpear.main.domain.questions.dto.request.QuestionRequest;
-import com.dsmpear.main.domain.questions.entity.Question;
-import com.dsmpear.main.domain.questions.entity.QuestionRepository;
+import com.dsmpear.main.entity.question.Question;
+import com.dsmpear.main.entity.question.QuestionRepository;
+import com.dsmpear.main.payload.request.QuestionRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

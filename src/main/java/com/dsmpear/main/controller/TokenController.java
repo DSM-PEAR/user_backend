@@ -1,9 +1,9 @@
 package com.dsmpear.main.controller;
 
-import com.dsmpear.main.domain.auth.dto.request.SignInRequest;
-import com.dsmpear.main.domain.auth.dto.response.AccessTokenResponse;
-import com.dsmpear.main.domain.auth.dto.response.TokenResponse;
-import com.dsmpear.main.domain.auth.service.AuthService;
+import com.dsmpear.main.payload.request.SignInRequest;
+import com.dsmpear.main.payload.response.AccessTokenResponse;
+import com.dsmpear.main.payload.response.TokenResponse;
+import com.dsmpear.main.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,9 +1,9 @@
 package com.dsmpear.main.domain;
 
-import com.dsmpear.main.domain.auth.dto.request.SignInRequest;
-import com.dsmpear.main.domain.auth.entity.refreshtoken.RefreshTokenRepository;
-import com.dsmpear.main.domain.user.entity.User;
-import com.dsmpear.main.domain.user.entity.UserRepository;
+import com.dsmpear.main.entity.refreshtoken.RefreshTokenRepository;
+import com.dsmpear.main.entity.user.User;
+import com.dsmpear.main.entity.user.UserRepository;
+import com.dsmpear.main.payload.request.SignInRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
