@@ -38,6 +38,8 @@ dependencies {
     // lombok
     compile "org.projectlombok:lombok:1.18.8"
     annotationProcessor("org.projectlombok:lombok:1.18.8")
+    // jsoup
+    compile 'org.jsoup:jsoup:1.13.1'
     // validation (For using @Valid Annotation)
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     // jackson (JSON Object)
