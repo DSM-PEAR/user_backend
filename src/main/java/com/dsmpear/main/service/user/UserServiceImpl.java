@@ -5,6 +5,9 @@ import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.exceptions.InvalidEmailAddressException;
 import com.dsmpear.main.exceptions.UserIsAlreadyRegisteredException;
 import com.dsmpear.main.payload.request.RegisterRequest;
+import com.dsmpear.main.service.email.EmailParameter;
+import com.dsmpear.main.service.email.EmailSender;
+import com.dsmpear.main.service.email.EmailType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailSender emailSender;
 
     @Override
     public void register(RegisterRequest request) {
@@ -23,8 +27,16 @@ public class UserServiceImpl implements UserService {
             throw new InvalidEmailAddressException();
 
         Optional<User> user = userRepository.findByEmail(request.getEmail());
-        if (user.isPresent())
+        if (user.isPresent() && user.get().getAuthStatus())
             throw new UserIsAlreadyRegisteredException();
+
+        emailSender.sendEmail(EmailType.AUTHORIZATION,
+                EmailParameter.builder()
+                    .name(request.getName())
+                    .sendTo(request.getEmail())
+                    .build()
+        );
+
         userRepository.save(
                 User.builder()
                     .email(request.getEmail())
