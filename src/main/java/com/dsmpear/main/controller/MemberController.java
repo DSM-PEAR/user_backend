@@ -13,8 +13,8 @@ public class MemberController {
     private MemberService memberService;
 
     @PostMapping
-    public void setMember(@RequestBody MemberRequest memberRequest){
-        memberService.setMember(memberRequest);
+    public void addMember(@RequestBody MemberRequest memberRequest){
+        memberService.addMember(memberRequest);
     }
 
     @DeleteMapping
