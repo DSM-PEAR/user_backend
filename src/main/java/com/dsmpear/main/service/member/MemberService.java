@@ -4,5 +4,5 @@ import com.dsmpear.main.payload.request.MemberRequest;
 
 public interface MemberService {
     void addMember(MemberRequest memberRequest);
-    void deleteMember(String userEmail);
+    void deleteMember(Integer memberId);
 }

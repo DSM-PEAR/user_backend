@@ -10,15 +10,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/member")
 public class MemberController {
 
-    private MemberService memberService;
+    private final MemberService memberService;
 
     @PostMapping
     public void addMember(@RequestBody MemberRequest memberRequest){
         memberService.addMember(memberRequest);
     }
 
-    @DeleteMapping
-    public void deleteMember(@RequestParam String userEmail){
-        memberService.deleteMember(userEmail);
+    @DeleteMapping("/{memberId}")
+    public void deleteMember(@PathVariable Integer memberId){
+        memberService.deleteMember(memberId);
     }
+
 }

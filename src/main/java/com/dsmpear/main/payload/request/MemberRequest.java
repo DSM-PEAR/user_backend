@@ -1,10 +1,12 @@
 package com.dsmpear.main.payload.request;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MemberRequest {
 
     private Integer teamId;

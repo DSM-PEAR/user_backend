@@ -17,6 +17,7 @@ public class Member {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false)
     private Integer teamId;
 
     @Column(length = 30,nullable = false)
