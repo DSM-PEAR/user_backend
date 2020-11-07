@@ -1,7 +1,7 @@
 package com.dsmpear.main.controller;
 
 
-import com.dsmpear.main.domain.team.dto.request.TeamRequest;
+import com.dsmpear.main.payload.request.TeamRequest;
 import com.dsmpear.main.service.team.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
