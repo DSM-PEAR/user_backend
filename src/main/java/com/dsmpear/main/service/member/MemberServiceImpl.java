@@ -12,6 +12,8 @@ import com.dsmpear.main.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
@@ -23,10 +25,13 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public void setMember(MemberRequest memberRequest) {
+        //요청한 user가 팀 멤버인지 확인하기
+
         User user=userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
         Team team=teamRepository.findById(memberRequest.getTeamId())
+                .filter(t -> user.getEmail().equals(t.getUserEmail()))
                 .orElseThrow(TeamNotFoundException::new);
 
         memberRepository.findByTeamIdAndUserEmail(team.getId(),user.getEmail())
@@ -45,10 +50,18 @@ public class MemberServiceImpl implements MemberService{
     public void deleteMember(String userEmail) {
         //요청한 user가 팀 멤버인지 확인하기
         User user=userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
+
+        User member=userRepository.findByEmail(userEmail)
                 .orElseThrow(UserNotMemberException::new);
 
-        Member member=memberRepository.findByUserEmail(user.getEmail())
-                .orElseThrow(MemberNotFoundException::new);
+        String memberEmail=member.getEmail();
+
+        if(user.getEmail().equals(memberEmail)) throw new UserNotFoundException();
+
+        memberRepository.findByTeamIdAndUserEmail()
+
+        List<Member> members=memberRepository.find
 
         teamRepository.findById(member.getTeamId())
                 .filter(team -> user.getEmail().equals(userEmail))
