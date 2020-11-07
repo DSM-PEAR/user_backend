@@ -1,12 +1,12 @@
 package com.dsmpear.main.service.team;
 
-import com.dsmpear.main.domain.team.dto.request.TeamRequest;
 import com.dsmpear.main.entity.team.Team;
 import com.dsmpear.main.entity.team.TeamRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.exceptions.TeamNotFoundException;
 import com.dsmpear.main.exceptions.UserNotFoundException;
+import com.dsmpear.main.payload.request.TeamRequest;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

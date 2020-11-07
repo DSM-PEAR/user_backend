@@ -1,4 +1,4 @@
-package com.dsmpear.main.domain.team.dto.request;
+package com.dsmpear.main.payload.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
