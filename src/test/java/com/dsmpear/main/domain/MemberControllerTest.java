@@ -102,13 +102,21 @@ public class MemberControllerTest {
                 .andExpect(status().isOk()).andDo(print());
     }
 
-    @Test
+    /*@Test
     @Order(2)
     @WithMockUser(value = "test@dsm.hs.kr",password = "1111")
     void deleteMember() throws Exception {
 
         mvc.perform(delete("/member/2"))
                 .andExpect(status().isOk()).andDo(print());
-    }
+    }*/
 
+    @Test
+    @Order(2)
+    @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
+    void deleteMember() throws Exception{
+
+        mvc.perform(delete("/member/1"))
+                .andExpect(status().isOk()).andDo(print());
+    }
 }

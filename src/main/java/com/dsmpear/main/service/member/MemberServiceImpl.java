@@ -55,6 +55,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void deleteMember(Integer memberId) {
+
         //요청한 user가 팀 멤버인지 확인하기
         User user=userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
@@ -65,13 +66,18 @@ public class MemberServiceImpl implements MemberService {
         Member member=memberRepository.findById(memberId)
                 .orElseThrow(UserNotMemberException::new);
 
+        //만약 최초 생성자를 지우려고 하면, 삭제를 요청한 유저 이메일로 대체하기
+        if(team.getUserEmail().equals(member.getUserEmail())){
+            //메모리에서의 변경
+            team.updateUser(user.getEmail());
+            //디비 변경
+            teamRepository.save(team);
+        }
+
         if(user.getEmail().equals(member.getUserEmail())){
             throw new UserEqualsMemberException();
         }
 
-        //만약 최초 생성자를 지우려고 하면, 삭제를 요청한 유저 이메일로 대체하기
-
         memberRepository.delete(member);
     }
-
 }
