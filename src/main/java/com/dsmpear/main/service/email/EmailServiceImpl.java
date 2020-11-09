@@ -19,9 +19,11 @@ public class EmailServiceImpl implements EmailService {
     @Value("${mail.address}")
     private String fromAddress;
 
+    @Async
     @Override
     public void sendNotificationEmail() {
-
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setSubject("");
     }
 
     @Async
