@@ -18,7 +18,4 @@ public interface MemberRepository extends CrudRepository<Member,Integer> {
     List<Member> findAllByTeamId(Integer teamId);
     //팀 아이디로 팀 삭제하기
     void deleteAllByTeamId(Integer teamId);
-    //보고서 아이디로 팀 삭제하기
-    //void deleteAllByReportId(Integer reportId);
-
 }
