@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "refresh_token")
+@RedisHash("refresh_token")
 @NoArgsConstructor @AllArgsConstructor @Getter
 @Builder
 public class RefreshToken {
