@@ -11,11 +11,6 @@ public interface MemberRepository extends CrudRepository<Member,Integer> {
 
     //팀 아이디와 유저이메일로 찾기
     Optional<Member> findByTeamIdAndUserEmail(Integer teamId, String userEmail);
-    //학생 이메일로 찾기
-    Optional<Member> findByUserEmail(String userEmail);
-    Optional<Member> findByTeamId(Optional<Member> teamId);
     //팀 아이디로 멤버찾기
     List<Member> findAllByTeamId(Integer teamId);
-    //팀 아이디로 팀 삭제하기
-    void deleteAllByTeamId(Integer teamId);
 }

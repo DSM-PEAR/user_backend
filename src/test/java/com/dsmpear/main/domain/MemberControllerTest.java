@@ -63,6 +63,7 @@ public class MemberControllerTest {
         userRepository.save(
                 User.builder()
                         .email("test@dsm.hs.kr")
+                        .name("홍길동")
                         .password(passwordEncoder.encode("1234"))
                 .build()
         );
@@ -70,6 +71,7 @@ public class MemberControllerTest {
         userRepository.save(
                 User.builder()
                         .email("tset@dsm.hs.kr")
+                        .name("고길동")
                         .password(passwordEncoder.encode("1234"))
                         .build()
         );

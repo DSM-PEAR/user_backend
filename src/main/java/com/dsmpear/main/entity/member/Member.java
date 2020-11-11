@@ -1,5 +1,6 @@
 package com.dsmpear.main.entity.member;
 
+import com.dsmpear.main.entity.team.Team;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,4 +24,6 @@ public class Member {
     @Column(length = 30,nullable = false)
     private String userEmail;
 
+    @ManyToOne
+    private Team team;
 }
