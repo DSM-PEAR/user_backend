@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ReportServiceImpl {
+public class ReportServiceImpl implements ReportService{
 
     private final ReportRepository reportRepository;
 
     @Override
-    public Integer writeReport(CreateReportRequest createReportRequest) {
+    public void writeReport(CreateReportRequest createReportRequest) {
         reportRepository.save(
                 Report.builder()
                         .title(createReportRequest.getTitle())
