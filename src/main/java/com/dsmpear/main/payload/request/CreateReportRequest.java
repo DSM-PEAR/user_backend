@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.dsmpear.main.entity.report.*;
+
 @Getter
 @NoArgsConstructor
 @RequiredArgsConstructor
@@ -21,9 +23,6 @@ public class CreateReportRequest {
     private Type type;
 
     @NotBlank
-    private int reportId;
-
-    @NotBlank
     private String title;
 
     @NotNull
@@ -31,23 +30,4 @@ public class CreateReportRequest {
 
     @NotBlank
     private String description;
-}
-
-enum Grade {
-    grade1,
-    grade2,
-    grade3,
-    graduated;
-}
-
-enum Access {
-    admin,
-    user,
-    every;
-}
-
-enum Type {
-    team,
-    sole,
-    circles;
 }

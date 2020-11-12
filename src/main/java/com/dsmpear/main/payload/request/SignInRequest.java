@@ -14,6 +14,4 @@ public class SignInRequest {
 
     @NotBlank
     private String password;
-
-    private ReportEnum type;
 }
