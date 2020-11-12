@@ -12,11 +12,13 @@ import javax.validation.constraints.NotNull;
 @RequiredArgsConstructor
 public class CreateReportRequest {
     @NotNull
-    private enum type {
-        admin,
-        user,
-        every
-    }
+    private Grade grade;
+
+    @NotNull
+    private Access access;
+
+    @NotNull
+    private Type type;
 
     @NotBlank
     private int reportId;
@@ -24,17 +26,28 @@ public class CreateReportRequest {
     @NotBlank
     private String title;
 
-    private String comment;
-
     @NotNull
     private String languages;
 
     @NotBlank
     private String description;
-    
-    @NotNull
-    private enum grade;
+}
 
-    @NotNull
-    private enum access;
+enum Grade {
+    grade1,
+    grade2,
+    grade3,
+    graduated;
+}
+
+enum Access {
+    admin,
+    user,
+    every;
+}
+
+enum Type {
+    team,
+    sole,
+    circles;
 }
