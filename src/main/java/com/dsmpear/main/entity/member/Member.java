@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Entity
 @Builder
 @Getter
+@Table(name = "member")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Member {

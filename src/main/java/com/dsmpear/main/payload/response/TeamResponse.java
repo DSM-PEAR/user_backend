@@ -14,8 +14,6 @@ public class TeamResponse {
 
     private String teamName;
 
-    private String userEmail;
-
     private List<MemberResponse> memberList;
 
 }

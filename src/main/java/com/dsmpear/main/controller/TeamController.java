@@ -13,20 +13,20 @@ public class TeamController {
 
     private final TeamService teamService;
 
+    @GetMapping("/{reportId}")
+    public void getTeam(@PathVariable Integer reportId){
+        teamService.getTeam(reportId);
+    }
+
     @PostMapping
     public void addTeam(@RequestBody TeamRequest teamRequest){
         teamService.addTeam(teamRequest);
     }
 
-    @PutMapping("/{teamId}")
-    public void modifyTeam(@PathVariable Integer teamId,
-            @RequestParam TeamRequest teamRequest){
-        teamService.modifyTeam(teamId, teamRequest);
+    @PatchMapping("/{teamId}")
+    public void modifyTeam(
+            @PathVariable Integer teamId,
+            @RequestParam String name){
+        teamService.modifyName(teamId,name);
     }
-
-    @DeleteMapping("/{teamId}")
-    public void deleteTeam(@PathVariable Integer teamId){
-        teamService.deleteTeam(teamId);
-    }
-
 }
