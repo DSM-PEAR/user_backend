@@ -43,9 +43,6 @@ public class Report {
     @Column(nullable = false)
     private String languages;
 
-    @Column(nullable = false)
-    private String comment;
-
 }
 
 enum Grade {
