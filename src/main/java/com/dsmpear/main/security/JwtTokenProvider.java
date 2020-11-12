@@ -73,11 +73,11 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        AuthDetails authDetails = authDetailsService.loadUserByUsername(getReceiptCode(token));
+        AuthDetails authDetails = authDetailsService.loadUserByUsername(getEmail(token));
         return new UsernamePasswordAuthenticationToken(authDetails, "", authDetails.getAuthorities());
     }
 
-    public String getReceiptCode(String token) {
+    public String getEmail(String token) {
         try {
             return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
         } catch (Exception e) {
@@ -91,5 +91,10 @@ public class JwtTokenProvider {
         } catch (Exception e) {
             throw new InvalidTokenException();
         }
+    }
+
+    public boolean isEmailAuthenticated(String token) {
+        AuthDetails authDetails = authDetailsService.loadUserByUsername(getEmail(token));
+        return authDetails.getAuthStatus();
     }
 }

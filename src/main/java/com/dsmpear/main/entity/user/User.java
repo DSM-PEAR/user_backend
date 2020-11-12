@@ -16,4 +16,13 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(name = "self_intro")
+    private String selfIntro;
+
+    @Column(name = "auth_status", nullable = false)
+    private Boolean authStatus;
 }

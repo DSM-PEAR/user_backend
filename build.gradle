@@ -24,6 +24,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     // spring boot starter web
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    // spring mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
     // spring security
     compile 'org.springframework.security:spring-security-web:4.2.2.RELEASE'
     compile 'org.springframework.security:spring-security-config:4.2.2.RELEASE'

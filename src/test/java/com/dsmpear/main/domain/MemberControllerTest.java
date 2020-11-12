@@ -1,8 +1,12 @@
 package com.dsmpear.main.domain;
 
-import com.dsmpear.main.entity.report.*;
+import com.dsmpear.main.entity.member.Member;
+import com.dsmpear.main.entity.member.MemberRepository;
+import com.dsmpear.main.entity.team.Team;
+import com.dsmpear.main.entity.team.TeamRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
+import com.dsmpear.main.payload.request.MemberRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -31,13 +35,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ReportControllerTest {
+public class MemberControllerTest {
 
     @Autowired
     private WebApplicationContext context;
 
     @Autowired
-    private ReportRepository reportRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private TeamRepository teamRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -50,15 +60,12 @@ public class ReportControllerTest {
                 .webAppContextSetup(context)
                 .build();
 
-        reportRepository.save(
-                Report.builder()
-                        .title("이승윤 돼지")
-                        .description("이승윤 민머리")
-                        .languages("이승윤 대머리")
-                        .type(Type.TEAM)
-                        .access(Access.EVERY)
-                        .grade(Grade.GRADE2)
-                        .build()
+        userRepository.save(
+                User.builder()
+                        .email("test@dsm.hs.kr")
+                        .name("홍길동")
+                        .password(passwordEncoder.encode("1234"))
+                .build()
         );
 
         userRepository.save(
@@ -73,14 +80,14 @@ public class ReportControllerTest {
                 Team.builder()
                         .name("랄랄라")
                         .userEmail("test@dsm.hs.kr")
-                        .build()
+                .build()
         );
 
         memberRepository.save(
                 Member.builder()
                         .teamId(1)
                         .userEmail("test@dsm.hs.kr")
-                        .build()
+                .build()
         );
     }
 
@@ -101,6 +108,7 @@ public class ReportControllerTest {
     @Order(2)
     @WithMockUser(value = "test@dsm.hs.kr",password = "1111")
     void deleteMember() throws Exception {
+
         mvc.perform(delete("/member/2"))
                 .andExpect(status().isOk()).andDo(print());
     }*/
