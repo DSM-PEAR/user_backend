@@ -68,6 +68,7 @@ public class TeamControllerTest {
         userRepository.save(
                 User.builder()
                         .email("test@dsm.hs.kr")
+                        .name("홍길동")
                         .password(passwordEncoder.encode("1234"))
                         .build()
         );
@@ -75,6 +76,7 @@ public class TeamControllerTest {
         userRepository.save(
                 User.builder()
                         .email("tset@dsm.hs.kr")
+                        .name("고길동")
                         .password(passwordEncoder.encode("1234"))
                         .build()
         );
@@ -84,9 +86,9 @@ public class TeamControllerTest {
                         .title("눈누난나")
                         .description("하잉")
                         .createdAt(LocalDateTime.now())
-                        .grade(Grade.grade1)
-                        .access(Access.admin)
-                        .type(Type.team)
+                        .grade(Grade.GRADE1)
+                        .access(Access.ADMIN)
+                        .type(Type.TEAM)
                         .isAccepted(1)
                         .languages("C,Java")
                 .build()
