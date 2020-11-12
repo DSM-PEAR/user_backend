@@ -44,22 +44,3 @@ public class Report {
     private String languages;
 
 }
-
-enum Grade {
-    grade1,
-    grade2,
-    grade3,
-    graduated;
-}
-
-enum Access {
-    admin,
-    user,
-    every;
-}
-
-enum Type {
-    team,
-    sole,
-    circles;
-}
