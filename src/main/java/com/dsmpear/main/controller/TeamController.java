@@ -2,6 +2,7 @@ package com.dsmpear.main.controller;
 
 
 import com.dsmpear.main.payload.request.TeamRequest;
+import com.dsmpear.main.payload.response.TeamResponse;
 import com.dsmpear.main.service.team.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +15,8 @@ public class TeamController {
     private final TeamService teamService;
 
     @GetMapping("/{reportId}")
-    public void getTeam(@PathVariable Integer reportId){
-        teamService.getTeam(reportId);
+    public TeamResponse getTeam(@PathVariable Integer reportId){
+        return teamService.getTeam(reportId);
     }
 
     @PostMapping

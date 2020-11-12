@@ -30,7 +30,7 @@ public class Team {
     //기본값은 유저 이름
     private String name;
 
-    @OneToMany(cascade=CascadeType.ALL,mappedBy = "team")
+    @OneToMany(cascade=CascadeType.ALL, mappedBy = "team")
     private List<Member> members;
 
     public void updateUser(String memberEmail){

@@ -10,7 +10,7 @@ import com.dsmpear.main.payload.request.MemberRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +65,8 @@ public class MemberControllerTest {
                         .email("test@dsm.hs.kr")
                         .name("홍길동")
                         .password(passwordEncoder.encode("1234"))
-                .build()
+                        .authStatus(true)
+                        .build()
         );
 
         userRepository.save(
@@ -73,29 +74,30 @@ public class MemberControllerTest {
                         .email("tset@dsm.hs.kr")
                         .name("고길동")
                         .password(passwordEncoder.encode("1234"))
+                        .authStatus(true)
                         .build()
         );
 
         teamRepository.save(
                 Team.builder()
                         .name("랄랄라")
+                        .reportId(1)
                         .userEmail("test@dsm.hs.kr")
-                .build()
+                        .build()
         );
 
         memberRepository.save(
                 Member.builder()
                         .teamId(1)
                         .userEmail("test@dsm.hs.kr")
-                .build()
+                        .build()
         );
     }
 
     @Test
     @Order(1)
     @WithMockUser(username = "test@dsm.hs.kr",password = "1111")
-    void addMember() throws Exception {
-
+    public void addMember() throws Exception {
         MemberRequest request = new MemberRequest(1,"tset@dsm.hs.kr");
 
         mvc.perform(post("/member").
@@ -116,7 +118,7 @@ public class MemberControllerTest {
     @Test
     @Order(2)
     @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
-    void deleteMember() throws Exception{
+    public void deleteMember() throws Exception{
 
         mvc.perform(delete("/member/1"))
                 .andExpect(status().isOk()).andDo(print());
