@@ -4,21 +4,21 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.TimeToLive;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "refresh_token")
+@RedisHash("refresh_token")
 @NoArgsConstructor @AllArgsConstructor @Getter
 @Builder
 public class RefreshToken {
     @Id
     private String email;
 
-    @Column(nullable = false)
     private String refreshToken;
 
-    @Column(nullable = false)
+    @TimeToLive
     private Long refreshExp;
 
     public RefreshToken update(String refreshToken, Long refreshExp) {
