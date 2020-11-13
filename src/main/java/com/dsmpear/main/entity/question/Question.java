@@ -10,9 +10,10 @@ import javax.persistence.*;
 @Builder
 @Getter
 @Entity
+@Table(name = "question_tbl")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Question {
+public class Question{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -20,6 +21,6 @@ public class Question {
     @Column(nullable = false,length = 30)
     private String email;
 
-    @Column(nullable = false,length = 150)
+    @Column(nullable = false, length = 150)
     private String description;
 }
