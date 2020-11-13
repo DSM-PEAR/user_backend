@@ -1,4 +1,4 @@
-package com.dsmpear.main;
+package com.dsmpear.main.domain;
 
 import com.dsmpear.main.payload.request.QuestionRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
