@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 public class QuestionControllerTest {
 
-
     @Autowired
     private WebApplicationContext context;
 
@@ -43,12 +42,11 @@ public class QuestionControllerTest {
         String description="description";
 
         QuestionRequest request = new QuestionRequest(email,description);
-
+      
         mvc.perform(post("/question")
                 .content(new ObjectMapper()
                         .writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andDo(print());
     }
-
 }
