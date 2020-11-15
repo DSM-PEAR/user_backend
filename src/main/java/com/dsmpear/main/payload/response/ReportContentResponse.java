@@ -30,5 +30,7 @@ public class ReportContentResponse {
 
     private Access access;
 
+    private boolean isMine;
+
     private List<ReportCommentsResponse> comments;
 }

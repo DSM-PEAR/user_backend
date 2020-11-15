@@ -8,16 +8,16 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter
+@Entity
 @Table(name = "report_tbl")
 @Builder
-@Entity
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer reportId;
 
     @Column(nullable = false)
     private String title;
@@ -25,7 +25,7 @@ public class Report {
     @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
@@ -37,10 +37,13 @@ public class Report {
     @Column(nullable = false)
     private Type type;
 
-    @Column(nullable = false)
+    @Column(name = "is_accepted", nullable = false)
     private int isAccepted;
 
     @Column(nullable = false)
     private String languages;
+
+    @Column(name = "file_name",nullable = false)
+    private String fileName;
 
 }
