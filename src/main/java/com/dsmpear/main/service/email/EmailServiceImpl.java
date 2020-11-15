@@ -3,6 +3,7 @@ package com.dsmpear.main.service.email;
 import com.dsmpear.main.entity.verifynumber.VerifyNumber;
 import com.dsmpear.main.entity.verifynumber.VerifyNumberRepository;
 import com.dsmpear.main.exceptions.EmailSendFailedException;
+import com.dsmpear.main.payload.request.NotificationRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
@@ -24,9 +25,9 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendNotificationEmail() {
+    public void sendNotificationEmail(NotificationRequest request) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setSubject("");
+        message.setSubject("이메일 알림");
     }
 
     @Async

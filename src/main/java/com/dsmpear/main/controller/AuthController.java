@@ -21,7 +21,7 @@ public class AuthController {
     }
 
     @PutMapping
-    public AccessTokenResponse tokenRefresh(@RequestHeader("Refresh-Token") String refreshToken) {
+    public AccessTokenResponse tokenRefresh(@RequestHeader("X-Refresh-Token") String refreshToken) {
         return authService.tokenRefresh(refreshToken);
     }
 }
