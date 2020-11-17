@@ -50,15 +50,11 @@ public class NoticeControllerTest {
     @Test
     public void  getNoticeList() throws Exception{
 
-        Integer noticeId1 = createNotice("notice1");
-        Integer noticeId2 = createNotice("notice2");
-        Integer noticeId3 = createNotice("notice3");
+        createNotice("notice1");
+        createNotice("notice2");
+        createNotice("notice3");
 
-        System.out.println("hihello"+mvc);
-
-        mvc.perform(get("/notice").
-                content(new ObjectMapper().writeValueAsString(1))
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+        mvc.perform(get("/notice"))
                 .andExpect(status().isOk()).andDo(print());
     }
 
@@ -67,8 +63,8 @@ public class NoticeControllerTest {
 
         Integer noticeId = createNotice("notice");
 
-        mvc.perform(get("/notice/"+noticeId).
-                content(new ObjectMapper().writeValueAsString(3))
+        mvc.perform(get("/notice/"+noticeId)
+                .content(new ObjectMapper().writeValueAsString(3))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andDo(print());
     }
