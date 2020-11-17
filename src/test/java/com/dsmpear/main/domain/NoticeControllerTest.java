@@ -1,4 +1,4 @@
-package com.dsmpear.main;
+package com.dsmpear.main.domain;
 
 import com.dsmpear.main.entity.notice.Notice;
 import com.dsmpear.main.entity.notice.NoticeRepository;
