@@ -19,7 +19,7 @@ public class EmailController {
     private final EmailService emailService;
 
     @GetMapping("/auth")
-    public void verifyAccount(int number, @Email String email) {
+    public void verifyAccount(String number, @Email String email) {
         userService.verify(number, email);
     }
 

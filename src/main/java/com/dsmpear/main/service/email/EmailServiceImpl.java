@@ -33,7 +33,7 @@ public class EmailServiceImpl implements EmailService {
     @Async
     @Override
     public void sendAuthNumEmail(String sendTo) throws EmailSendFailedException {
-        int number = generateVerifyNumber();
+        String number = generateVerifyNumber();
         SimpleMailMessage message = new SimpleMailMessage();
         message.setSubject("회원가입 인증번호 안내 이메일입니다.");
         message.setFrom(fromAddress);
@@ -42,7 +42,7 @@ public class EmailServiceImpl implements EmailService {
         numberRepository.save(
                 VerifyNumber.builder()
                     .email(sendTo)
-                    .number(number)
+                    .verifyNumber(number)
                     .build()
         );
 
@@ -53,9 +53,9 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
-    private int generateVerifyNumber() {
+    private String generateVerifyNumber() {
         Random random = new Random();
         random.setSeed(System.currentTimeMillis());
-        return random.nextInt(1000000) % 1000000;
+        return Integer.toString(random.nextInt(1000000) % 1000000);
     }
 }

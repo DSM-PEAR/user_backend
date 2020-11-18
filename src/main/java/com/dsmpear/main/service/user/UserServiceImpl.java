@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void verify(int number, String email) {
+    public void verify(String number, String email) {
         VerifyNumber verifyNumber = numberRepository.findByEmail(email)
                 .orElseThrow(NumberNotFoundException::new);
 
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
         userRepository.findByEmail(email)
                 .map(user -> {
-                    user.setToTrueAuthStatus();
+                    user.authenticatedSuccess();
                     return user;
                 })
                 .map(userRepository::save)
