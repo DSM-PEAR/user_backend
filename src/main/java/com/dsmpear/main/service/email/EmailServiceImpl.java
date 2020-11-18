@@ -20,7 +20,7 @@ public class EmailServiceImpl implements EmailService {
     private final JavaMailSender javaMailSender;
     private final VerifyNumberRepository numberRepository;
 
-    @Value("${mail.address}")
+    @Value("${spring.mail.host}")
     private String fromAddress;
 
     @Async

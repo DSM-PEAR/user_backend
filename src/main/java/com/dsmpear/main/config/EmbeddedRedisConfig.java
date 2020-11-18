@@ -10,7 +10,7 @@ import javax.annotation.PreDestroy;
 import java.io.IOException;
 
 @Configuration
-@Profile("local")
+@Profile("dev")
 public class EmbeddedRedisConfig {
     @Value("${spring.redis.port}")
     private int redisPort;
