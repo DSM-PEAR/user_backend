@@ -55,12 +55,16 @@ public class ReportServiceImpl implements ReportService{
     // 보고서 보기
     @Override
     public ReportContentResponse viewReport(Integer reportId) {
-        // (드디어) 토큰에서 유저 가져오기
 
         boolean isLogined = false;
+        String email = "";
+        boolean isMine = false;
 
-        User user=userRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotFoundException::new);
+        // (드디어) 토큰에서 유저 가져오기
+        if(authenticationFacade.getUserEmail() != null) {
+            email = authenticationFacade.getUserEmail();
+            isLogined = true;
+        }
 
         // 보고서를 아이디로 찾기
         Report report = reportRepository.findById(reportId)
@@ -70,21 +74,26 @@ public class ReportServiceImpl implements ReportService{
         Team team = teamRepository.findByReportId(reportId)
                 .orElseThrow(TeamNotFoundException::new);
 
+        if(isLogined) {
+            isMine = !memberRepository.findByTeamIdAndUserEmail(team.getId(), email).isEmpty();
+
+            // 보고서를 볼 때 보는 보고서의 access가 ADMIN인지, 만약 admin이라면  현재 유저가 글쓴이가 맞는지 검사
+            if (report.getAccess().equals(Access.ADMIN) && !isMine) {
+                throw new PermissionDeniedException();
+            }
+        }else {
+            if(report.getAccess().equals(Access.USER)) {
+                throw new PermissionDeniedException();
+            }
+        }
+
         // 내 보고서인지 확인함
-        boolean isMine = !memberRepository.findByTeamIdAndUserEmail(team.getId(), user.getEmail()).isEmpty();
 
-        // 보고서를 볼 때 보는 보고서의 access가 ADMIN인지, 만약 admin이라면  현재 유저가 글쓴이가 맞는지 검사
-        if (report.getAccess().equals(Access.ADMIN) && !isMine) {
-            throw new PermissionDeniedException();
-        }
-
-        if(report.getAccess().equals(Access.USER) && !isLogined) {
-            throw new PermissionDeniedException();
-        }
 
         List<Comment> comment = commentRepository.findAllByReportIdOrderByIdAsc(reportId);
         List<ReportCommentsResponse> commentsResponses = new ArrayList<>();
 
+        // 댓글 하나하나 담기ㅣ
         for (Comment co : comment) {
             User commentWriter;
             if(isLogined) {
@@ -99,7 +108,7 @@ public class ReportServiceImpl implements ReportService{
                             .content(co.getContent())
                             .createdAt(co.getCreatedAt())
                             .userEmail(co.getUserEmail())
-                            .isMine(commentWriter.equals(user))
+                            .isMine(commentWriter.getEmail().equals(email))
                             .build()
             );
         }

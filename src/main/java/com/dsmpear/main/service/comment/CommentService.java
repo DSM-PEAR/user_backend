@@ -4,5 +4,4 @@ import com.dsmpear.main.payload.request.CommentResponse;
 import com.dsmpear.main.payload.response.ReportCommentsResponse;
 
 public interface CommentService {
-    ReportCommentsResponse viewComments(Integer reportId);
 }
