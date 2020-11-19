@@ -46,4 +46,9 @@ public class Report {
     @Column(name = "file_name",nullable = false)
     private String fileName;
 
+    public Report update(String title, String description) {
+        this.title = title;
+        this.description = description;
+        return this;
+    }
 }

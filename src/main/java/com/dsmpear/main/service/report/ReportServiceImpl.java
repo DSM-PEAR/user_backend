@@ -20,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 import net.bytebuddy.implementation.bind.MethodDelegationBinder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,18 +38,20 @@ public class ReportServiceImpl implements ReportService{
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
 
-
     // 보고서 작성
     @Override
     public void writeReport(CreateReportRequest createReportRequest) {
         reportRepository.save(
                 Report.builder()
+                        .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                         .title(createReportRequest.getTitle())
                         .description(createReportRequest.getDescription())
                         .languages(createReportRequest.getLanguages())
                         .type(createReportRequest.getType())
                         .access(createReportRequest.getAccess())
                         .grade(createReportRequest.getGrade())
+                        .isAccepted(0)
+                        .fileName(createReportRequest.getFileName())
                         .build()
         );
     }
@@ -56,15 +60,9 @@ public class ReportServiceImpl implements ReportService{
     @Override
     public ReportContentResponse viewReport(Integer reportId) {
 
-        boolean isLogined = false;
-        String email = "";
         boolean isMine = false;
-
-        // (드디어) 토큰에서 유저 가져오기
-        if(authenticationFacade.getUserEmail() != null) {
-            email = authenticationFacade.getUserEmail();
-            isLogined = true;
-        }
+        // 이메일 받아오기. 없으면 null이 들어갈껄?
+        String email = authenticationFacade.getUserEmail();
 
         // 보고서를 아이디로 찾기
         Report report = reportRepository.findById(reportId)
@@ -74,7 +72,7 @@ public class ReportServiceImpl implements ReportService{
         Team team = teamRepository.findByReportId(reportId)
                 .orElseThrow(TeamNotFoundException::new);
 
-        if(isLogined) {
+        if(email != null) {
             isMine = !memberRepository.findByTeamIdAndUserEmail(team.getId(), email).isEmpty();
 
             // 보고서를 볼 때 보는 보고서의 access가 ADMIN인지, 만약 admin이라면  현재 유저가 글쓴이가 맞는지 검사
@@ -87,8 +85,6 @@ public class ReportServiceImpl implements ReportService{
             }
         }
 
-        // 내 보고서인지 확인함
-
 
         List<Comment> comment = commentRepository.findAllByReportIdOrderByIdAsc(reportId);
         List<ReportCommentsResponse> commentsResponses = new ArrayList<>();
@@ -96,9 +92,9 @@ public class ReportServiceImpl implements ReportService{
         // 댓글 하나하나 담기ㅣ
         for (Comment co : comment) {
             User commentWriter;
-            if(isLogined) {
+            if(authenticationFacade.getUserEmail() != null) {
                 commentWriter = userRepository.findByEmail(co.getUserEmail())
-                        .orElseThrow(PermissionDeniedException::new);
+                        .orElseThrow(UserNotFoundException::new);
             }else {
                 throw new PermissionDeniedException();
             }
@@ -108,7 +104,7 @@ public class ReportServiceImpl implements ReportService{
                             .content(co.getContent())
                             .createdAt(co.getCreatedAt())
                             .userEmail(co.getUserEmail())
-                            .isMine(commentWriter.getEmail().equals(email))
+                            .isMine(commentWriter.getEmail().equals(authenticationFacade.getUserEmail()))
                             .build()
             );
         }
@@ -125,6 +121,17 @@ public class ReportServiceImpl implements ReportService{
                 .isMine(isMine)
                 .comments(commentsResponses)
                 .build();
+    }
+    public Integer updateReport(Integer boardId, String title, String description) {
+        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
+
+        Report report = reportRepository.findById(boardId).
+                orElseThrow(ReportNotFoundException::new);
+
+        reportRepository.save(report.update(title,description));
+
+        return boardId;
     }
 
 }

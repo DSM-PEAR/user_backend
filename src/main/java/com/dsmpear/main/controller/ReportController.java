@@ -20,7 +20,14 @@ public class ReportController {
     }
 
     @GetMapping("/{reportId}")
-    public ReportContentResponse getReportContent(@PathVariable("id") int reportId) {
+    public ReportContentResponse getReportContent(@PathVariable Integer reportId) {
         return getReportContent(reportId);
+    }
+
+    @PatchMapping("/{reportId}")
+    public Integer updateReport(@PathVariable Integer reportId,
+                                @RequestParam String title,
+                                @RequestParam String description) {
+        return reportService.updateReport(reportId,title,description);
     }
 }

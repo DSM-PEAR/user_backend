@@ -1,14 +1,18 @@
 package com.dsmpear.main.payload.request;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-public class CommentResponse {
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class CommentRequest {
     @NotNull
     private Long reportId;
-
-    @NotNull
-    private Long userId;
 
     @NotNull
     private String userEmail;
@@ -18,4 +22,6 @@ public class CommentResponse {
 
     @NotNull
     private String content;
+
+
 }

@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
 
 import com.dsmpear.main.entity.report.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,4 +33,9 @@ public class CreateReportRequest {
 
     @NotBlank
     private String description;
+
+    @NotNull
+    private String fileName;
+
+    private LocalDateTime createdAt;
 }
