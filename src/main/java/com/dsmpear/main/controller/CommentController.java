@@ -22,9 +22,9 @@ public class CommentController {
     public void deleteComment(@PathVariable Integer commentId) {
         commentService.deleteComment(commentId);
     }
-/*
+
     @PatchMapping
-    public void updateComment(@RequestParam) {
-        commentService.updateComment(com)
-    }*/
+    public void updateComment(@PathVariable Integer commentId, @RequestParam String description) {
+        commentService.updateComment(commentId, description);
+    }
 }

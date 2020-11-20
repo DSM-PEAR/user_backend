@@ -1,14 +1,12 @@
 package com.dsmpear.main.domain;
 
 import com.dsmpear.main.entity.member.MemberRepository;
-import com.dsmpear.main.entity.notice.Notice;
-import com.dsmpear.main.entity.notice.NoticeRepository;
 import com.dsmpear.main.entity.report.*;
 import com.dsmpear.main.entity.team.Team;
 import com.dsmpear.main.entity.team.TeamRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
-import com.dsmpear.main.payload.request.CreateReportRequest;
+import com.dsmpear.main.payload.request.ReportRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.jupiter.api.MethodOrderer;
@@ -91,7 +89,7 @@ public class ReportControllerTest {
     @WithMockUser(value = "test@dsm.hs.kr",password="11123")
     public void createTest() throws Exception {
 
-        CreateReportRequest request = CreateReportRequest.builder()
+        ReportRequest request = ReportRequest.builder()
                 .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .title("1. 이승윤 돼지")
                 .description("내애용은 이승윤 돼지")

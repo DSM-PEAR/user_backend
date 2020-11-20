@@ -2,7 +2,6 @@ package com.dsmpear.main.service.report;
 
 import com.dsmpear.main.entity.comment.Comment;
 import com.dsmpear.main.entity.comment.CommentRepository;
-import com.dsmpear.main.entity.member.Member;
 import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.Access;
 import com.dsmpear.main.entity.report.Report;
@@ -12,20 +11,18 @@ import com.dsmpear.main.entity.team.TeamRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.exceptions.*;
-import com.dsmpear.main.payload.request.CreateReportRequest;
+import com.dsmpear.main.payload.request.ReportRequest;
 import com.dsmpear.main.payload.response.ReportCommentsResponse;
 import com.dsmpear.main.payload.response.ReportContentResponse;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import com.dsmpear.main.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.implementation.bind.MethodDelegationBinder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -42,19 +39,21 @@ public class ReportServiceImpl implements ReportService{
 
     // 보고서 작성
     @Override
-    public void writeReport(CreateReportRequest createReportRequest) {
+    public void writeReport(ReportRequest reportRequest) {
+        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
         reportRepository.save(
                 Report.builder()
                         .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                        .title(createReportRequest.getTitle())
-                        .description(createReportRequest.getDescription())
-                        .languages(createReportRequest.getLanguages())
-                        .type(createReportRequest.getType())
-                        .access(createReportRequest.getAccess())
-                        .grade(createReportRequest.getGrade())
+                        .title(reportRequest.getTitle())
+                        .description(reportRequest.getDescription())
+                        .languages(reportRequest.getLanguages())
+                        .type(reportRequest.getType())
+                        .access(reportRequest.getAccess())
+                        .grade(reportRequest.getGrade())
                         .isAccepted(0)
-                        .field(createReportRequest.getField())
-                        .fileName(createReportRequest.getFileName())
+                        .field(reportRequest.getField())
+                        .fileName(reportRequest.getFileName())
                         .build()
         );
     }
@@ -125,14 +124,14 @@ public class ReportServiceImpl implements ReportService{
                 .comments(commentsResponses)
                 .build();
     }
-    public Integer updateReport(Integer boardId, String title, String description) {
+    public Integer updateReport(Integer boardId, ReportRequest reportRequest) {
         User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
         Report report = reportRepository.findByReportId(boardId).
                 orElseThrow(ReportNotFoundException::new);
 
-        reportRepository.save(report.update(title,description));
+        reportRepository.save(report.update(reportRequest));
 
         return boardId;
     }

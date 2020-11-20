@@ -1,6 +1,6 @@
 package com.dsmpear.main.controller;
 
-import com.dsmpear.main.payload.request.CreateReportRequest;
+import com.dsmpear.main.payload.request.ReportRequest;
 import com.dsmpear.main.payload.response.ReportContentResponse;
 import com.dsmpear.main.service.report.ReportService;
 import lombok.RequiredArgsConstructor;
@@ -15,20 +15,18 @@ public class ReportController {
     private final ReportService reportService;
 
     @PostMapping
-    public void writeReport(@RequestBody @Valid CreateReportRequest createReportRequest) {
-        reportService.writeReport(createReportRequest);
+    public void writeReport(@RequestBody @Valid ReportRequest reportRequest) {
+        reportService.writeReport(reportRequest);
     }
 
     @GetMapping("/{reportId}")
     public ReportContentResponse getReportContent(@PathVariable Integer reportId) {
-        return getReportContent(reportId);
+        return reportService.viewReport(reportId);
     }
 
     @PatchMapping("/{reportId}")
-    public Integer updateReport(@PathVariable Integer reportId,
-                                @RequestParam String title,
-                                @RequestParam String description) {
-        return reportService.updateReport(reportId,title,description);
+    public Integer updateReport(@PathVariable Integer reportId, @RequestBody ReportRequest reportRequest) {
+        return reportService.updateReport(reportId, reportRequest);
     }
 
     @DeleteMapping("{reportId}")

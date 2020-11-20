@@ -48,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Integer updateComment(Integer commentId, CommentRequest commentRequest) {
+    public Integer updateComment(Integer commentId, String content) {
         User user=userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
@@ -58,7 +58,7 @@ public class CommentServiceImpl implements CommentService {
             throw new PermissionDeniedException();
         }
 
-        commentRepository.save(comment.updateContent(commentRequest.getContent()));
+        commentRepository.save(comment.updateContent(content));
 
         return commentId;
     }

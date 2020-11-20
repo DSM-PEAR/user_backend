@@ -1,5 +1,6 @@
 package com.dsmpear.main.entity.report;
 
+import com.dsmpear.main.payload.request.ReportRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,9 +50,15 @@ public class Report {
     @Column(name = "file_name",nullable = false)
     private String fileName;
 
-    public Report update(String title, String description) {
-        this.title = title;
-        this.description = description;
+    public Report update(ReportRequest reportRequest) {
+        this.title = reportRequest.getTitle();
+        this.description = reportRequest.getDescription();
+        this.type = reportRequest.getType();
+        this.access = reportRequest.getAccess();
+        this.field = reportRequest.getField();
+        this.grade = reportRequest.getGrade();
+        this.fileName = reportRequest.getFileName();
+        this.languages = reportRequest.getLanguages();
         return this;
     }
 }

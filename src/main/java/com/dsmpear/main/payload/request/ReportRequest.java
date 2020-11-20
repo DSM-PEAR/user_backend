@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class CreateReportRequest {
+public class ReportRequest {
     @NotNull
     private Grade grade;
 
@@ -35,9 +35,6 @@ public class CreateReportRequest {
 
     @NotNull
     private String fileName;
-
-    @NotNull
-    private Integer isAccpeted;
 
     private LocalDateTime createdAt;
 }
