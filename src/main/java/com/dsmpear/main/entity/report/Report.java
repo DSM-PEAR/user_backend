@@ -35,6 +35,9 @@ public class Report {
     private Access access;
 
     @Column(nullable = false)
+    private Field field;
+
+    @Column(nullable = false)
     private Type type;
 
     @Column(name = "is_accepted", nullable = false)

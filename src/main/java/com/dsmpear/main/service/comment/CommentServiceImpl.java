@@ -27,20 +27,20 @@ public class CommentServiceImpl implements CommentService {
     private final UserRepository userRepository;
 
     @Override
-    public void createComment(Integer reportId, CommentRequest commentRequest) {
+    public void createComment(CommentRequest commentRequest) {
         String email = authenticationFacade.getUserEmail();
         if(email == null) {
             throw new PermissionDeniedException();
         }
 
 
-        reportRepository.findById(reportId)
+        reportRepository.findById(commentRequest.getReportId())
                 .orElseThrow(ReportNotFoundException::new);
         commentRepository.save(
                 Comment.builder()
                     .content(commentRequest.getContent())
                     .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                    .reportId(reportId)
+                    .reportId(commentRequest.getReportId())
                     .userEmail(email)
                     .build()
         );

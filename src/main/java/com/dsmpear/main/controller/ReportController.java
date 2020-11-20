@@ -30,4 +30,10 @@ public class ReportController {
                                 @RequestParam String description) {
         return reportService.updateReport(reportId,title,description);
     }
+
+    @DeleteMapping("{reportId}")
+    public void deleteReport(@PathVariable Integer reportId) {
+        reportService.deleteReport(reportId);
+    }
+
 }

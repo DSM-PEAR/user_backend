@@ -77,7 +77,7 @@ public class TeamServiceImpl implements TeamService{
 
            Team team=teamRepository.save(
                    Team.builder()
-                          .reportId(report.getId())
+                          .reportId(report.getReportId())
                           .userEmail(user.getEmail())
                           .name(Optional.ofNullable(teamRequest.getName()).orElseGet(user::getName))
                           .build()

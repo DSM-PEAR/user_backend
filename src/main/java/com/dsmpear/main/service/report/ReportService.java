@@ -11,4 +11,7 @@ public interface ReportService {
     ReportContentResponse viewReport(Integer reportId);
 
     public Integer updateReport(Integer boardId, String title, String description);
+
+    public void deleteReport(Integer reportId);
+
 }

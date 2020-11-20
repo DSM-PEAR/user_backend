@@ -16,6 +16,7 @@ import com.dsmpear.main.payload.request.CreateReportRequest;
 import com.dsmpear.main.payload.response.ReportCommentsResponse;
 import com.dsmpear.main.payload.response.ReportContentResponse;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
+import com.dsmpear.main.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
 import net.bytebuddy.implementation.bind.MethodDelegationBinder;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class ReportServiceImpl implements ReportService{
     private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
+    private final CommentService commentService;
 
     // 보고서 작성
     @Override
@@ -51,6 +53,7 @@ public class ReportServiceImpl implements ReportService{
                         .access(createReportRequest.getAccess())
                         .grade(createReportRequest.getGrade())
                         .isAccepted(0)
+                        .field(createReportRequest.getField())
                         .fileName(createReportRequest.getFileName())
                         .build()
         );
@@ -126,12 +129,27 @@ public class ReportServiceImpl implements ReportService{
         User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
-        Report report = reportRepository.findById(boardId).
+        Report report = reportRepository.findByReportId(boardId).
                 orElseThrow(ReportNotFoundException::new);
 
         reportRepository.save(report.update(title,description));
 
         return boardId;
     }
+
+    public void deleteReport(Integer reportId) {
+        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
+
+        Report report = reportRepository.findByReportId(reportId)
+                .orElseThrow(ReportNotFoundException::new);
+
+        for(Comment comment : commentRepository.findAllByReportIdOrderByIdAsc(reportId)) {
+            commentService.deleteComment(comment.getId());
+        }
+
+        reportRepository.deleteById(reportId);
+    }
+
 
 }

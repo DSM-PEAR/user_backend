@@ -1,6 +1,7 @@
 package com.dsmpear.main.payload.response;
 
 import com.dsmpear.main.entity.report.Access;
+import com.dsmpear.main.entity.report.Field;
 import com.dsmpear.main.entity.report.Grade;
 import com.dsmpear.main.entity.report.Type;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -29,6 +30,8 @@ public class ReportContentResponse {
     private Grade grade;
 
     private Access access;
+
+    private Field field;
 
     private boolean isMine;
 

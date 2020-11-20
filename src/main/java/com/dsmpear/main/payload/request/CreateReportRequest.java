@@ -1,9 +1,6 @@
 package com.dsmpear.main.payload.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -13,8 +10,7 @@ import com.dsmpear.main.entity.report.*;
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 public class CreateReportRequest {
     @NotNull
     private Grade grade;
@@ -24,6 +20,9 @@ public class CreateReportRequest {
 
     @NotNull
     private Type type;
+
+    @NotNull
+    private Field field;
 
     @NotBlank
     private String title;
@@ -36,6 +35,9 @@ public class CreateReportRequest {
 
     @NotNull
     private String fileName;
+
+    @NotNull
+    private Integer isAccpeted;
 
     private LocalDateTime createdAt;
 }

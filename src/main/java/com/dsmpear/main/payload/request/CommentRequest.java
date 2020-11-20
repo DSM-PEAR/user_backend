@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CommentRequest {
     @NotNull
-    private Long reportId;
+    private Integer reportId;
 
     @NotNull
     private String userEmail;
@@ -22,6 +22,5 @@ public class CommentRequest {
 
     @NotNull
     private String content;
-
 
 }
