@@ -144,7 +144,7 @@ public class TeamControllerTest {
                         .languages("C, JAVA")
                         .access(Access.ADMIN)
                         .build()
-        ).getId();
+        ).getReportId();
     }
 
     private Integer createTeam(Integer reportId) {
