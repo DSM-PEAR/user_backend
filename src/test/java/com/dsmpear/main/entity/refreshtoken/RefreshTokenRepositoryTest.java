@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {EmbeddedRedisConfig.class, MainApplication.class})
-@ActiveProfiles("dev")
+@ActiveProfiles("test")
 public class RefreshTokenRepositoryTest {
 
     @Autowired
