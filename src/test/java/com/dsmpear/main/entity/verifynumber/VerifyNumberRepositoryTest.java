@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {MainApplication.class, EmbeddedRedisConfig.class})
-@ActiveProfiles("test")
+@ActiveProfiles({"test"})
 public class VerifyNumberRepositoryTest {
     @Autowired
     private VerifyNumberRepository verifyNumberRepository;
