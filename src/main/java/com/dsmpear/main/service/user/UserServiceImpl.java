@@ -5,6 +5,7 @@ import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.entity.verifynumber.VerifyNumber;
 import com.dsmpear.main.exceptions.InvalidEmailAddressException;
 import com.dsmpear.main.exceptions.UserIsAlreadyRegisteredException;
+import com.dsmpear.main.exceptions.UserNotFoundException;
 import com.dsmpear.main.payload.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
