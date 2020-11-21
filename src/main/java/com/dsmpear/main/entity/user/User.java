@@ -29,4 +29,8 @@ public class User {
     public void authenticatedSuccess() {
         this.authStatus = true;
     }
+
+    public void setSelfIntro(String intro){
+        this.selfIntro = intro;
+    }
 }

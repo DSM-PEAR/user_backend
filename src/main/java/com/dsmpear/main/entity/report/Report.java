@@ -1,5 +1,6 @@
 package com.dsmpear.main.entity.report;
 
+import com.dsmpear.main.payload.request.ReportRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,16 +9,16 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter
+@Entity
 @Table(name = "report_tbl")
 @Builder
-@Entity
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer reportId;
 
     @Column(nullable = false)
     private String title;
@@ -25,7 +26,7 @@ public class Report {
     @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
@@ -35,12 +36,29 @@ public class Report {
     private Access access;
 
     @Column(nullable = false)
-    private Type type;
+    private Field field;
 
     @Column(nullable = false)
+    private Type type;
+
+    @Column(name = "is_accepted", nullable = false)
     private int isAccepted;
 
     @Column(nullable = false)
     private String languages;
 
+    @Column(name = "file_name",nullable = false)
+    private String fileName;
+
+    public Report update(ReportRequest reportRequest) {
+        this.title = reportRequest.getTitle();
+        this.description = reportRequest.getDescription();
+        this.type = reportRequest.getType();
+        this.access = reportRequest.getAccess();
+        this.field = reportRequest.getField();
+        this.grade = reportRequest.getGrade();
+        this.fileName = reportRequest.getFileName();
+        this.languages = reportRequest.getLanguages();
+        return this;
+    }
 }
