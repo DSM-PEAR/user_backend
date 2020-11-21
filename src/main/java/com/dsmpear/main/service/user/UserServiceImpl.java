@@ -34,4 +34,25 @@ public class UserServiceImpl implements UserService {
                     .build()
         );
     }
+<<<<<<< HEAD
 }
+=======
+
+    @Override
+    public void verify(String number, String email) {
+        VerifyNumber verifyNumber = numberRepository.findByEmail(email)
+                .orElseThrow(NumberNotFoundException::new);
+
+        if (!verifyNumber.verifyNumber(number))
+            throw new InvalidVerifyNumberException();
+
+        userRepository.findByEmail(email)
+                .map(user -> {
+                    user.authenticatedSuccess();
+                    return user;
+                })
+                .map(userRepository::save)
+                .orElseThrow(UserNotFoundException::new);
+    }
+}
+>>>>>>> develop
