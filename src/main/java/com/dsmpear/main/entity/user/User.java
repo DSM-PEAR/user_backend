@@ -25,11 +25,8 @@ public class User {
 
     @Column(name = "auth_status", nullable = false)
     private Boolean authStatus;
-<<<<<<< HEAD
-=======
 
     public void authenticatedSuccess() {
         this.authStatus = true;
     }
->>>>>>> develop
 }

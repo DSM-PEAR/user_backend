@@ -2,6 +2,7 @@ package com.dsmpear.main.service.user;
 
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
+import com.dsmpear.main.entity.verifynumber.VerifyNumber;
 import com.dsmpear.main.exceptions.InvalidEmailAddressException;
 import com.dsmpear.main.exceptions.UserIsAlreadyRegisteredException;
 import com.dsmpear.main.payload.request.RegisterRequest;
@@ -34,9 +35,6 @@ public class UserServiceImpl implements UserService {
                     .build()
         );
     }
-<<<<<<< HEAD
-}
-=======
 
     @Override
     public void verify(String number, String email) {
@@ -55,4 +53,3 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(UserNotFoundException::new);
     }
 }
->>>>>>> develop
