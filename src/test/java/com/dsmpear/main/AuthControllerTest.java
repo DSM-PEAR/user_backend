@@ -23,8 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
+@SpringBootTest(classes = MainApplication.class)
+@ActiveProfiles({"test"})
 public class AuthControllerTest {
     @Autowired
     private WebApplicationContext context;

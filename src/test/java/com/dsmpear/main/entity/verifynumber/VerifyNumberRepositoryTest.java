@@ -1,7 +1,6 @@
 package com.dsmpear.main.entity.verifynumber;
 
 import com.dsmpear.main.MainApplication;
-import com.dsmpear.main.config.EmbeddedRedisConfig;
 import com.dsmpear.main.exceptions.UserNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {MainApplication.class, EmbeddedRedisConfig.class})
-@ActiveProfiles("dev")
+@SpringBootTest(classes = {MainApplication.class})
+@ActiveProfiles({"test"})
 public class VerifyNumberRepositoryTest {
     @Autowired
     private VerifyNumberRepository verifyNumberRepository;
