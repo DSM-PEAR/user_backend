@@ -14,9 +14,9 @@ import javax.validation.Valid;
 @RequestMapping("/report")
 public class ReportController {
     private final ReportService reportService;
-
+/* 공사중..
     @GetMapping
-    public ApplicationListResponse getReportList(@RequestBody @Valid )  
+    public ApplicationListResponse getReportList(@RequestBody @Valid )*/
     @PostMapping
     public void writeReport(@RequestBody @Valid ReportRequest reportRequest) {
         reportService.writeReport(reportRequest);
