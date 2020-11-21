@@ -1,0 +1,27 @@
+language: java
+jdk:
+- openjdk11
+
+env:
+  global:
+    - CODECOV_TOKEN="ab6169c8-6c03-48e5-a0f5-d5e40401f0cb"
+
+branches:
+  only:
+  - develop
+cache:
+  directories:
+  - "$HOME/.m2/repository"
+  - "$HOME/.gradle"
+script:
+  - ./gradlew clean build
+  - ./gradlew jacocoTestReport
+
+before_install:
+  - chmod +x gradlew
+
+after_success:
+- bash <(curl -s https://codecov.io/bash)
+
+notifications:
+  slack: pear-ldh1042:mCNcIVNrZs0gIBnTWbi2Sf4C
