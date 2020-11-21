@@ -10,7 +10,10 @@ import org.springframework.data.redis.core.TimeToLive;
 import org.springframework.data.redis.core.index.Indexed;
 
 @RedisHash(value = "verify_number", timeToLive = 60 * 3)
-@Getter @AllArgsConstructor @NoArgsConstructor @Builder
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class VerifyNumber {
     @Id
     private Integer id;

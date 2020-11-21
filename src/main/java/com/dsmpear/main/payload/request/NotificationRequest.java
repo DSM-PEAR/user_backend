@@ -5,4 +5,5 @@ import lombok.Getter;
 @Getter
 public class NotificationRequest {
     private String context;
+    private String target_id;
 }
