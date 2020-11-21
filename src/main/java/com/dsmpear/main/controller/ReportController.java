@@ -1,6 +1,7 @@
 package com.dsmpear.main.controller;
 
 import com.dsmpear.main.payload.request.ReportRequest;
+import com.dsmpear.main.payload.response.ApplicationListResponse;
 import com.dsmpear.main.payload.response.ReportContentResponse;
 import com.dsmpear.main.service.report.ReportService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,8 @@ import javax.validation.Valid;
 public class ReportController {
     private final ReportService reportService;
 
+    @GetMapping
+    public ApplicationListResponse getReportList(@RequestBody @Valid )  
     @PostMapping
     public void writeReport(@RequestBody @Valid ReportRequest reportRequest) {
         reportService.writeReport(reportRequest);
