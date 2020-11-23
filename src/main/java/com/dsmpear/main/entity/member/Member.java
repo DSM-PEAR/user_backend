@@ -26,5 +26,6 @@ public class Member {
     private String userEmail;
 
     @ManyToOne
+    @JoinColumn(name = "team")
     private Team team;
 }

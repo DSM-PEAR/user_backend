@@ -4,21 +4,22 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
-import javax.persistence.*;
+import java.io.Serializable;
 
-@Entity
-@Table(name = "refresh_token")
+@RedisHash(value = "refresh_token")
 @NoArgsConstructor @AllArgsConstructor @Getter
 @Builder
-public class RefreshToken {
+public class RefreshToken implements Serializable {
     @Id
     private String email;
 
-    @Column(nullable = false)
+    @Indexed
     private String refreshToken;
 
-    @Column(nullable = false)
     private Long refreshExp;
 
     public RefreshToken update(String refreshToken, Long refreshExp) {

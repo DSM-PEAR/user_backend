@@ -1,17 +1,9 @@
 package com.dsmpear.main.domain;
 
-import com.dsmpear.main.entity.member.Member;
-import com.dsmpear.main.entity.member.MemberRepository;
-import com.dsmpear.main.entity.team.Team;
-import com.dsmpear.main.entity.team.TeamRepository;
+import com.dsmpear.main.entity.report.ReportRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
-import com.dsmpear.main.payload.request.MemberRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,16 +18,15 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class MemberControllerTest {
+public class MyPageControllerTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -44,18 +35,15 @@ public class MemberControllerTest {
     private UserRepository userRepository;
 
     @Autowired
-    private TeamRepository teamRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ReportRepository reportRepository;
 
     private MockMvc mvc;
 
     @PostConstruct
-    public void setUp(){
+    public void setUp() {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .build();
@@ -65,62 +53,35 @@ public class MemberControllerTest {
                         .email("test@dsm.hs.kr")
                         .name("홍길동")
                         .password(passwordEncoder.encode("1234"))
+                        .selfIntro("")
                         .authStatus(true)
                         .build()
         );
-
         userRepository.save(
                 User.builder()
                         .email("tset@dsm.hs.kr")
                         .name("고길동")
                         .password(passwordEncoder.encode("1234"))
+                        .selfIntro("hehehehehello")
                         .authStatus(true)
-                        .build()
-        );
-
-        teamRepository.save(
-                Team.builder()
-                        .name("랄랄라")
-                        .reportId(1)
-                        .userEmail("test@dsm.hs.kr")
-                        .build()
-        );
-
-        memberRepository.save(
-                Member.builder()
-                        .teamId(1)
-                        .userEmail("test@dsm.hs.kr")
                         .build()
         );
     }
 
     @Test
-    @Order(1)
-    @WithMockUser(username = "test@dsm.hs.kr",password = "1111")
-    public void addMember() throws Exception {
-        MemberRequest request = new MemberRequest(1,"tset@dsm.hs.kr");
+    @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
+    public void  getMypage() throws Exception{
+        mvc.perform(get("/user/profile/tset@dsm.hs.kr"))
+                .andExpect(status().isOk()).andDo(print());
+    }
 
-        mvc.perform(post("/member").
-                content(new ObjectMapper().writeValueAsString(request))
+    @Test
+    @WithMockUser(value = "test@dsm.hs.kr",password = "1111")
+    public void  modifyName() throws Exception{
+        mvc.perform(put("/user/profile/test@dsm.hs.kr")
+                .param("intro","Hi I'm lullulalla")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andDo(print());
     }
 
-    /*@Test
-    @Order(2)
-    @WithMockUser(value = "test@dsm.hs.kr",password = "1111")
-    void deleteMember() throws Exception {
-
-        mvc.perform(delete("/member/2"))
-                .andExpect(status().isOk()).andDo(print());
-    }*/
-
-    @Test
-    @Order(2)
-    @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
-    public void deleteMember() throws Exception{
-
-        mvc.perform(delete("/member/1"))
-                .andExpect(status().isOk()).andDo(print());
-    }
 }

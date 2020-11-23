@@ -9,9 +9,10 @@ import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.payload.request.TeamRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,11 +25,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.annotation.PostConstruct;
-
 import java.time.LocalDateTime;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -59,7 +58,7 @@ public class TeamControllerTest {
 
     private MockMvc mvc;
 
-    @PostConstruct
+    @Before
     public void setUp(){
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
@@ -70,6 +69,7 @@ public class TeamControllerTest {
                         .email("test@dsm.hs.kr")
                         .name("홍길동")
                         .password(passwordEncoder.encode("1234"))
+                        .authStatus(true)
                         .build()
         );
 
@@ -78,48 +78,91 @@ public class TeamControllerTest {
                         .email("tset@dsm.hs.kr")
                         .name("고길동")
                         .password(passwordEncoder.encode("1234"))
-                        .build()
-        );
-
-        reportRepository.save(
-                Report.builder()
-                        .title("눈누난나")
-                        .description("하잉")
-                        .createdAt(LocalDateTime.now())
-                        .grade(Grade.GRADE1)
-                        .access(Access.ADMIN)
-                        .type(Type.TEAM)
-                        .isAccepted(1)
-                        .languages("C,Java")
-                .build()
-        );
-
-        teamRepository.save(
-                Team.builder()
-                        .reportId(1)
-                        .name("랄랄라")
-                        .userEmail("test@dsm.hs.kr")
-                        .build()
-        );
-
-        memberRepository.save(
-                Member.builder()
-                        .teamId(1)
-                        .userEmail("test@dsm.hs.kr")
+                        .authStatus(true)
                         .build()
         );
     }
 
+    @After
+    public void after() {
+        memberRepository.deleteAll();
+        teamRepository.deleteAll();
+        reportRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @Test
+    @Order(1)
     @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
-    void  modifyName() throws Exception{
+    public void addTeam() throws Exception{
 
-        TeamRequest request = new TeamRequest(1,"룰룰루");
+        TeamRequest team = TeamRequest.builder()
+                .reportId(writeReport())
+                .name("second")
+                .build();
 
-        mvc.perform(patch("/team").
-                content(new ObjectMapper().writeValueAsString(request))
+        mvc.perform(post("/team").
+                content(new ObjectMapper().writeValueAsString(team))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
+    @Order(2)
+    @WithMockUser(value = "test@dsm.hs.kr",password = "1111")
+    public void  modifyName() throws Exception{
+
+        int teamId = createTeam(writeReport());
+        addMember(teamId);
+        mvc.perform(patch("/team/"+teamId)
+                .param("name", "ffirst")
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
+    @Order(3)
+    @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
+    public void getTeam() throws Exception{
+
+        int reportId = writeReport();
+        createTeam(reportId);
+        mvc.perform(get("/team/"+reportId)).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+
+    }
+
+    private Integer writeReport() {
+        return reportRepository.save(
+                Report.builder()
+                        .title("title")
+                        .description("description")
+                        .createdAt(LocalDateTime.now())
+                        .type(Type.TEAM)
+                        .grade(Grade.GRADE1)
+                        .isAccepted(1)
+                        .languages("C, JAVA")
+                        .access(Access.ADMIN)
+                        .build()
+        ).getReportId();
+    }
+
+    private Integer createTeam(Integer reportId) {
+        return teamRepository.save(
+                Team.builder()
+                        .reportId(reportId)
+                        .name("first")
+                        .userEmail("tset@dsm.hs.kr")
+                        .build()
+        ).getId();
+    }
+
+    private Integer addMember(Integer teamId) {
+        return memberRepository.save(
+                Member.builder()
+                        .teamId(teamId)
+                        .userEmail("test@dsm.hs.kr")
+                        .build()
+        ).getId();
     }
 }
