@@ -71,14 +71,14 @@ public class MyPageControllerTest {
     @Test
     @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
     public void  getMypage() throws Exception{
-        mvc.perform(get("/user/profile/tset@dsm.hs.kr"))
+        mvc.perform(get("/user/profile"))
                 .andExpect(status().isOk()).andDo(print());
     }
 
     @Test
     @WithMockUser(value = "test@dsm.hs.kr",password = "1111")
     public void  modifyName() throws Exception{
-        mvc.perform(put("/user/profile/test@dsm.hs.kr")
+        mvc.perform(put("/user/profile")
                 .param("intro","Hi I'm lullulalla")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andDo(print());

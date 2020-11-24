@@ -1,8 +1,11 @@
 package com.dsmpear.main.controller;
 
-import com.dsmpear.main.payload.response.MyPageResponse;
+import com.dsmpear.main.payload.response.ApplicationListResponse;
+import com.dsmpear.main.payload.response.ProfilePageResponse;
 import com.dsmpear.main.service.mypage.mypage.MyPageService;
+import com.dsmpear.main.service.mypage.mypageReportList.MyPageReportListService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,16 +14,21 @@ import org.springframework.web.bind.annotation.*;
 public class MyPageController {
 
     private final MyPageService myPageService;
+    private final MyPageReportListService myPageReportListService;
 
-    @GetMapping("/{userEmail}")
-    public MyPageResponse getMyPage(@PathVariable String userEmail){
-        return myPageService.getMypage(userEmail);
+    @GetMapping
+    public ProfilePageResponse getMyPage(){
+        return myPageService.getMyPage();
     }
 
-    @PutMapping("/{userEmail}")
-    public void setSelfIntro(
-            @PathVariable String userEmail,
-            @RequestParam String intro){
-        myPageService.setSelfIntro(userEmail, intro);
+    @PutMapping
+    public void setSelfIntro(@RequestParam String intro){
+        myPageService.setSelfIntro(intro);
     }
+
+    @GetMapping
+    public ApplicationListResponse getReport(Pageable page){
+        return myPageReportListService.getReport(page);
+    }
+
 }
