@@ -24,7 +24,7 @@ public class ProfileController {
         return profileService.getProfile(userEmail);
     }
 
-    @GetMapping("/{userEmail}")
+    @GetMapping("/report/{userEmail}")
     public ApplicationListResponse getReport(@PathVariable String userEmail, Pageable page){
         return profileReportListService.getReport(userEmail, page);
     }

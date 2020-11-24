@@ -99,7 +99,7 @@ public class ReportControllerTest {
                 .grade(Grade.GRADE2)
                 .field(Field.AI)
                 .fileName("이승윤 돼지")
-                .isAccpeted(1)
+//                .isAccpeted(1)
                 .build();
 
         mvc.perform(post("/report").

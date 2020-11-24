@@ -26,7 +26,7 @@ public class MyPageController {
         myPageService.setSelfIntro(intro);
     }
 
-    @GetMapping
+    @GetMapping("/report")
     public ApplicationListResponse getReport(Pageable page){
         return myPageReportListService.getReport(page);
     }
