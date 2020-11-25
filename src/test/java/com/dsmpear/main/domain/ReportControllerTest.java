@@ -1,5 +1,6 @@
 package com.dsmpear.main.domain;
 
+import com.dsmpear.main.entity.member.Member;
 import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.*;
 import com.dsmpear.main.entity.team.Team;
@@ -8,6 +9,8 @@ import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.payload.request.ReportRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -58,7 +61,7 @@ public class ReportControllerTest {
 
     private MockMvc mvc;
 
-    @PostConstruct
+    @Before
     public void setUp() {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
@@ -69,6 +72,7 @@ public class ReportControllerTest {
                         .email("test@dsm.hs.kr")
                         .name("홍길동")
                         .password(passwordEncoder.encode("1234"))
+                        .authStatus(true)
                         .build()
         );
 
@@ -77,17 +81,25 @@ public class ReportControllerTest {
                         .email("test1@dsm.hs.kr")
                         .name("고길동")
                         .password(passwordEncoder.encode("1234"))
+                        .authStatus(true)
                         .build()
         );
 
 
     }
 
+    @After
+    public void after() {
+        memberRepository.deleteAll();
+        teamRepository.deleteAll();
+        reportRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @Test
     @Order(1)
-    @WithMockUser(value = "test@dsm.hs.kr",password="11123")
-    public void createTest() throws Exception {
+    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
+    public void createReportTest() throws Exception {
 
         ReportRequest request = ReportRequest.builder()
                 .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
@@ -97,22 +109,82 @@ public class ReportControllerTest {
                 .type(Type.TEAM)
                 .access(Access.EVERY)
                 .grade(Grade.GRADE2)
+                .isAccepted(0)
                 .field(Field.AI)
                 .fileName("이승윤 돼지")
-//                .isAccpeted(1)
                 .build();
 
-        mvc.perform(post("/report").
-                content(new ObjectMapper().writeValueAsString(request))
+        mvc.perform(post("/report")
+                .content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andDo(print());
     }
 
-    private Integer createTeam() throws Exception {
+    @Test
+    @Order(1)
+    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
+    public void getReportTest() throws Exception {
+
+        Integer reportId = createReport();
+
+        Integer teamId = createTeam(reportId);
+
+        createMember(teamId);
+        createMember(teamId);
+
+        mvc.perform(get("/report/"+reportId)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
+    @Order(1)
+    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
+    public void updateReportTest() throws Exception {
+
+        Integer reportId = createReport();
+
+        ReportRequest request = ReportRequest.builder()
+                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                .title("2. 이승윤 돼지")
+                .description("2째 돼지 이승윤")
+                .languages("돼지")
+                .type(Type.TEAM)
+                .access(Access.USER)
+                .grade(Grade.GRADE1)
+                .field(Field.AI)
+                .fileName("돼지")
+                .isAccepted(1)
+                .build();
+
+        mvc.perform(patch("/report/"+reportId)
+                .content(new ObjectMapper().writeValueAsString(request)))
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
+    @Order(1)
+    @WithMockUser(value = "tset@dsm.hs.kr",password="1234")
+    public void deleteReportTest() throws Exception {
+        Integer reportId = createReport();
+        createMember(createTeam(reportId));
+
+        mvc.perform(delete("/report/"+reportId))
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+    private Integer createTeam(Integer reportId) throws Exception {
         return Team.builder()
-                .name("이승유 돼지")
+                .name("이승윤 돼지")
                 .reportId(1)
                 .userEmail("test@dsm.hs.kr")
+                .build().getId();
+    }
+
+    private Integer createMember(Integer teamId) throws Exception {
+        return Member.builder()
+                .teamId(teamId)
+                .userEmail("tset@dsm.hs.kr")
                 .build().getId();
     }
 
@@ -129,6 +201,7 @@ public class ReportControllerTest {
                 .field(Field.AI)
                 .fileName("이승윤 돼지")
                 .reportId(1)
+                .isAccepted(0)
                 .build().getReportId();
     }
 

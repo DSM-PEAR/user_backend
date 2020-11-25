@@ -61,6 +61,7 @@ public class ReportServiceImpl implements ReportService{
                         .fileName(reportRequest.getFileName())
                         .build()
         );
+        System.out.println(reportRequest);
     }
 
     // 보고서 보기

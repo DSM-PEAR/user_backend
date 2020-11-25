@@ -22,7 +22,9 @@ public class ReportController {
                                                  Pageable page) {
         return reportService.searchReport(page,type,query);
     }
+
     @PostMapping
+    @ResponseBody
     public void writeReport(@RequestBody @Valid ReportRequest reportRequest) {
         reportService.writeReport(reportRequest);
     }

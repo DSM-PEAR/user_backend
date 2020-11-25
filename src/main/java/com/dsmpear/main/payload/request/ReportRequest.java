@@ -37,4 +37,7 @@ public class ReportRequest {
     private String fileName;
 
     private LocalDateTime createdAt;
+
+    @NotNull
+    private  Integer isAccepted;
 }
