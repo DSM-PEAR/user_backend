@@ -13,5 +13,5 @@ import java.util.Optional;
 public interface ReportRepository extends CrudRepository<Report,Integer> {
     Optional<Report> findByReportId(Integer reportId);
     List<Report> findByAccess(Access access);
-    Page<Report> findAllBy(Pageable pageable);
+    Page<Report> findAllBy(Pageable page);
 }
