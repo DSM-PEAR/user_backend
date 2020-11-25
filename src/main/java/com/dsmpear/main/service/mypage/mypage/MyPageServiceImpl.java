@@ -28,11 +28,12 @@ public class MyPageServiceImpl implements MyPageService {
                 .userName(user.getName())
                 .userEmail(user.getEmail())
                 .selfIntro(user.getSelfIntro())
+                .gitHub(user.getGitHub())
                 .build();
     }
 
     @Override
-    public void setSelfIntro(String intro) {
+    public void setSelfIntro(String intro, String gitHub) {
 
         User student = userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
@@ -41,6 +42,7 @@ public class MyPageServiceImpl implements MyPageService {
                 .orElseThrow(UserNotAccessibleException::new);
 
         user.setSelfIntro(intro);
+        user.setGitHub(gitHub);
 
     }
 }

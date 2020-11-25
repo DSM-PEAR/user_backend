@@ -22,8 +22,8 @@ public class MyPageController {
     }
 
     @PutMapping
-    public void setSelfIntro(@RequestParam String intro){
-        myPageService.setSelfIntro(intro);
+    public void setSelfIntro(@RequestParam String intro, @RequestParam String gitHub){
+        myPageService.setSelfIntro(intro, gitHub);
     }
 
     @GetMapping("/report")

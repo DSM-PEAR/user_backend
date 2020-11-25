@@ -13,4 +13,6 @@ public class ProfilePageResponse {
 
     private String selfIntro;
 
+    private String gitHub;
+
 }

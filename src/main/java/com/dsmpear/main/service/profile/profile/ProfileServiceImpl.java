@@ -24,6 +24,7 @@ public class ProfileServiceImpl implements ProfileService {
                 .userName(user.getName())
                 .userEmail(user.getEmail())
                 .selfIntro(user.getSelfIntro())
+                .gitHub(user.getGitHub())
                 .build();
     }
 }

@@ -1,6 +1,7 @@
 package com.dsmpear.main.domain;
 
 import com.dsmpear.main.entity.report.ReportRepository;
+import com.dsmpear.main.entity.team.TeamRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import org.junit.After;
@@ -36,6 +37,9 @@ public class ProfileControllerTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private TeamRepository teamRepository;
 
     private MockMvc mvc;
 
@@ -78,4 +82,98 @@ public class ProfileControllerTest {
     }
 
     //권한에 따라 보고서 목록 보여주기
+    /*@Test
+    @WithMockUser(value = "test@dsm.hs.kr", password = "1111")
+    public void  getReportList() throws Exception{
+
+        createTeam(writeReportAdmin());
+        createTeam(writeReportEvery());
+        createTeam(writeReportEvery2());
+        createTeam(writeReportUser());
+
+        mvc.perform(get("/user/profile/report"))
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+    private Integer writeReportUser() {
+        return reportRepository.save(
+                Report.builder()
+                        .reportId(1)
+                        .title("title")
+                        .description("description")
+                        .createdAt(LocalDateTime.now())
+                        .type(Type.TEAM)
+                        .grade(Grade.GRADE1)
+                        .isAccepted(0)
+                        .languages("C, JAVA")
+                        .access(Access.ADMIN)
+                        .field(Field.AI)
+                        .fileName("file")
+                        .build()
+        ).getReportId();
+    }
+
+    private Integer writeReportAdmin() {
+        return reportRepository.save(
+                Report.builder()
+                        .reportId(2)
+                        .title("title")
+                        .description("description")
+                        .createdAt(LocalDateTime.now())
+                        .type(Type.TEAM)
+                        .grade(Grade.GRADE1)
+                        .isAccepted(1)
+                        .languages("C, JAVA")
+                        .access(Access.ADMIN)
+                        .field(Field.WEB)
+                        .fileName("file")
+                        .build()
+        ).getReportId();
+    }
+
+    private Integer writeReportEvery() {
+        return reportRepository.save(
+                Report.builder()
+                        .reportId(3)
+                        .title("title")
+                        .description("description")
+                        .createdAt(LocalDateTime.now())
+                        .type(Type.TEAM)
+                        .grade(Grade.GRADE1)
+                        .isAccepted(1)
+                        .languages("C, JAVA")
+                        .access(Access.ADMIN)
+                        .field(Field.APP)
+                        .fileName("file")
+                        .build()
+        ).getReportId();
+    }
+
+    private Integer writeReportEvery2() {
+        return reportRepository.save(
+                Report.builder()
+                        .reportId(4)
+                        .title("title")
+                        .description("description")
+                        .createdAt(LocalDateTime.now())
+                        .type(Type.TEAM)
+                        .grade(Grade.GRADE1)
+                        .isAccepted(2)
+                        .languages("C, JAVA")
+                        .access(Access.ADMIN)
+                        .field(Field.EMBEDDED)
+                        .fileName("file")
+                        .build()
+        ).getReportId();
+    }
+
+    private Integer createTeam(Integer reportId) {
+        return teamRepository.save(
+                Team.builder()
+                        .name("랄랄라")
+                        .reportId(reportId)
+                        .userEmail("test@dsm.hs.kr")
+                        .build()
+        ).getId();
+    }*/
 }

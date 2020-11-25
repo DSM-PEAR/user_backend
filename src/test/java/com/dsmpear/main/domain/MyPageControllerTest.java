@@ -1,8 +1,7 @@
 package com.dsmpear.main.domain;
 
 import com.dsmpear.main.entity.member.MemberRepository;
-import com.dsmpear.main.entity.report.*;
-import com.dsmpear.main.entity.team.Team;
+import com.dsmpear.main.entity.report.ReportRepository;
 import com.dsmpear.main.entity.team.TeamRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
@@ -20,8 +19,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -90,6 +87,7 @@ public class MyPageControllerTest {
 
         mvc.perform(put("/user/profile")
                 .param("intro", "hihihihi")
+                .param("gitHub","https://github.com/syxxn")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andDo(print());
     }

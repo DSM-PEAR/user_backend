@@ -4,5 +4,5 @@ import com.dsmpear.main.payload.response.ProfilePageResponse;
 
 public interface MyPageService {
     ProfilePageResponse getMyPage();
-    void setSelfIntro(String intro);
+    void setSelfIntro(String intro, String gitHub);
 }
