@@ -12,11 +12,16 @@ import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.exceptions.*;
 import com.dsmpear.main.payload.request.ReportRequest;
+import com.dsmpear.main.payload.response.ApplicationListResponse;
 import com.dsmpear.main.payload.response.ReportCommentsResponse;
 import com.dsmpear.main.payload.response.ReportContentResponse;
+import com.dsmpear.main.payload.response.ReportListResponse;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import com.dsmpear.main.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -102,7 +107,6 @@ public class ReportServiceImpl implements ReportService{
             }
             commentsResponses.add(
                     ReportCommentsResponse.builder()
-                            .commentId(co.getId())
                             .content(co.getContent())
                             .createdAt(co.getCreatedAt())
                             .userEmail(co.getUserEmail())
@@ -150,5 +154,37 @@ public class ReportServiceImpl implements ReportService{
         reportRepository.deleteById(reportId);
     }
 
+
+    @Override
+    public ApplicationListResponse getReportList(Pageable page) {
+        return searchReport(page,"title","");
+    }
+
+    @Override
+    public ApplicationListResponse searchReport(Pageable page, String mode, String query) {
+    /* 공사중
+    용성짱이 알려줄 예정
+
+
+    boolean isLogined= authenticationFacade.getUserEmail() == null;
+        ApplicationListResponse a = null;
+        page = PageRequest.of(Math.max(0, page.getPageNumber()-1), page.getPageSize());
+        Page<Report> reportPage;
+        switch(mode) {
+            case "title":
+                reportPage = reportRepository
+                        .findAllByTitleContainsOrderByCreatedAt(page,query);
+                break;
+            case "languages":
+                reportPage = reportRepository
+                        .findAllByLanguagesContainsOrderByCreatedAt(page, query);
+                break;
+            default:
+                break;
+        }*/
+        ApplicationListResponse a = null;
+        return a;
+
+    }
 
 }

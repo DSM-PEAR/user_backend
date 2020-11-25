@@ -1,5 +1,6 @@
 package com.dsmpear.main.domain;
 
+import com.dsmpear.main.entity.member.Member;
 import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.*;
 import com.dsmpear.main.entity.team.Team;
@@ -99,7 +100,6 @@ public class ReportControllerTest {
                 .grade(Grade.GRADE2)
                 .field(Field.AI)
                 .fileName("이승윤 돼지")
-                .isAccpeted(1)
                 .build();
 
         mvc.perform(post("/report").
@@ -108,14 +108,19 @@ public class ReportControllerTest {
                 .andExpect(status().isOk()).andDo(print());
     }
 
-    private Integer createTeam() throws Exception {
-        return Team.builder()
+    @Test
+    @Order(2)
+    @WithMockUser(value = "test@dsm.hs.kr",password="11123")
+    public void createTeam() throws Exception {
+        teamRepository.save(
+                Team.builder()
                 .name("이승유 돼지")
                 .reportId(1)
                 .userEmail("test@dsm.hs.kr")
-                .build().getId();
+                .build()
+        );
     }
-
+/*
     private Integer createReport() throws Exception {
         return Report.builder()
                 .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
@@ -130,25 +135,53 @@ public class ReportControllerTest {
                 .fileName("이승윤 돼지")
                 .reportId(1)
                 .build().getReportId();
-    }
+    }*/
 
-
-    /*@Test
-    public void  getNoticeList() throws Exception{
-
-        mvc.perform(get("/notice").
-                content(new ObjectMapper().writeValueAsString(1))
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andDo(print());
-    }
 
     @Test
-    public void  getNoticeContent() throws Exception{
+    @Order(3)
+    @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
+    public void getTeam() throws Exception{
 
-        mvc.perform(get("/notice/3").
-                content(new ObjectMapper().writeValueAsString(3))
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+        int reportId = writeReport();
+        createTeam(reportId);
+        mvc.perform(get("/team/"+reportId)).andDo(print())
                 .andExpect(status().isOk()).andDo(print());
-    }*/
+
+    }
+
+    private Integer writeReport() {
+        return reportRepository.save(
+                Report.builder()
+                        .title("title")
+                        .description("description")
+                        .createdAt(LocalDateTime.now())
+                        .type(Type.TEAM)
+                        .grade(Grade.GRADE1)
+                        .isAccepted(1)
+                        .languages("C, JAVA")
+                        .access(Access.ADMIN)
+                        .build()
+        ).getReportId();
+    }
+
+    private Integer createTeam(Integer reportId) {
+        return teamRepository.save(
+                Team.builder()
+                        .reportId(reportId)
+                        .name("first")
+                        .userEmail("tset@dsm.hs.kr")
+                        .build()
+        ).getId();
+    }
+
+    private Integer addMember(Integer teamId) {
+        return memberRepository.save(
+                Member.builder()
+                        .teamId(teamId)
+                        .userEmail("test@dsm.hs.kr")
+                        .build()
+        ).getId();
+    }
 
 }
