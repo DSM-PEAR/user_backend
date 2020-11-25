@@ -13,6 +13,8 @@ public class MyProfileListResponse {
 
     private String title;
 
+    private String teamName;
+
     private Integer isAccepted;
 
     private LocalDateTime createdAt;

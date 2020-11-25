@@ -14,6 +14,8 @@ public class ProfileReportListResponse {
 
     private String title;
 
+    private String teamName;
+
     private Integer isAccepted;
 
     private Access access;
