@@ -18,13 +18,13 @@ public class CommentController {
         commentService.createComment(commentRequest);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{commentId}")
     public void deleteComment(@PathVariable Integer commentId) {
         commentService.deleteComment(commentId);
     }
 
-    @PatchMapping
-    public void updateComment(@PathVariable Integer commentId, @RequestParam String description) {
-        commentService.updateComment(commentId, description);
+    @PatchMapping("/{commentId}")
+    public void updateComment(@PathVariable Integer commentId, @RequestParam String content) {
+        commentService.updateComment(commentId, content);
     }
 }
