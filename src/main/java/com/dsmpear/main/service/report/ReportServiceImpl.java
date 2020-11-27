@@ -18,6 +18,7 @@ import com.dsmpear.main.payload.response.ReportContentResponse;
 import com.dsmpear.main.payload.response.ReportListResponse;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import com.dsmpear.main.service.comment.CommentService;
+import com.dsmpear.main.service.team.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,6 +42,7 @@ public class ReportServiceImpl implements ReportService{
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final CommentService commentService;
+    private final TeamService teamService;
 
     // 보고서 작성
     @Override
@@ -49,19 +51,18 @@ public class ReportServiceImpl implements ReportService{
                 .orElseThrow(UserNotFoundException::new);
         reportRepository.save(
                 Report.builder()
-                        .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                         .title(reportRequest.getTitle())
                         .description(reportRequest.getDescription())
-                        .languages(reportRequest.getLanguages())
-                        .type(reportRequest.getType())
-                        .access(reportRequest.getAccess())
+                        .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                         .grade(reportRequest.getGrade())
-                        .isAccepted(0)
+                        .access(reportRequest.getAccess())
                         .field(reportRequest.getField())
+                        .type(reportRequest.getType())
+                        .isAccepted(0)
+                        .languages(reportRequest.getLanguages())
                         .fileName(reportRequest.getFileName())
                         .build()
         );
-        System.out.println(reportRequest);
     }
 
     // 보고서 보기
@@ -73,7 +74,7 @@ public class ReportServiceImpl implements ReportService{
         String email = authenticationFacade.getUserEmail();
 
         // 보고서를 아이디로 찾기
-        Report report = reportRepository.findById(reportId)
+        Report report = reportRepository.findByReportId(reportId)
                 .orElseThrow(ReportNotFoundException::new);
 
         // 보고서의 팀을 받아오자ㅏㅏ
@@ -93,9 +94,9 @@ public class ReportServiceImpl implements ReportService{
             }
         }
 
-
         List<Comment> comment = commentRepository.findAllByReportIdOrderByIdAsc(reportId);
         List<ReportCommentsResponse> commentsResponses = new ArrayList<>();
+
 
         // 댓글 하나하나 담기ㅣ
         for (Comment co : comment) {
@@ -148,9 +149,19 @@ public class ReportServiceImpl implements ReportService{
         Report report = reportRepository.findByReportId(reportId)
                 .orElseThrow(ReportNotFoundException::new);
 
+        Team team = teamRepository.findByReportId(report.getReportId())
+                .orElseThrow(TeamNotFoundException::new);
+
+        System.out.println(team.getReportId());
+
+        memberRepository.findByTeamIdAndUserEmail(team.getId(),user.getEmail())
+                .orElseThrow(PermissionDeniedException::new);
+
         for(Comment comment : commentRepository.findAllByReportIdOrderByIdAsc(reportId)) {
             commentService.deleteComment(comment.getId());
         }
+
+        teamRepository.deleteById(team.getId());
 
         reportRepository.deleteById(reportId);
     }

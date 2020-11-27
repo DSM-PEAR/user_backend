@@ -16,15 +16,14 @@ import javax.validation.Valid;
 public class ReportController {
     private final ReportService reportService;
 
-    @GetMapping("/{type}")
+   /* @GetMapping("/{type}")
     public ApplicationListResponse getReportList(@PathVariable String type,
                                                  @RequestParam("query") String query,
                                                  Pageable page) {
         return reportService.searchReport(page,type,query);
-    }
+    }*/
 
     @PostMapping
-    @ResponseBody
     public void writeReport(@RequestBody @Valid ReportRequest reportRequest) {
         reportService.writeReport(reportRequest);
     }

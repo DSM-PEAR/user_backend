@@ -1,5 +1,7 @@
 package com.dsmpear.main.domain;
 
+import com.dsmpear.main.entity.comment.Comment;
+import com.dsmpear.main.entity.comment.CommentRepository;
 import com.dsmpear.main.entity.member.Member;
 import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.*;
@@ -7,6 +9,9 @@ import com.dsmpear.main.entity.team.Team;
 import com.dsmpear.main.entity.team.TeamRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
+import com.dsmpear.main.exceptions.MemberNotFoundException;
+import com.dsmpear.main.exceptions.TeamNotFoundException;
+import com.dsmpear.main.payload.request.CommentRequest;
 import com.dsmpear.main.payload.request.ReportRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
@@ -27,7 +32,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -55,6 +59,9 @@ public class ReportControllerTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -102,22 +109,22 @@ public class ReportControllerTest {
     public void createReportTest() throws Exception {
 
         ReportRequest request = ReportRequest.builder()
-                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .title("1. 이승윤 돼지")
                 .description("내애용은 이승윤 돼지")
-                .languages("자바")
-                .type(Type.TEAM)
-                .access(Access.EVERY)
                 .grade(Grade.GRADE2)
-                .isAccepted(0)
+                .access(Access.EVERY)
                 .field(Field.AI)
+                .type(Type.TEAM)
+                .isAccepted(0)
+                .languages("자바")
                 .fileName("이승윤 돼지")
                 .build();
 
         mvc.perform(post("/report")
                 .content(new ObjectMapper().writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
                 .andExpect(status().isOk()).andDo(print());
+
     }
 
     @Test
@@ -129,11 +136,10 @@ public class ReportControllerTest {
 
         Integer teamId = createTeam(reportId);
 
-        createMember(teamId);
-        createMember(teamId);
+        Integer memberId1 = addMember(teamId);
 
         mvc.perform(get("/report/"+reportId)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
                 .andExpect(status().isOk()).andDo(print());
     }
 
@@ -145,7 +151,6 @@ public class ReportControllerTest {
         Integer reportId = createReport();
 
         ReportRequest request = ReportRequest.builder()
-                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .title("2. 이승윤 돼지")
                 .description("2째 돼지 이승윤")
                 .languages("돼지")
@@ -158,38 +163,94 @@ public class ReportControllerTest {
                 .build();
 
         mvc.perform(patch("/report/"+reportId)
-                .content(new ObjectMapper().writeValueAsString(request)))
+                .content(new ObjectMapper().writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+}
+
+    @Test
+    @Order(1)
+    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
+    public void deleteReportTest() throws Exception {
+        Integer reportId = createReport();
+        addMember(createTeam(reportId));
+
+        mvc.perform(delete("/report/"+reportId)).andDo(print())
                 .andExpect(status().isOk()).andDo(print());
     }
 
     @Test
-    @Order(1)
-    @WithMockUser(value = "tset@dsm.hs.kr",password="1234")
-    public void deleteReportTest() throws Exception {
+    @Order(2)
+    @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
+    public void createComment() throws Exception {
         Integer reportId = createReport();
-        createMember(createTeam(reportId));
+        addMember(createTeam(reportId));
+        Integer commentId1 = createComment(reportId);
 
-        mvc.perform(delete("/report/"+reportId))
-                .andExpect(status().isOk()).andDo(print());
-    }
-
-    private Integer createTeam(Integer reportId) throws Exception {
-        return Team.builder()
-                .name("이승윤 돼지")
-                .reportId(1)
+        CommentRequest request = CommentRequest.builder()
+                .reportId(reportId)
                 .userEmail("test@dsm.hs.kr")
-                .build().getId();
+                .content("아이야아이야")
+                .build();
+
+        mvc.perform(post("/comment")
+                .content(new ObjectMapper().writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+
     }
 
-    private Integer createMember(Integer teamId) throws Exception {
-        return Member.builder()
-                .teamId(teamId)
-                .userEmail("tset@dsm.hs.kr")
-                .build().getId();
+    @Test
+    @Order(2)
+    @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
+    public void updateComment() throws Exception {
+        Integer reportId = createReport();
+        addMember(createTeam(reportId));
+        Integer commentId1 = createComment(reportId);
+        Integer commentId2 = createComment(reportId);
+
+        mvc.perform(patch("/comment/"+commentId1)
+                .param("content", "content")).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+
+    }
+
+    @Test
+    @Order(2)
+    @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
+    public void deleteComment() throws Exception {
+        Integer reportId = createReport();
+        addMember(createTeam(reportId));
+        Integer commentId1 = createComment(reportId);
+        Integer commentId2 = createComment(reportId);
+
+        mvc.perform(delete("/comment/"+commentId1)).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+
+    }
+
+    private Integer createTeam(Integer reportId) {
+        return teamRepository.save(
+                Team.builder()
+                        .reportId(reportId)
+                        .name("first")
+                        .userEmail("tset@dsm.hs.kr")
+                        .build()
+        ).getId();
+    }
+
+    private Integer addMember(Integer teamId) {
+        return memberRepository.save(
+                Member.builder()
+                        .teamId(teamId)
+                        .userEmail("test@dsm.hs.kr")
+                        .build()
+        ).getId();
     }
 
     private Integer createReport() throws Exception {
-        return Report.builder()
+        return reportRepository.save(
+                Report.builder()
                 .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .title("1. 이승윤 돼지")
                 .description("내애용은 이승윤 돼지")
@@ -200,9 +261,20 @@ public class ReportControllerTest {
                 .isAccepted(0)
                 .field(Field.AI)
                 .fileName("이승윤 돼지")
-                .reportId(1)
                 .isAccepted(0)
-                .build().getReportId();
+                .build()
+        ).getReportId();
+    }
+
+    private Integer createComment(Integer reportId) throws Exception {
+        return commentRepository.save(
+                Comment.builder()
+                .reportId(reportId)
+                .userEmail("test@dsm.hs.kr")
+                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                .content("아이야아이야")
+                .build()
+        ).getId();
     }
 
 
