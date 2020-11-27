@@ -20,6 +20,6 @@ public interface ReportRepository extends CrudRepository<Report,Integer> {
     // 언어로 검색
     Page<Report> findAllByLanguagesContainsAndAccessOrderByCreatedAt(Pageable page, String query,Access access);
     List<Report> findByAccess(Access access);
-    Page<Report> findAllBy(Pageable pageable);
+    Page<Report> findAllBy(Pageable page);
 }
 

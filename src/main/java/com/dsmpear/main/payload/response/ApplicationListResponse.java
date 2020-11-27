@@ -15,6 +15,4 @@ public class ApplicationListResponse {
 
     private List applicationResponses;
 
-    private String userEmail;
-
 }
