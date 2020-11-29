@@ -52,6 +52,8 @@ public class CommentServiceImpl implements CommentService {
         User user=userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
+        System.out.println("여기까진 살아있나?");
+
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
         if(!user.getEmail().equals(comment.getUserEmail())) {
@@ -70,7 +72,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(RuntimeException::new);
 
-        if(comment.getUserEmail().equals(user.getEmail())){
+        if(!(comment.getUserEmail().equals(user.getEmail()))){
             throw new PermissionDeniedException();
         }
 

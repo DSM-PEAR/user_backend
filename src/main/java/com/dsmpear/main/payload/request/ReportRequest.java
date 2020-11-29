@@ -11,7 +11,16 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReportRequest {
+
+    @NotBlank
+    private String title;
+
+    @NotBlank
+    private String description;
+
     @NotNull
     private Grade grade;
 
@@ -19,22 +28,18 @@ public class ReportRequest {
     private Access access;
 
     @NotNull
+    private Field field;
+
+    @NotNull
     private Type type;
 
     @NotNull
-    private Field field;
-
-    @NotBlank
-    private String title;
+    private  Integer isAccepted;
 
     @NotNull
     private String languages;
 
-    @NotBlank
-    private String description;
-
     @NotNull
     private String fileName;
 
-    private LocalDateTime createdAt;
 }

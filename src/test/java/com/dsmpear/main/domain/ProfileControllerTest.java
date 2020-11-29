@@ -1,24 +1,21 @@
 package com.dsmpear.main.domain;
 
-import com.dsmpear.main.entity.report.*;
+import com.dsmpear.main.entity.report.ReportRepository;
+import com.dsmpear.main.entity.team.TeamRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import javax.annotation.PostConstruct;
-import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -36,15 +33,18 @@ public class ProfileControllerTest {
     private UserRepository userRepository;
 
     @Autowired
+    private ReportRepository reportRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private ReportRepository reportRepository;
+    private TeamRepository teamRepository;
 
     private MockMvc mvc;
 
-    @PostConstruct
-    public void setUp() {
+    @Before
+    public void setUp() throws Exception {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .build();
@@ -54,80 +54,70 @@ public class ProfileControllerTest {
                         .email("test@dsm.hs.kr")
                         .name("홍길동")
                         .password(passwordEncoder.encode("1234"))
-                        .selfIntro("")
                         .authStatus(true)
+                        .selfIntro("hihihihi")
+                        .build()
+        );
+        userRepository.save(
+                User.builder()
+                        .email("tset@dsm.hs.kr")
+                        .name("고길동")
+                        .password(passwordEncoder.encode("1234"))
+                        .authStatus(true)
+                        .selfIntro("lalalala")
                         .build()
         );
     }
+
     @After
-    public void deleteAll(){
-        reportRepository.deleteAll();;
+    public void after () {
+        reportRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
-    public void getEveryAccess() throws Exception{
-
-        createReport();
-        createEveryReport();
-        createUserReport();
-
-        mvc.perform(get("/profile/report")
-                .param("size","5")
-                .param("page","2")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+    public void getProfile () throws Exception {
+        mvc.perform(get("/profile/test@dsm.hs.kr"))
                 .andExpect(status().isOk()).andDo(print());
     }
 
-    @Test
-    @WithMockUser(value = "test@dsm.hs.kr",password = "1111")
-    public void getUserAccess() throws Exception{
+    //권한에 따라 보고서 목록 보여주기
+    /*@Test
+    @WithMockUser(value = "test@dsm.hs.kr", password = "1111")
+    public void  getReportList() throws Exception{
 
-        createReport();
-        createEveryReport();
-        createUserReport();
+        createTeam(writeReportAdmin());
+        createTeam(writeReportEvery());
+        createTeam(writeReportEvery2());
+        createTeam(writeReportUser());
 
-        mvc.perform(get("/profile/report")
-                .param("size","5")
-                .param("page","2")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+        mvc.perform(get("/user/profile/report"))
                 .andExpect(status().isOk()).andDo(print());
     }
 
-    private void createEveryReport(){
-        reportRepository.save(
+    private Integer writeReportUser() {
+        return reportRepository.save(
                 Report.builder()
                         .reportId(1)
-                        .title("everyTitle")
+                        .title("title")
                         .description("description")
                         .createdAt(LocalDateTime.now())
                         .type(Type.TEAM)
                         .grade(Grade.GRADE1)
-                        .isAccepted(1)
+                        .isAccepted(0)
                         .languages("C, JAVA")
-                        .access(Access.EVERY)
+                        .access(Access.ADMIN)
+                        .field(Field.AI)
+                        .fileName("file")
                         .build()
-        );
+        ).getReportId();
     }
-    private void createUserReport(){
-        reportRepository.save(
+
+    private Integer writeReportAdmin() {
+        return reportRepository.save(
                 Report.builder()
                         .reportId(2)
-                        .title("userTitle")
-                        .description("description")
-                        .createdAt(LocalDateTime.now())
-                        .type(Type.TEAM)
-                        .grade(Grade.GRADE1)
-                        .isAccepted(1)
-                        .languages("C, JAVA")
-                        .access(Access.USER)
-                        .build()
-        );
-    }
-    private void createReport(){
-        reportRepository.save(
-                Report.builder()
-                        .reportId(3)
-                        .title("adminTitle")
+                        .title("title")
                         .description("description")
                         .createdAt(LocalDateTime.now())
                         .type(Type.TEAM)
@@ -135,8 +125,55 @@ public class ProfileControllerTest {
                         .isAccepted(1)
                         .languages("C, JAVA")
                         .access(Access.ADMIN)
+                        .field(Field.WEB)
+                        .fileName("file")
                         .build()
-        );
+        ).getReportId();
     }
 
+    private Integer writeReportEvery() {
+        return reportRepository.save(
+                Report.builder()
+                        .reportId(3)
+                        .title("title")
+                        .description("description")
+                        .createdAt(LocalDateTime.now())
+                        .type(Type.TEAM)
+                        .grade(Grade.GRADE1)
+                        .isAccepted(1)
+                        .languages("C, JAVA")
+                        .access(Access.ADMIN)
+                        .field(Field.APP)
+                        .fileName("file")
+                        .build()
+        ).getReportId();
+    }
+
+    private Integer writeReportEvery2() {
+        return reportRepository.save(
+                Report.builder()
+                        .reportId(4)
+                        .title("title")
+                        .description("description")
+                        .createdAt(LocalDateTime.now())
+                        .type(Type.TEAM)
+                        .grade(Grade.GRADE1)
+                        .isAccepted(2)
+                        .languages("C, JAVA")
+                        .access(Access.ADMIN)
+                        .field(Field.EMBEDDED)
+                        .fileName("file")
+                        .build()
+        ).getReportId();
+    }
+
+    private Integer createTeam(Integer reportId) {
+        return teamRepository.save(
+                Team.builder()
+                        .name("랄랄라")
+                        .reportId(reportId)
+                        .userEmail("test@dsm.hs.kr")
+                        .build()
+        ).getId();
+    }*/
 }

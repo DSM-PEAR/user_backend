@@ -12,11 +12,17 @@ import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.exceptions.*;
 import com.dsmpear.main.payload.request.ReportRequest;
+import com.dsmpear.main.payload.response.ApplicationListResponse;
 import com.dsmpear.main.payload.response.ReportCommentsResponse;
 import com.dsmpear.main.payload.response.ReportContentResponse;
+import com.dsmpear.main.payload.response.ReportListResponse;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import com.dsmpear.main.service.comment.CommentService;
+import com.dsmpear.main.service.team.TeamService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -36,6 +42,7 @@ public class ReportServiceImpl implements ReportService{
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final CommentService commentService;
+    private final TeamService teamService;
 
     // 보고서 작성
     @Override
@@ -44,15 +51,15 @@ public class ReportServiceImpl implements ReportService{
                 .orElseThrow(UserNotFoundException::new);
         reportRepository.save(
                 Report.builder()
-                        .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                         .title(reportRequest.getTitle())
                         .description(reportRequest.getDescription())
-                        .languages(reportRequest.getLanguages())
-                        .type(reportRequest.getType())
-                        .access(reportRequest.getAccess())
+                        .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                         .grade(reportRequest.getGrade())
-                        .isAccepted(0)
+                        .access(reportRequest.getAccess())
                         .field(reportRequest.getField())
+                        .type(reportRequest.getType())
+                        .isAccepted(0)
+                        .languages(reportRequest.getLanguages())
                         .fileName(reportRequest.getFileName())
                         .build()
         );
@@ -67,7 +74,7 @@ public class ReportServiceImpl implements ReportService{
         String email = authenticationFacade.getUserEmail();
 
         // 보고서를 아이디로 찾기
-        Report report = reportRepository.findById(reportId)
+        Report report = reportRepository.findByReportId(reportId)
                 .orElseThrow(ReportNotFoundException::new);
 
         // 보고서의 팀을 받아오자ㅏㅏ
@@ -87,9 +94,9 @@ public class ReportServiceImpl implements ReportService{
             }
         }
 
-
         List<Comment> comment = commentRepository.findAllByReportIdOrderByIdAsc(reportId);
         List<ReportCommentsResponse> commentsResponses = new ArrayList<>();
+
 
         // 댓글 하나하나 담기ㅣ
         for (Comment co : comment) {
@@ -102,7 +109,6 @@ public class ReportServiceImpl implements ReportService{
             }
             commentsResponses.add(
                     ReportCommentsResponse.builder()
-                            .commentId(co.getId())
                             .content(co.getContent())
                             .createdAt(co.getCreatedAt())
                             .userEmail(co.getUserEmail())
@@ -143,12 +149,54 @@ public class ReportServiceImpl implements ReportService{
         Report report = reportRepository.findByReportId(reportId)
                 .orElseThrow(ReportNotFoundException::new);
 
+        Team team = teamRepository.findByReportId(report.getReportId())
+                .orElseThrow(TeamNotFoundException::new);
+
+        System.out.println(team.getReportId());
+
+        memberRepository.findByTeamIdAndUserEmail(team.getId(),user.getEmail())
+                .orElseThrow(PermissionDeniedException::new);
+
         for(Comment comment : commentRepository.findAllByReportIdOrderByIdAsc(reportId)) {
             commentService.deleteComment(comment.getId());
         }
 
+        teamRepository.deleteById(team.getId());
+
         reportRepository.deleteById(reportId);
     }
 
+
+    @Override
+    public ApplicationListResponse getReportList(Pageable page) {
+        return searchReport(page,"title","");
+    }
+
+    @Override
+    public ApplicationListResponse searchReport(Pageable page, String mode, String query) {
+    /* 공사중
+    용성짱이 알려줄 예정
+
+
+    boolean isLogined= authenticationFacade.getUserEmail() == null;
+        ApplicationListResponse a = null;
+        page = PageRequest.of(Math.max(0, page.getPageNumber()-1), page.getPageSize());
+        Page<Report> reportPage;
+        switch(mode) {
+            case "title":
+                reportPage = reportRepository
+                        .findAllByTitleContainsOrderByCreatedAt(page,query);
+                break;
+            case "languages":
+                reportPage = reportRepository
+                        .findAllByLanguagesContainsOrderByCreatedAt(page, query);
+                break;
+            default:
+                break;
+        }*/
+        ApplicationListResponse a = null;
+        return a;
+
+    }
 
 }

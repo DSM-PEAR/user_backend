@@ -36,6 +36,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .formLogin().disable()
                 .authorizeRequests()
                     .antMatchers(HttpMethod.POST, "/auth").permitAll()
+<<<<<<< HEAD
+                    .antMatchers(HttpMethod.GET, "/report").permitAll()
+                    .antMatchers(HttpMethod.POST, "/report").authenticated()
+=======
+                    .antMatchers(HttpMethod.POST, "/question").permitAll()
+                    .antMatchers(HttpMethod.GET, "/notice").permitAll()
+                    .antMatchers(HttpMethod.GET, "/notice/{noticeId}").permitAll()
+                    .antMatchers(HttpMethod.GET, "/user/profile/report").permitAll()
+                    .antMatchers(HttpMethod.GET, "/profile/report/{userEmail}").permitAll()
+                    .antMatchers(HttpMethod.GET, "/profile/{userEmail}").permitAll()
+
+>>>>>>> develop
                 .and()
                     .apply(new JwtConfigurer(jwtTokenProvider));
     }
