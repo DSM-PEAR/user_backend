@@ -11,8 +11,8 @@ public class ProfilePageResponse {
 
     private String userEmail;
 
-    private String selfIntro;
-
     private String gitHub;
+
+    private String selfIntro;
 
 }

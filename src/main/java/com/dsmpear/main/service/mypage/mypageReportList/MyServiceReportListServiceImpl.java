@@ -3,8 +3,11 @@ package com.dsmpear.main.service.mypage.mypageReportList;
 import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.Report;
 import com.dsmpear.main.entity.report.ReportRepository;
+import com.dsmpear.main.entity.team.Team;
+import com.dsmpear.main.entity.team.TeamRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
+import com.dsmpear.main.exceptions.TeamNotFoundException;
 import com.dsmpear.main.exceptions.UserNotFoundException;
 import com.dsmpear.main.exceptions.UserNotMemberException;
 import com.dsmpear.main.payload.response.ApplicationListResponse;
@@ -26,6 +29,7 @@ public class MyServiceReportListServiceImpl implements MyPageReportListService{
     private final ReportRepository reportRepository;
     private final AuthenticationFacade authenticationFacade;
     private final MemberRepository memberRepository;
+    private final TeamRepository teamRepository;
 
 
     @Override
@@ -38,7 +42,11 @@ public class MyServiceReportListServiceImpl implements MyPageReportListService{
 
         List<MyProfileListResponse> myProfileListResponses = new ArrayList<>();
 
+
         for(Report report : myProfilePage){
+            Team team = teamRepository.findByReportId(report.getReportId())
+                    .orElseThrow(TeamNotFoundException::new);
+
             memberRepository.findByTeamIdAndUserEmail(report.getReportId(),user.getEmail())
                     .orElseThrow(UserNotMemberException::new);
 
@@ -46,6 +54,7 @@ public class MyServiceReportListServiceImpl implements MyPageReportListService{
                     MyProfileListResponse.builder()
                             .reportId(report.getReportId())
                             .title(report.getTitle())
+                            .teamName(team.getName())
                             .isAccepted(report.getIsAccepted())
                             .createdAt(report.getCreatedAt())
                             .build()
@@ -58,4 +67,6 @@ public class MyServiceReportListServiceImpl implements MyPageReportListService{
                 .applicationResponses(myProfileListResponses)
                 .build();
     }
+
+
 }
