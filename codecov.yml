@@ -1,0 +1,13 @@
+coverage:
+  notify:
+    slack:
+      default:
+        url: "https://hooks.slack.com/services/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"
+        threshold: 1%
+        only_pulls: false
+        branches:
+          - "develop"
+        flags:
+          - "unit"
+        paths:
+          - "src"
