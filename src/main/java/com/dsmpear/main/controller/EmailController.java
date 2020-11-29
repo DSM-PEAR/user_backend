@@ -1,14 +1,13 @@
 package com.dsmpear.main.controller;
 
+import com.dsmpear.main.payload.request.EmailVerifyRequest;
 import com.dsmpear.main.payload.request.NotificationRequest;
 import com.dsmpear.main.service.email.EmailService;
 import com.dsmpear.main.service.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 
 @RestController
@@ -19,8 +18,13 @@ public class EmailController {
     private final EmailService emailService;
 
     @GetMapping("/auth")
-    public void verifyAccount(String number, @Email String email) {
-        userService.verify(number, email);
+    public void authNumEmail(@Email String email) {
+        emailService.sendAuthNumEmail(email);
+    }
+
+    @PutMapping("/auth")
+    public void verifyAccount(@Valid EmailVerifyRequest request) {
+        userService.verify(request);
     }
 
     @PostMapping("/notification")
