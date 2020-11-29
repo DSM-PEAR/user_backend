@@ -17,12 +17,12 @@ public class ProfileController {
     private final ProfileReportListService profileReportListService;
 
     @GetMapping
-    public ProfilePageResponse getProfile(@RequestParam String userEmail){
+    public ProfilePageResponse getProfile(@RequestParam("user-email") String userEmail){
         return profileService.getProfile(userEmail);
     }
 
     @GetMapping("/report")
-    public ApplicationListResponse getReport(@RequestParam String userEmail, Pageable page){
+    public ApplicationListResponse getReport(@RequestParam("user-email") String userEmail, Pageable page){
         return profileReportListService.getReport(userEmail, page);
     }
 
