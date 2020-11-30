@@ -7,8 +7,8 @@ import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.exceptions.UserNotFoundException;
 import com.dsmpear.main.exceptions.UserNotMemberException;
-import com.dsmpear.main.payload.response.ApplicationListResponse;
-import com.dsmpear.main.payload.response.MyProfileListResponse;
+import com.dsmpear.main.payload.response.MyProfileResponse;
+import com.dsmpear.main.payload.response.ProfileReportListResponse;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,21 +29,21 @@ public class MyServiceReportListServiceImpl implements MyPageReportListService{
 
 
     @Override
-    public ApplicationListResponse getReport(Pageable page) {
+    public ProfileReportListResponse getReport(Pageable page) {
         User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
 
         Page<Report> myProfilePage = reportRepository.findAllBy(page);
 
-        List<MyProfileListResponse> myProfileListResponses = new ArrayList<>();
+        List<MyProfileResponse> myProfileListResponses = new ArrayList<>();
 
         for(Report report : myProfilePage){
             memberRepository.findByTeamIdAndUserEmail(report.getReportId(),user.getEmail())
                     .orElseThrow(UserNotMemberException::new);
 
             myProfileListResponses.add(
-                    MyProfileListResponse.builder()
+                    MyProfileResponse.builder()
                             .reportId(report.getReportId())
                             .title(report.getTitle())
                             .isAccepted(report.getIsAccepted())
@@ -52,10 +52,10 @@ public class MyServiceReportListServiceImpl implements MyPageReportListService{
             );
         }
 
-        return ApplicationListResponse.builder()
+        return ProfileReportListResponse.builder()
                 .totalElements((int) myProfilePage.getTotalElements())
                 .totalPages(myProfilePage.getTotalPages())
-                .applicationResponses(myProfileListResponses)
+                .myProfileResponses(myProfileListResponses)
                 .build();
     }
 }

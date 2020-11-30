@@ -1,7 +1,7 @@
 package com.dsmpear.main.controller;
 
-import com.dsmpear.main.payload.response.ApplicationListResponse;
 import com.dsmpear.main.payload.response.NoticeContentResponse;
+import com.dsmpear.main.payload.response.NoticeListResponse;
 import com.dsmpear.main.service.notice.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +18,7 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     @GetMapping
-    public ApplicationListResponse getNoticeList(Pageable page){
+    public NoticeListResponse getNoticeList(Pageable page){
         return noticeService.getNoticeList(page);
     }
 
