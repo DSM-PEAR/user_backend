@@ -5,7 +5,6 @@ import com.dsmpear.main.entity.user.UserRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.Order;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -55,7 +54,7 @@ public class UserControllerTest {
         userRepository.save(
                 User.builder()
                         .email("bear@dsm.hs.kr")
-                        .name("고길동")
+                        .name("고jam")
                         .password(passwordEncoder.encode("1234"))
                         .authStatus(true)
                         .build()
@@ -64,7 +63,7 @@ public class UserControllerTest {
         userRepository.save(
                 User.builder()
                         .email("cat@dsm.hs.kr")
-                        .name("양길동")
+                        .name("양jam")
                         .password(passwordEncoder.encode("1234"))
                         .authStatus(true)
                         .build()
@@ -73,7 +72,7 @@ public class UserControllerTest {
         userRepository.save(
                 User.builder()
                         .email("dear@dsm.hs.kr")
-                        .name("강길동")
+                        .name("강jam")
                         .password(passwordEncoder.encode("1234"))
                         .authStatus(true)
                         .build()
@@ -87,12 +86,10 @@ public class UserControllerTest {
     }
 
     @Test
-    @Order(3)
     @WithMockUser(value = "apple@dsm.hs.kr",password = "1111")
     public void getTeam() throws Exception{
-        mvc.perform(get("/account?userEmail=&size=4&page=1"))
+        mvc.perform(get("/account?name="))
                 .andExpect(status().isOk()).andDo(print());
-
     }
 
 }
