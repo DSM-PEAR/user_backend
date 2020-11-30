@@ -2,7 +2,7 @@ package com.dsmpear.main.service.notice;
 
 import com.dsmpear.main.entity.notice.Notice;
 import com.dsmpear.main.entity.notice.NoticeRepository;
-import com.dsmpear.main.exceptions.ApplicationNotFoundException;
+import com.dsmpear.main.exceptions.NoticeNotFoundException;
 import com.dsmpear.main.payload.response.NoticeContentResponse;
 import com.dsmpear.main.payload.response.NoticeListResponse;
 import com.dsmpear.main.payload.response.NoticeResponse;
@@ -46,7 +46,7 @@ public class NoticeServiceImpl implements NoticeService{
     @Override
     public NoticeContentResponse getNoticeContent(Integer noticeId) {
         Notice notice = noticeRepository.findById(noticeId)
-                .orElseThrow(ApplicationNotFoundException::new);
+                .orElseThrow(NoticeNotFoundException::new);
 
         return NoticeContentResponse.builder()
                 .title(notice.getTitle())
