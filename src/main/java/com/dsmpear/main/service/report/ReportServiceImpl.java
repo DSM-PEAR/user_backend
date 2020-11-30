@@ -4,6 +4,7 @@ import com.dsmpear.main.entity.comment.Comment;
 import com.dsmpear.main.entity.comment.CommentRepository;
 import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.Access;
+import com.dsmpear.main.entity.report.Field;
 import com.dsmpear.main.entity.report.Report;
 import com.dsmpear.main.entity.report.ReportRepository;
 import com.dsmpear.main.entity.team.Team;
@@ -16,6 +17,7 @@ import com.dsmpear.main.payload.response.ApplicationListResponse;
 import com.dsmpear.main.payload.response.ReportCommentsResponse;
 import com.dsmpear.main.payload.response.ReportContentResponse;
 import com.dsmpear.main.payload.response.ReportListResponse;
+import com.dsmpear.main.security.JwtTokenProvider;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import com.dsmpear.main.service.comment.CommentService;
 import com.dsmpear.main.service.team.TeamService;
@@ -29,6 +31,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -42,7 +45,6 @@ public class ReportServiceImpl implements ReportService{
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final CommentService commentService;
-    private final TeamService teamService;
 
     // 보고서 작성
     @Override
@@ -71,7 +73,8 @@ public class ReportServiceImpl implements ReportService{
 
         boolean isMine = false;
         // 이메일 받아오기. 없으면 null이 들어갈껄?
-        String email = authenticationFacade.getUserEmail();
+
+        boolean isLogined = authenticationFacade.isLogin();
 
         // 보고서를 아이디로 찾기
         Report report = reportRepository.findByReportId(reportId)
@@ -81,8 +84,8 @@ public class ReportServiceImpl implements ReportService{
         Team team = teamRepository.findByReportId(reportId)
                 .orElseThrow(TeamNotFoundException::new);
 
-        if(email != null) {
-            isMine = !memberRepository.findByTeamIdAndUserEmail(team.getId(), email).isEmpty();
+        if(isLogined) {
+            isMine = !memberRepository.findByTeamIdAndUserEmail(team.getId(), authenticationFacade.getUserEmail()).isEmpty();
 
             // 보고서를 볼 때 보는 보고서의 access가 ADMIN인지, 만약 admin이라면  현재 유저가 글쓴이가 맞는지 검사
             if (report.getAccess().equals(Access.ADMIN) && !isMine) {
@@ -168,7 +171,7 @@ public class ReportServiceImpl implements ReportService{
 
 
     @Override
-    public ApplicationListResponse getReportList(Pageable page) {
+    public ApplicationListResponse getReportList(Pageable page, Field field) {
         return searchReport(page,"title","");
     }
 
@@ -198,5 +201,6 @@ public class ReportServiceImpl implements ReportService{
         return a;
 
     }
+
 
 }

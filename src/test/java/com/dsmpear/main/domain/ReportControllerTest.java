@@ -103,6 +103,7 @@ public class ReportControllerTest {
         userRepository.deleteAll();
     }
 
+    // 보고서 작성 성공 테스트
     @Test
     @Order(1)
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
@@ -127,6 +128,57 @@ public class ReportControllerTest {
 
     }
 
+    // 보고서 작성 실패 테스트(UserNotFound)
+    @Test
+    @Order(1)
+    @WithMockUser(value = "test3@dsm.hs.kr",password="1234")
+    public void createReportTest2() throws Exception {
+
+        ReportRequest request = ReportRequest.builder()
+                .title("1. 이승윤 돼지")
+                .description("내애용은 이승윤 돼지")
+                .grade(Grade.GRADE2)
+                .access(Access.EVERY)
+                .field(Field.AI)
+                .type(Type.TEAM)
+                .isAccepted(0)
+                .languages("자바")
+                .fileName("이승윤 돼지")
+                .build();
+
+        mvc.perform(post("/report")
+                .content(new ObjectMapper().writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+
+    }
+
+    // 보고서 작성 실패 테스트(InvalidData인데 에러메세지는 없음)
+    @Test
+    @Order(1)
+    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
+    public void createReportTest3() throws Exception {
+
+        ReportRequest request = ReportRequest.builder()
+                .title("")
+                .description("내애용은 이승윤 돼지")
+                .grade(Grade.GRADE2)
+                .access(Access.EVERY)
+                .field(Field.AI)
+                .type(Type.TEAM)
+                .isAccepted(0)
+                .languages("자바")
+                .fileName("이승윤 돼지")
+                .build();
+
+        mvc.perform(post("/report")
+                .content(new ObjectMapper().writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+
+    }
+
+    // 보고서 보기 성공 테스트
     @Test
     @Order(1)
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
@@ -143,6 +195,39 @@ public class ReportControllerTest {
                 .andExpect(status().isOk()).andDo(print());
     }
 
+    // 보고서 보기 성공 테스트(EVERY꺼)
+    @Test
+    @Order(1)
+    /*@WithMockUser(value = "test1@dsm.hs.kr",password="1234")*/
+    public void getReportTest1() throws Exception {
+
+        Integer reportId = createReport();
+
+        Integer teamId = createTeam(reportId);
+
+        Integer memberId1 = addMember(teamId);
+
+        mvc.perform(get("/report/"+reportId)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
+    @Order(1)
+    public void getReportTest2() throws Exception {
+
+        Integer reportId = createReport();
+
+        Integer teamId = createTeam(reportId);
+
+        Integer memberId1 = addMember(teamId);
+
+        mvc.perform(get("/report/"+reportId)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+    // 보고서 업데이트 성공 테스트
     @Test
     @Order(1)
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
@@ -168,6 +253,7 @@ public class ReportControllerTest {
                 .andExpect(status().isOk()).andDo(print());
 }
 
+    // 보고서 삭제 성공 테스트
     @Test
     @Order(1)
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
@@ -179,6 +265,7 @@ public class ReportControllerTest {
                 .andExpect(status().isOk()).andDo(print());
     }
 
+    // 댓글 작성 성공 테스트
     @Test
     @Order(2)
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
@@ -200,6 +287,7 @@ public class ReportControllerTest {
 
     }
 
+    // 댓글 수정 성공 테스트
     @Test
     @Order(2)
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
@@ -215,6 +303,7 @@ public class ReportControllerTest {
 
     }
 
+    // 댓글 삭제 성공 테스트
     @Test
     @Order(2)
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
@@ -256,7 +345,7 @@ public class ReportControllerTest {
                 .description("내애용은 이승윤 돼지")
                 .languages("자바")
                 .type(Type.TEAM)
-                .access(Access.EVERY)
+                .access(Access.USER)
                 .grade(Grade.GRADE2)
                 .isAccepted(0)
                 .field(Field.AI)
@@ -278,19 +367,5 @@ public class ReportControllerTest {
     }
 
 
-    /*@Test
-    public void  getNoticeList() throws Exception{
-        mvc.perform(get("/notice").
-                content(new ObjectMapper().writeValueAsString(1))
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andDo(print());
-    }
-    @Test
-    public void  getNoticeContent() throws Exception{
-        mvc.perform(get("/notice/3").
-                content(new ObjectMapper().writeValueAsString(3))
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andDo(print());
-    }*/
 
 }
