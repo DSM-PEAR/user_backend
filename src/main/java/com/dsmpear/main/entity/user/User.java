@@ -23,6 +23,9 @@ public class User {
     @Column(name = "self_intro")
     private String selfIntro;
 
+    @Column(name = "git_hub")
+    private String gitHub;
+
     @Column(name = "auth_status", nullable = false)
     private Boolean authStatus;
 
@@ -32,5 +35,9 @@ public class User {
 
     public void setSelfIntro(String intro){
         this.selfIntro = intro;
+    }
+
+    public void setGitHub(String gitHub){
+        this.gitHub = gitHub;
     }
 }

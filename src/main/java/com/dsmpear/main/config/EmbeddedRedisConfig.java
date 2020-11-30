@@ -19,7 +19,7 @@ public class EmbeddedRedisConfig {
 
     @PostConstruct
     public void redisServer() throws IOException {
-        redisServer = new RedisServer(6379);
+        redisServer = new RedisServer(redisPort);
         redisServer.start();
     }
 
