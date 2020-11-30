@@ -1,7 +1,7 @@
 package com.dsmpear.main.controller;
 
-import com.dsmpear.main.payload.response.ApplicationListResponse;
 import com.dsmpear.main.payload.response.ProfilePageResponse;
+import com.dsmpear.main.payload.response.ProfileReportListResponse;
 import com.dsmpear.main.service.mypage.mypage.MyPageService;
 import com.dsmpear.main.service.mypage.mypageReportList.MyPageReportListService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class MyPageController {
     }
 
     @GetMapping("/report")
-    public ApplicationListResponse getReport(Pageable page){
+    public ProfileReportListResponse getReport(Pageable page){
         return myPageReportListService.getReport(page);
     }
 
