@@ -7,9 +7,7 @@ import com.dsmpear.main.entity.team.Team;
 import com.dsmpear.main.entity.team.TeamRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
-import com.dsmpear.main.exceptions.TeamNotFoundException;
 import com.dsmpear.main.exceptions.UserNotFoundException;
-import com.dsmpear.main.exceptions.UserNotMemberException;
 import com.dsmpear.main.payload.response.MyPageReportResponse;
 import com.dsmpear.main.payload.response.ProfileReportListResponse;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
@@ -44,21 +42,19 @@ public class MyServiceReportListServiceImpl implements MyPageReportListService{
 
 
         for(Report report : myProfilePage){
-            Team team = teamRepository.findByReportId(report.getReportId())
-                    .orElseThrow(TeamNotFoundException::new);
+            Team team = teamRepository.findByReportId(report.getReportId());
 
-            memberRepository.findByTeamIdAndUserEmail(report.getReportId(),user.getEmail())
-                    .orElseThrow(UserNotMemberException::new);
-
-            myProfileListResponses.add(
-                    MyPageReportResponse.builder()
-                            .reportId(report.getReportId())
-                            .title(report.getTitle())
-                            .teamName(team.getName())
-                            .isAccepted(report.getIsAccepted())
-                            .createdAt(report.getCreatedAt())
-                            .build()
-            );
+            if(memberRepository.findByTeamIdAndUserEmail(report.getReportId(), user.getEmail()).isPresent()){
+                myProfileListResponses.add(
+                        MyPageReportResponse.builder()
+                                .reportId(report.getReportId())
+                                .title(report.getTitle())
+                                .teamName(team.getName())
+                                .isAccepted(report.getIsAccepted())
+                                .createdAt(report.getCreatedAt())
+                                .build()
+                );
+            }
         }
 
         return ProfileReportListResponse.builder()
