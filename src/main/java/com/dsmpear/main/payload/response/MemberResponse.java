@@ -10,4 +10,5 @@ public class MemberResponse {
     private String memberEmail;
 
     private String memberName;
+
 }

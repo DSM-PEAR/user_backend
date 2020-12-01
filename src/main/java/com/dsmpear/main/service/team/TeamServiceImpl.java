@@ -68,7 +68,6 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public void addTeam(TeamRequest teamRequest) {
-
         User user=userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
@@ -106,4 +105,5 @@ public class TeamServiceImpl implements TeamService{
 
         teamRepository.save(team);
     }
+
 }

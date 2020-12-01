@@ -22,7 +22,6 @@ public class NoticeServiceImpl implements NoticeService{
 
     @Override
     public NoticeListResponse getNoticeList(Pageable page) {
-        //size는 어떻게 써야하는가
         Page<Notice> noticePage = noticeRepository.findAllBy(page);
 
         List<NoticeResponse> noticeResponses = new ArrayList<>();

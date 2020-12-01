@@ -33,8 +33,6 @@ public class ProfileReportListServiceImpl implements ProfileReportListService{
 
     @Override
     public ProfileReportListResponse getReport(String email, Pageable page) {
-
-        //로그인을 했으면 학생 공개까지, 로그인이 안되어있다면 전체공개만
         userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 

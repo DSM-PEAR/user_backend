@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 @Builder
 public class ApplicationReportListResponse {
+
     private int totalElements;
 
     private int totalPages;
@@ -22,5 +23,6 @@ public class ApplicationReportListResponse {
     private Field field;
 
     private Grade grade;
+
 }
 

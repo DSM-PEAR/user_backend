@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 @Builder
 public class ReportContentResponse {
+
     private String title;
 
     private String description;
@@ -36,4 +37,5 @@ public class ReportContentResponse {
     private boolean isMine;
 
     private List<ReportCommentsResponse> comments;
+
 }

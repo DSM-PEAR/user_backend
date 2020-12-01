@@ -15,6 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor @AllArgsConstructor @Getter
 @Builder
 public class RefreshToken implements Serializable {
+
     @Id
     private String email;
 
@@ -29,4 +30,5 @@ public class RefreshToken implements Serializable {
         this.refreshExp = refreshExp;
         return this;
     }
+
 }

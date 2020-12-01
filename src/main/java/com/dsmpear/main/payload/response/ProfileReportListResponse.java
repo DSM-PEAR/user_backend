@@ -17,4 +17,5 @@ public class ProfileReportListResponse extends PageResponse{
         this.profileReportResponses = profileReportResponses;
         this.myPageReportResponses = myProfileReportResponses;
     }
+
 }

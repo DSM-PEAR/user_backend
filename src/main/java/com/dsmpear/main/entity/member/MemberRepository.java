@@ -8,7 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends CrudRepository<Member,Integer> {
-
     //팀 아이디와 유저이메일로 찾기
     Optional<Member> findByTeamIdAndUserEmail(Integer teamId, String userEmail);
     //팀 아이디로 멤버찾기

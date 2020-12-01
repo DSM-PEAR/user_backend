@@ -10,18 +10,18 @@ import com.dsmpear.main.entity.team.Team;
 import com.dsmpear.main.entity.team.TeamRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
-import com.dsmpear.main.exceptions.*;
+import com.dsmpear.main.exceptions.PermissionDeniedException;
+import com.dsmpear.main.exceptions.ReportNotFoundException;
+import com.dsmpear.main.exceptions.TeamNotFoundException;
+import com.dsmpear.main.exceptions.UserNotFoundException;
 import com.dsmpear.main.payload.request.ReportRequest;
 import com.dsmpear.main.payload.response.ApplicationListResponse;
 import com.dsmpear.main.payload.response.ReportCommentsResponse;
 import com.dsmpear.main.payload.response.ReportContentResponse;
-import com.dsmpear.main.payload.response.ReportListResponse;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import com.dsmpear.main.service.comment.CommentService;
 import com.dsmpear.main.service.team.TeamService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +68,6 @@ public class ReportServiceImpl implements ReportService{
     // 보고서 보기
     @Override
     public ReportContentResponse viewReport(Integer reportId) {
-
         boolean isMine = false;
         // 이메일 받아오기. 없으면 null이 들어갈껄?
         String email = authenticationFacade.getUserEmail();
@@ -130,6 +129,7 @@ public class ReportServiceImpl implements ReportService{
                 .comments(commentsResponses)
                 .build();
     }
+
     public Integer updateReport(Integer boardId, ReportRequest reportRequest) {
         User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
@@ -165,7 +165,6 @@ public class ReportServiceImpl implements ReportService{
 
         reportRepository.deleteById(reportId);
     }
-
 
     @Override
     public ApplicationListResponse getReportList(Pageable page) {

@@ -9,5 +9,4 @@ import java.util.Optional;
 public interface TeamRepository extends CrudRepository<Team,Integer> {
     Optional<Team> findAllByReportId(Integer reportId);
     Optional<Team> findByReportId(Integer reportId);
-    void deleteAllByReportId(Integer reportId);
 }

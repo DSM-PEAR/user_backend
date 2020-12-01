@@ -16,7 +16,6 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public ProfilePageResponse getProfile(String email) {
-
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
@@ -27,4 +26,5 @@ public class ProfileServiceImpl implements ProfileService {
                 .gitHub(user.getGitHub())
                 .build();
     }
+
 }

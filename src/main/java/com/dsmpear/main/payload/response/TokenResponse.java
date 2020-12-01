@@ -9,6 +9,7 @@ import lombok.Getter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TokenResponse {
+
     @JsonProperty("access-token")
     private String accessToken;
 
@@ -17,4 +18,5 @@ public class TokenResponse {
 
     @JsonProperty("refresh-exp")
     private Long refreshExp;
+
 }
