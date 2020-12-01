@@ -49,8 +49,9 @@ public class ReportServiceImpl implements ReportService{
     // 보고서 작성
     @Override
     public void writeReport(ReportRequest reportRequest) {
-        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotFoundException::new);
+        if(authenticationFacade.isLogin() == false) {
+            throw new UserNotFoundException();
+        }
         reportRepository.save(
                 Report.builder()
                         .title(reportRequest.getTitle())
@@ -134,11 +135,23 @@ public class ReportServiceImpl implements ReportService{
                 .build();
     }
     public Integer updateReport(Integer boardId, ReportRequest reportRequest) {
-        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotFoundException::new);
+
+        if(authenticationFacade.isLogin()) {
+            System.out.println("로그인 했다.");
+            User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                    .orElseThrow(UserNotFoundException::new);
+        }else {
+            throw new UserNotFoundException();
+        }
 
         Report report = reportRepository.findByReportId(boardId).
                 orElseThrow(ReportNotFoundException::new);
+
+        Team team = teamRepository.findByReportId(report.getReportId())
+                .orElseThrow(TeamNotFoundException::new);
+
+        memberRepository.findByTeamIdAndUserEmail(team.getId(), authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotMemberException::new);
 
         reportRepository.save(report.update(reportRequest));
 
@@ -146,16 +159,19 @@ public class ReportServiceImpl implements ReportService{
     }
 
     public void deleteReport(Integer reportId) {
-        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotFoundException::new);
+        User user = null;
+        if(authenticationFacade.isLogin()) {
+            user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                    .orElseThrow(UserNotFoundException::new);
+        }else {
+            throw new UserNotFoundException();
+        }
 
         Report report = reportRepository.findByReportId(reportId)
                 .orElseThrow(ReportNotFoundException::new);
 
         Team team = teamRepository.findByReportId(report.getReportId())
                 .orElseThrow(TeamNotFoundException::new);
-
-        System.out.println(team.getReportId());
 
         memberRepository.findByTeamIdAndUserEmail(team.getId(),user.getEmail())
                 .orElseThrow(PermissionDeniedException::new);

@@ -131,7 +131,7 @@ public class ReportControllerTest {
     // 보고서 작성 실패 테스트(UserNotFound)
     @Test
     @Order(1)
-    @WithMockUser(value = "test3@dsm.hs.kr",password="1234")
+    /*@WithMockUser(value = "test3@dsm.hs.kr",password="1234")*/
     public void createReportTest2() throws Exception {
 
         ReportRequest request = ReportRequest.builder()
@@ -235,6 +235,10 @@ public class ReportControllerTest {
 
         Integer reportId = createReport();
 
+        Integer teamId = createTeam(reportId);
+
+        addMember(teamId);
+
         ReportRequest request = ReportRequest.builder()
                 .title("2. 이승윤 돼지")
                 .description("2째 돼지 이승윤")
@@ -247,11 +251,68 @@ public class ReportControllerTest {
                 .isAccepted(1)
                 .build();
 
+
+
         mvc.perform(patch("/report/"+reportId)
                 .content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
                 .andExpect(status().isOk()).andDo(print());
-}
+    }
+
+    // 보고서 업데이트 실패 테스트(userNotMemer)
+    @Test
+    @Order(1)
+    @WithMockUser(value = "test1@dsm.hs.kr",password="1234")
+    public void updateReportTest1() throws Exception {
+
+        Integer reportId = createReport();
+
+        ReportRequest request = ReportRequest.builder()
+                .title("2. 이승윤 돼지")
+                .description("2째 돼지 이승윤")
+                .languages("돼지")
+                .type(Type.TEAM)
+                .access(Access.USER)
+                .grade(Grade.GRADE1)
+                .field(Field.AI)
+                .fileName("돼지")
+                .isAccepted(1)
+                .build();
+
+        createTeam(reportId);
+
+        mvc.perform(patch("/report/"+reportId)
+                .content(new ObjectMapper().writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+    // 보고서 업데이트 실패 테스트(UserNotFound)
+    @Test
+    @Order(1)
+    public void updateReportTest2() throws Exception {
+
+        Integer reportId = createReport();
+
+        ReportRequest request = ReportRequest.builder()
+                .title("2. 이승윤 돼지")
+                .description("2째 돼지 이승윤")
+                .languages("돼지")
+                .type(Type.TEAM)
+                .access(Access.USER)
+                .grade(Grade.GRADE1)
+                .field(Field.AI)
+                .fileName("돼지")
+                .isAccepted(1)
+                .build();
+
+        createTeam(reportId);
+
+        mvc.perform(patch("/report/"+reportId)
+                .content(new ObjectMapper().writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+    }
 
     // 보고서 삭제 성공 테스트
     @Test
@@ -265,11 +326,55 @@ public class ReportControllerTest {
                 .andExpect(status().isOk()).andDo(print());
     }
 
+    // 보고서 삭제 실패 테스트
+    @Test
+    @Order(1)
+    @WithMockUser(value = "test12@dsm.hs.kr",password="1234")
+    public void deleteReportTest1() throws Exception {
+        Integer reportId = createReport();
+        addMember(createTeam(reportId));
+
+        mvc.perform(delete("/report/"+reportId)).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+    // 보고서 삭제 실패 테스트
+    @Test
+    @Order(1)
+    public void deleteReportTest2() throws Exception {
+        Integer reportId = createReport();
+        addMember(createTeam(reportId));
+
+        mvc.perform(delete("/report/"+reportId)).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+    }
+
     // 댓글 작성 성공 테스트
     @Test
     @Order(2)
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
     public void createComment() throws Exception {
+        Integer reportId = createReport();
+        addMember(createTeam(reportId));
+        Integer commentId1 = createComment(reportId);
+
+        CommentRequest request = CommentRequest.builder()
+                .reportId(reportId)
+                .userEmail("test@dsm.hs.kr")
+                .content("아이야아이야")
+                .build();
+
+        mvc.perform(post("/comment")
+                .content(new ObjectMapper().writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+
+    }
+
+    // 댓글 작성 실패 테스트
+    @Test
+    @Order(2)
+    public void createComment1() throws Exception {
         Integer reportId = createReport();
         addMember(createTeam(reportId));
         Integer commentId1 = createComment(reportId);
@@ -303,11 +408,74 @@ public class ReportControllerTest {
 
     }
 
+    // 댓글 수정 성공 테스트
+    @Test
+    @Order(2)
+    @WithMockUser(value = "test22@dsm.hs.kr", password = "1234")
+    public void updateComment2() throws Exception {
+        Integer reportId = createReport();
+        addMember(createTeam(reportId));
+        Integer commentId1 = createComment(reportId);
+        Integer commentId2 = createComment(reportId);
+
+        mvc.perform(patch("/comment/"+commentId1)
+                .param("content", "content")).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+
+    }
+
+
+    // 댓글 수정 실패 테스트
+    @Test
+    @Order(2)
+    public void updateComment1() throws Exception {
+        Integer reportId = createReport();
+        addMember(createTeam(reportId));
+        Integer commentId1 = createComment(reportId);
+        Integer commentId2 = createComment(reportId);
+
+        mvc.perform(patch("/comment/"+commentId1)
+                .param("content", "content")).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+
+    }
+
     // 댓글 삭제 성공 테스트
     @Test
     @Order(2)
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
     public void deleteComment() throws Exception {
+        Integer reportId = createReport();
+        addMember(createTeam(reportId));
+        Integer commentId1 = createComment(reportId);
+        Integer commentId2 = createComment(reportId);
+
+        mvc.perform(delete("/comment/"+commentId1)).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+
+    }
+
+
+    // 댓글 삭제 성공 테스트
+    @Test
+    @Order(2)
+    @WithMockUser(value = "test1@dsm.hs.kr", password = "1234")
+    public void deleteComment1() throws Exception {
+        Integer reportId = createReport();
+        addMember(createTeam(reportId));
+        Integer commentId1 = createComment(reportId);
+        Integer commentId2 = createComment(reportId);
+
+        mvc.perform(delete("/comment/"+commentId1)).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+
+    }
+
+
+    // 댓글 삭제 성공 테스트
+    @Test
+    @Order(2)
+    public void deleteComment2() throws Exception {
         Integer reportId = createReport();
         addMember(createTeam(reportId));
         Integer commentId1 = createComment(reportId);
