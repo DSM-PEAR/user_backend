@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Table(name = "user_tbl")
 @Getter @Builder @NoArgsConstructor @AllArgsConstructor
 public class User {
+
     @Id
     private String email;
 
@@ -40,4 +41,5 @@ public class User {
     public void setGitHub(String gitHub){
         this.gitHub = gitHub;
     }
+
 }

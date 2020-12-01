@@ -19,6 +19,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
+
     private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
@@ -36,6 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .formLogin().disable()
                 .authorizeRequests()
                     .antMatchers(HttpMethod.POST, "/auth").permitAll()
+                    .antMatchers(HttpMethod.GET, "/report").permitAll()
+                    .antMatchers(HttpMethod.POST, "/report").authenticated()
                     .antMatchers(HttpMethod.POST, "/question").permitAll()
                     .antMatchers(HttpMethod.GET, "/notice").permitAll()
                     .antMatchers(HttpMethod.GET, "/notice/{noticeId}").permitAll()
@@ -58,4 +61,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

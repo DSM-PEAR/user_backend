@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Report {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer reportId;
@@ -61,4 +62,5 @@ public class Report {
         this.languages = reportRequest.getLanguages();
         return this;
     }
+
 }

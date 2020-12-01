@@ -8,9 +8,11 @@ import java.util.List;
 @Getter
 @Builder
 public class ReportListResponse {
+
     private Integer totalReports;
 
     private Integer totalPages;
 
     private List applicationResponses;
+
 }

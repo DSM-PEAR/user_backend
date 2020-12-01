@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class MemberResponse {
+public class UserResponse {
 
-    private String memberEmail;
+    private String name;
 
-    private String memberName;
+    private String email;
 
 }

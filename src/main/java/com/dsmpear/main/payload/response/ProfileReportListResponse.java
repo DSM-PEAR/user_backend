@@ -1,23 +1,21 @@
 package com.dsmpear.main.payload.response;
 
-import com.dsmpear.main.entity.report.Access;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
-@Builder
-public class ProfileReportListResponse {
+public class ProfileReportListResponse extends PageResponse{
 
-    private Integer reportId;
+    private List<ProfileReportResponse> profileReportResponses;
+    private List<MyPageReportResponse> myPageReportResponses;
 
-    private String title;
-
-    private Integer isAccepted;
-
-    private Access access;
-
-    private LocalDateTime createdAt;
+    @Builder
+    public ProfileReportListResponse(int totalElements, int totalPages, List<ProfileReportResponse> profileReportResponses, List<MyPageReportResponse> myProfileReportResponses) {
+        super(totalElements, totalPages);
+        this.profileReportResponses = profileReportResponses;
+        this.myPageReportResponses = myProfileReportResponses;
+    }
 
 }

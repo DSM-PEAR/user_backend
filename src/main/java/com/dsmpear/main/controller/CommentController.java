@@ -11,6 +11,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/comment")
 public class CommentController {
+
     private final CommentService commentService;
 
     @PostMapping
@@ -27,4 +28,5 @@ public class CommentController {
     public void updateComment(@PathVariable Integer commentId, @RequestParam String content) {
         commentService.updateComment(commentId, content);
     }
+
 }
