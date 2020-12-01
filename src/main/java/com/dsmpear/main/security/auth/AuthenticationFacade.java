@@ -15,4 +15,7 @@ public class AuthenticationFacade {
         return this.getAuthentication().getName();
     }
 
+    public boolean isLogin() {
+        return getAuthentication() != null;
+    }
 }
