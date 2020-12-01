@@ -28,20 +28,24 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void createComment(CommentRequest commentRequest) {
-        String email = authenticationFacade.getUserEmail();
-        if(email == null) {
+        User user = null;
+        if(authenticationFacade.isLogin()) {
+            user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                    .orElseThrow(UserNotFoundException::new);
+        }else {
             throw new PermissionDeniedException();
         }
 
 
         reportRepository.findById(commentRequest.getReportId())
                 .orElseThrow(ReportNotFoundException::new);
+
         commentRepository.save(
                 Comment.builder()
                     .content(commentRequest.getContent())
                     .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                     .reportId(commentRequest.getReportId())
-                    .userEmail(email)
+                    .userEmail(user.getEmail())
                     .build()
         );
 
@@ -49,13 +53,17 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Integer updateComment(Integer commentId, String content) {
-        User user=userRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotFoundException::new);
-
-        System.out.println("여기까진 살아있나?");
+        User user = null;
+        if(authenticationFacade.isLogin()) {
+            user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                    .orElseThrow(UserNotFoundException::new);
+        }else {
+            throw new PermissionDeniedException();
+        }
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
+
         if(!user.getEmail().equals(comment.getUserEmail())) {
             throw new PermissionDeniedException();
         }
@@ -66,8 +74,13 @@ public class CommentServiceImpl implements CommentService {
     }
     @Override
     public void deleteComment(Integer commentId) {
-        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotFoundException::new);
+        User user = null;
+        if(authenticationFacade.isLogin()) {
+            user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                    .orElseThrow(UserNotFoundException::new);
+        }else {
+            throw new PermissionDeniedException();
+        }
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(RuntimeException::new);

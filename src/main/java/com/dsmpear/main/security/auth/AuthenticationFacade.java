@@ -13,4 +13,8 @@ public class AuthenticationFacade {
     public String getUserEmail() {
         return this.getAuthentication().getName();
     }
+
+    public boolean isLogin() {
+        return getAuthentication() != null;
+    }
 }
