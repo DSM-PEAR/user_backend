@@ -15,4 +15,5 @@ public class NoticeListResponse extends PageResponse{
         super(totalElements, totalPages);
         this.noticeResponses = noticeResponses;
     }
+
 }

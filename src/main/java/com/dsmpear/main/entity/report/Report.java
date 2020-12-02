@@ -1,5 +1,6 @@
 package com.dsmpear.main.entity.report;
 
+import com.dsmpear.main.entity.member.Member;
 import com.dsmpear.main.payload.request.ReportRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "report_tbl")
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Report {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer reportId;
@@ -50,6 +53,9 @@ public class Report {
     @Column(name = "file_name",nullable = false)
     private String fileName;
 
+    @OneToMany(cascade=CascadeType.ALL, mappedBy = "report")
+    private List<Member> members;
+
     public Report update(ReportRequest reportRequest) {
         this.title = reportRequest.getTitle();
         this.description = reportRequest.getDescription();
@@ -61,4 +67,5 @@ public class Report {
         this.languages = reportRequest.getLanguages();
         return this;
     }
+
 }

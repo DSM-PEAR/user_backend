@@ -28,4 +28,5 @@ public class Member {
     @ManyToOne
     @JoinColumn(name = "team")
     private Team team;
+
 }

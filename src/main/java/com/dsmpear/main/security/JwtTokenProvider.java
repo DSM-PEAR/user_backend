@@ -17,6 +17,7 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
+
     @Value("${auth.jwt.secret}")
     private String secretKey;
 
@@ -97,4 +98,5 @@ public class JwtTokenProvider {
         AuthDetails authDetails = authDetailsService.loadUserByUsername(getEmail(token));
         return authDetails.getAuthStatus();
     }
+
 }
