@@ -152,7 +152,7 @@ public class ReportServiceImpl implements ReportService{
                 .orElseThrow(TeamNotFoundException::new);
 
         memberRepository.findByTeamIdAndUserEmail(team.getId(), authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotMemberException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         reportRepository.save(report.update(reportRequest));
 
