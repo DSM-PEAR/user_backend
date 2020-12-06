@@ -29,6 +29,7 @@ public class NoticeServiceImpl implements NoticeService{
         for(Notice notice : noticePage){
             noticeResponses.add(
                     NoticeResponse.builder()
+                            .id(notice.getId())
                             .title(notice.getTitle())
                             .createdAt(notice.getCreatedAt())
                             .build()
