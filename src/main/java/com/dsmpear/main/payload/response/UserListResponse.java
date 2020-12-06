@@ -15,4 +15,5 @@ public class UserListResponse extends PageResponse{
         super(totalElements, totalPages);
         this.userResponses = userResponses;
     }
+
 }

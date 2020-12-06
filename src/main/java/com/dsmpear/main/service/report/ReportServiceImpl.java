@@ -2,15 +2,15 @@ package com.dsmpear.main.service.report;
 
 import com.dsmpear.main.entity.comment.Comment;
 import com.dsmpear.main.entity.comment.CommentRepository;
+import com.dsmpear.main.entity.member.Member;
 import com.dsmpear.main.entity.member.MemberRepository;
-import com.dsmpear.main.entity.report.Access;
-import com.dsmpear.main.entity.report.Report;
-import com.dsmpear.main.entity.report.ReportRepository;
-import com.dsmpear.main.entity.team.Team;
-import com.dsmpear.main.entity.team.TeamRepository;
+import com.dsmpear.main.entity.report.*;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
-import com.dsmpear.main.exceptions.*;
+import com.dsmpear.main.exceptions.PermissionDeniedException;
+import com.dsmpear.main.exceptions.ReportNotFoundException;
+import com.dsmpear.main.exceptions.TeamNotFoundException;
+import com.dsmpear.main.exceptions.UserNotFoundException;
 import com.dsmpear.main.payload.request.ReportRequest;
 import com.dsmpear.main.payload.response.ApplicationListResponse;
 import com.dsmpear.main.payload.response.ReportCommentsResponse;
@@ -18,7 +18,6 @@ import com.dsmpear.main.payload.response.ReportContentResponse;
 import com.dsmpear.main.payload.response.ReportListResponse;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import com.dsmpear.main.service.comment.CommentService;
-import com.dsmpear.main.service.team.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +29,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Service
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService{
@@ -38,17 +36,16 @@ public class ReportServiceImpl implements ReportService{
     private final ReportRepository reportRepository;
     private final UserRepository userRepository;
     private final AuthenticationFacade authenticationFacade;
-    private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final CommentService commentService;
-    private final TeamService teamService;
 
     // 보고서 작성
     @Override
     public void writeReport(ReportRequest reportRequest) {
-        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotFoundException::new);
+        if(authenticationFacade.isLogin() == false) {
+            throw new UserNotFoundException();
+        }
         reportRepository.save(
                 Report.builder()
                         .title(reportRequest.getTitle())
@@ -68,21 +65,22 @@ public class ReportServiceImpl implements ReportService{
     // 보고서 보기
     @Override
     public ReportContentResponse viewReport(Integer reportId) {
-
         boolean isMine = false;
         // 이메일 받아오기. 없으면 null이 들어갈껄?
-        String email = authenticationFacade.getUserEmail();
+
+        boolean isLogined = authenticationFacade.isLogin();
 
         // 보고서를 아이디로 찾기
         Report report = reportRepository.findByReportId(reportId)
                 .orElseThrow(ReportNotFoundException::new);
 
         // 보고서의 팀을 받아오자ㅏㅏ
-        Team team = teamRepository.findByReportId(reportId)
-                .orElseThrow(TeamNotFoundException::new);
+        List<Member> members = report.getMembers();
 
-        if(email != null) {
-            isMine = !memberRepository.findByTeamIdAndUserEmail(team.getId(), email).isEmpty();
+        if(isLogined) {
+            for(Member member : members) {
+                isMine = !memberRepository.findByReportIdAndUserEmail(reportId, member.getUserEmail()).isEmpty();
+            }
 
             // 보고서를 볼 때 보는 보고서의 access가 ADMIN인지, 만약 admin이라면  현재 유저가 글쓴이가 맞는지 검사
             if (report.getAccess().equals(Access.ADMIN) && !isMine) {
@@ -130,56 +128,77 @@ public class ReportServiceImpl implements ReportService{
                 .comments(commentsResponses)
                 .build();
     }
-    public Integer updateReport(Integer boardId, ReportRequest reportRequest) {
-        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotFoundException::new);
 
-        Report report = reportRepository.findByReportId(boardId).
+    @Override
+    public Integer updateReport(Integer reportId, ReportRequest reportRequest) {
+
+        boolean isMine = false;
+
+        if(authenticationFacade.isLogin()) {
+            memberRepository.findByReportIdAndUserEmail(reportId, authenticationFacade.getUserEmail())
+                    .orElseThrow(UserNotFoundException::new);
+        }else {
+            throw new UserNotFoundException();
+        }
+
+        Report report = reportRepository.findByReportId(reportId).
                 orElseThrow(ReportNotFoundException::new);
 
         reportRepository.save(report.update(reportRequest));
 
-        return boardId;
+        return reportId;
     }
 
+    @Override
     public void deleteReport(Integer reportId) {
-        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotFoundException::new);
+        User user = null;
+        boolean isMine = false;
+        if(authenticationFacade.isLogin()) {
+            memberRepository.findByReportIdAndUserEmail(reportId, authenticationFacade.getUserEmail())
+                    .orElseThrow(UserNotFoundException::new);
+        }else {
+            throw new UserNotFoundException();
+        }
 
         Report report = reportRepository.findByReportId(reportId)
                 .orElseThrow(ReportNotFoundException::new);
 
-        Team team = teamRepository.findByReportId(report.getReportId())
-                .orElseThrow(TeamNotFoundException::new);
-
-        System.out.println(team.getReportId());
-
-        memberRepository.findByTeamIdAndUserEmail(team.getId(),user.getEmail())
-                .orElseThrow(PermissionDeniedException::new);
+        List<Member> members = report.getMembers();
 
         for(Comment comment : commentRepository.findAllByReportIdOrderByIdAsc(reportId)) {
             commentService.deleteComment(comment.getId());
         }
 
-        teamRepository.deleteById(team.getId());
+        for(Member member : members) {
+            memberRepository.deleteById(member.getId());
+        }
 
         reportRepository.deleteById(reportId);
     }
 
-
     @Override
-    public ApplicationListResponse getReportList(Pageable page) {
-        return searchReport(page,"title","");
+    public ReportListResponse getReportList(Pageable page, Field field, Grade grade) {
+        boolean isLogined = authenticationFacade.isLogin();
+        User user = null;
+
+        if (isLogined) {
+            user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                    .orElseThrow(UserNotFoundException::new);
+        }
+        page = PageRequest.of(Math.max(0, page.getPageNumber() - 1), page.getPageSize());
+        Page<Report> reportPage;
+
+        ReportListResponse lists = null;
+
+        return lists;
+//      return reportRepository.findAllByFieldAndGradeAndIsAcceptedAndAccess_UserOrAccess_EveryOrderByCreatedAt(field, grade, 0, Access.EVERY);
     }
 
     @Override
-    public ApplicationListResponse searchReport(Pageable page, String mode, String query) {
-    /* 공사중
-    용성짱이 알려줄 예정
-
-
-    boolean isLogined= authenticationFacade.getUserEmail() == null;
-        ApplicationListResponse a = null;
+    public ReportListResponse searchReport(Pageable page, String mode, String query) {
+        boolean isLogined= authenticationFacade.getUserEmail() == null;
+        ReportListResponse a = null;
+        /*
         page = PageRequest.of(Math.max(0, page.getPageNumber()-1), page.getPageSize());
         Page<Report> reportPage;
         switch(mode) {
@@ -193,10 +212,9 @@ public class ReportServiceImpl implements ReportService{
                 break;
             default:
                 break;
-        }*/
-        ApplicationListResponse a = null;
+        }
+        ApplicationListResponse a = null;*/
         return a;
 
     }
-
 }

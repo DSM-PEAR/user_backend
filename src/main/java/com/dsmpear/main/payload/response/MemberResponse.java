@@ -7,7 +7,10 @@ import lombok.Getter;
 @Builder
 public class MemberResponse {
 
+    private Integer memberId;
+
     private String memberEmail;
 
     private String memberName;
+
 }

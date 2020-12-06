@@ -39,4 +39,5 @@ public class UserListServiceImpl implements UserListService {
                 .userResponses(userResponse)
                 .build();
     }
+
 }

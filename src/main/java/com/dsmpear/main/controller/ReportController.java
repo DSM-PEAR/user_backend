@@ -1,8 +1,10 @@
 package com.dsmpear.main.controller;
 
+import com.dsmpear.main.entity.report.Field;
+import com.dsmpear.main.entity.report.Grade;
 import com.dsmpear.main.payload.request.ReportRequest;
-import com.dsmpear.main.payload.response.ApplicationListResponse;
 import com.dsmpear.main.payload.response.ReportContentResponse;
+import com.dsmpear.main.payload.response.ReportListResponse;
 import com.dsmpear.main.service.report.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -14,14 +16,9 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/report")
 public class ReportController {
+
     private final ReportService reportService;
 
-   /* @GetMapping("/{type}")
-    public ApplicationListResponse getReportList(@PathVariable String type,
-                                                 @RequestParam("query") String query,
-                                                 Pageable page) {
-        return reportService.searchReport(page,type,query);
-    }*/
 
     @PostMapping
     public void writeReport(@RequestBody @Valid ReportRequest reportRequest) {

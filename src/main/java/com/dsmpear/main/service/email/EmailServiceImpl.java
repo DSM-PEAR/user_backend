@@ -17,6 +17,7 @@ import java.util.Random;
 @Component
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
+
     private final JavaMailSender javaMailSender;
     private final VerifyNumberRepository numberRepository;
 
@@ -58,4 +59,5 @@ public class EmailServiceImpl implements EmailService {
         random.setSeed(System.currentTimeMillis());
         return Integer.toString(random.nextInt(1000000) % 1000000);
     }
+
 }

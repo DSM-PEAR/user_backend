@@ -6,11 +6,14 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-@Builder
-public class ReportListResponse {
-    private Integer totalReports;
+public class ReportListResponse extends PageResponse{
 
-    private Integer totalPages;
+    private List<ReportResponse> reportResponses;
 
-    private List applicationResponses;
+    @Builder
+    public ReportListResponse(int totalElements, int totalPages, List<ReportResponse> reportResponses) {
+        super(totalElements, totalPages);
+        this.reportResponses = reportResponses;
+    }
+
 }

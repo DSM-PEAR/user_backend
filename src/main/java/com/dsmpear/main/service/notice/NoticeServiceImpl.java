@@ -2,7 +2,7 @@ package com.dsmpear.main.service.notice;
 
 import com.dsmpear.main.entity.notice.Notice;
 import com.dsmpear.main.entity.notice.NoticeRepository;
-import com.dsmpear.main.exceptions.ApplicationNotFoundException;
+import com.dsmpear.main.exceptions.NoticeNotFoundException;
 import com.dsmpear.main.payload.response.NoticeContentResponse;
 import com.dsmpear.main.payload.response.NoticeListResponse;
 import com.dsmpear.main.payload.response.NoticeResponse;
@@ -22,7 +22,6 @@ public class NoticeServiceImpl implements NoticeService{
 
     @Override
     public NoticeListResponse getNoticeList(Pageable page) {
-        //size는 어떻게 써야하는가
         Page<Notice> noticePage = noticeRepository.findAllBy(page);
 
         List<NoticeResponse> noticeResponses = new ArrayList<>();
@@ -30,6 +29,7 @@ public class NoticeServiceImpl implements NoticeService{
         for(Notice notice : noticePage){
             noticeResponses.add(
                     NoticeResponse.builder()
+                            .id(notice.getId())
                             .title(notice.getTitle())
                             .createdAt(notice.getCreatedAt())
                             .build()
@@ -46,7 +46,7 @@ public class NoticeServiceImpl implements NoticeService{
     @Override
     public NoticeContentResponse getNoticeContent(Integer noticeId) {
         Notice notice = noticeRepository.findById(noticeId)
-                .orElseThrow(ApplicationNotFoundException::new);
+                .orElseThrow(NoticeNotFoundException::new);
 
         return NoticeContentResponse.builder()
                 .title(notice.getTitle())

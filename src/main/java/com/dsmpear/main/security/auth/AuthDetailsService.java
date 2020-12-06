@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthDetailsService implements UserDetailsService {
+
     private final UserRepository userRepository;
 
     @Override
@@ -18,4 +19,5 @@ public class AuthDetailsService implements UserDetailsService {
                 .map(AuthDetails::new)
                 .orElseThrow(UserNotFoundException::new);
     }
+
 }

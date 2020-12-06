@@ -21,4 +21,5 @@ public class QuestionController {
     public void inquiry(@RequestBody @Valid QuestionRequest questionRequest){
         questionService.inquiry(questionRequest);
     }
+
 }

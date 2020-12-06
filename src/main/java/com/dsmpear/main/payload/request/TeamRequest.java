@@ -17,4 +17,5 @@ public class TeamRequest {
     private Integer reportId;
 
     private String name;
+
 }
