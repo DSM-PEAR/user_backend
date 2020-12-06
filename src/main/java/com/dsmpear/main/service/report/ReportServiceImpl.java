@@ -2,6 +2,7 @@ package com.dsmpear.main.service.report;
 
 import com.dsmpear.main.entity.comment.Comment;
 import com.dsmpear.main.entity.comment.CommentRepository;
+import com.dsmpear.main.entity.member.Member;
 import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.Access;
 import com.dsmpear.main.entity.report.Field;
@@ -20,11 +21,11 @@ import com.dsmpear.main.payload.response.ApplicationListResponse;
 import com.dsmpear.main.payload.response.ReportCommentsResponse;
 import com.dsmpear.main.payload.response.ReportContentResponse;
 import com.dsmpear.main.payload.response.ReportListResponse;
-import com.dsmpear.main.security.JwtTokenProvider;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import com.dsmpear.main.service.comment.CommentService;
-import com.dsmpear.main.service.team.TeamService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +33,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 
 @Service
 @RequiredArgsConstructor
@@ -187,12 +186,22 @@ public class ReportServiceImpl implements ReportService{
     }
 
     @Override
-    public ApplicationListResponse getReportList(Pageable page, Field field) {
-        return searchReport(page,"title","");
+    public ReportListResponse getReportList(Pageable page, Field field, Grade grade) {
+        boolean isLogined = authenticationFacade.isLogin();
+        User user = null;
+
+        if(isLogined) {
+            user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                    .orElseThrow(UserNotFoundException::new);
+        }
+        page = PageRequest.of(Math.max(0, page.getPageNumber()-1), page.getPageSize());
+        Page<Report> reportPage;
+
+        reportRepository.findAllByFieldAndGradeAndIsAcceptedAndAccess_UserOrAccess_EveryOrderByCreatedAt(field, grade, user.)
     }
 
     @Override
-    public ApplicationListResponse searchReport(Pageable page, String mode, String query) {
+    public ReportListResponse searchReport(Pageable page, String mode, String query) {
     /* 공사중
     용성짱이 알려줄 예정
 
