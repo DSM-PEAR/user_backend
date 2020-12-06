@@ -14,10 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProfileController {
 
     private final ProfileService profileService;
+    /*private final ProfileReportListService profileReportListService;*/
 
     @GetMapping
     public ProfilePageResponse getProfile(@RequestParam("user-email") String userEmail){
         return profileService.getProfile(userEmail);
     }
+
+    /*@GetMapping("/report")
+    public ProfileReportListResponse getReport(@RequestParam("user-email") String userEmail, Pageable page){
+        return profileReportListService.getReport(userEmail, page);
+    }*/
 
 }

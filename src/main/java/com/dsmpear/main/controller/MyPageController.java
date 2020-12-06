@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 public class MyPageController {
 
     private final MyPageService myPageService;
+    /*private final MyPageReportListService myPageReportListService;*/
 
     @GetMapping
     public ProfilePageResponse getMyPage(){
@@ -21,5 +22,10 @@ public class MyPageController {
     public void setSelfIntro(@RequestParam String intro, @RequestParam String gitHub){
         myPageService.setSelfIntro(intro, gitHub);
     }
+
+    /*@GetMapping("/report")
+    public ProfileReportListResponse getReport(Pageable page){
+        return myPageReportListService.getReport(page);
+    }*/
 
 }
