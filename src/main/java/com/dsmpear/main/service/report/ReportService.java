@@ -13,7 +13,7 @@ public interface ReportService {
 
     ReportContentResponse viewReport(Integer reportId);
 
-    public Integer updateReport(Integer boardId, ReportRequest reportRequest);
+    public Integer updateReport(Integer reportId, ReportRequest reportRequest);
 
     public void deleteReport(Integer reportId);
 

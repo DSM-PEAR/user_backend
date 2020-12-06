@@ -1,6 +1,5 @@
 package com.dsmpear.main.service.report;
 
-<<<<<<< HEAD
 import com.dsmpear.main.entity.comment.Comment;
 import com.dsmpear.main.entity.comment.CommentRepository;
 import com.dsmpear.main.entity.member.Member;
@@ -76,13 +75,11 @@ public class ReportServiceImpl implements ReportService{
                 .orElseThrow(ReportNotFoundException::new);
 
         // 보고서의 팀을 받아오자ㅏㅏ
-        List<User> users = userRepository.findAllByReportId(report.getReportId());
+        List<Member> members = report.getMembers();
 
         if(isLogined) {
-            for(User user : users) {
-                if(memberRepository.findByReportIdAndUserEmail(reportId, user.getEmail()) != null) {
-                    isMine = true;
-                }
+            for(Member member : members) {
+                isMine = !memberRepository.findByReportIdAndUserEmail(reportId, member.getUserEmail()).isEmpty();
             }
 
             // 보고서를 볼 때 보는 보고서의 access가 ADMIN인지, 만약 admin이라면  현재 유저가 글쓴이가 맞는지 검사
@@ -132,34 +129,32 @@ public class ReportServiceImpl implements ReportService{
                 .build();
     }
 
-    public Integer updateReport(Integer boardId, ReportRequest reportRequest) {
+    @Override
+    public Integer updateReport(Integer reportId, ReportRequest reportRequest) {
+
+        boolean isMine = false;
 
         if(authenticationFacade.isLogin()) {
-            System.out.println("로그인 했다.");
-            User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+            memberRepository.findByReportIdAndUserEmail(reportId, authenticationFacade.getUserEmail())
                     .orElseThrow(UserNotFoundException::new);
         }else {
             throw new UserNotFoundException();
         }
 
-        Report report = reportRepository.findByReportId(boardId).
+        Report report = reportRepository.findByReportId(reportId).
                 orElseThrow(ReportNotFoundException::new);
-
-        Team team = teamRepository.findByReportId(report.getReportId())
-                .orElseThrow(TeamNotFoundException::new);
-
-        memberRepository.findByTeamIdAndUserEmail(team.getId(), authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotFoundException::new);
 
         reportRepository.save(report.update(reportRequest));
 
-        return boardId;
+        return reportId;
     }
 
+    @Override
     public void deleteReport(Integer reportId) {
         User user = null;
+        boolean isMine = false;
         if(authenticationFacade.isLogin()) {
-            user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+            memberRepository.findByReportIdAndUserEmail(reportId, authenticationFacade.getUserEmail())
                     .orElseThrow(UserNotFoundException::new);
         }else {
             throw new UserNotFoundException();
@@ -168,17 +163,15 @@ public class ReportServiceImpl implements ReportService{
         Report report = reportRepository.findByReportId(reportId)
                 .orElseThrow(ReportNotFoundException::new);
 
-        Team team = teamRepository.findByReportId(report.getReportId())
-                .orElseThrow(TeamNotFoundException::new);
-
-        memberRepository.findByTeamIdAndUserEmail(team.getId(),user.getEmail())
-                .orElseThrow(PermissionDeniedException::new);
+        List<Member> members = report.getMembers();
 
         for(Comment comment : commentRepository.findAllByReportIdOrderByIdAsc(reportId)) {
             commentService.deleteComment(comment.getId());
         }
 
-        teamRepository.deleteById(team.getId());
+        for(Member member : members) {
+            memberRepository.deleteById(member.getId());
+        }
 
         reportRepository.deleteById(reportId);
     }
@@ -188,14 +181,17 @@ public class ReportServiceImpl implements ReportService{
         boolean isLogined = authenticationFacade.isLogin();
         User user = null;
 
-        if(isLogined) {
+        if (isLogined) {
             user = userRepository.findByEmail(authenticationFacade.getUserEmail())
                     .orElseThrow(UserNotFoundException::new);
         }
-        page = PageRequest.of(Math.max(0, page.getPageNumber()-1), page.getPageSize());
+        page = PageRequest.of(Math.max(0, page.getPageNumber() - 1), page.getPageSize());
         Page<Report> reportPage;
 
-        reportRepository.findAllByFieldAndGradeAndIsAcceptedAndAccess_UserOrAccess_EveryOrderByCreatedAt(field, grade, user.)
+        ReportListResponse lists = null;
+
+        return lists;
+//      return reportRepository.findAllByFieldAndGradeAndIsAcceptedAndAccess_UserOrAccess_EveryOrderByCreatedAt(field, grade, 0, Access.EVERY);
     }
 
     @Override

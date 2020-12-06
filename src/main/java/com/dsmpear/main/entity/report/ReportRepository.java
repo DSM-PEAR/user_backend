@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface ReportRepository extends CrudRepository<Report,Integer> {
     // 보고서 갖고오기
     Optional<Report> findByReportId(Integer reportId);
-    Optional<Report> findAllByFieldAndGradeAndIsAcceptedAndAccess_UserOrAccess_EveryOrderByCreatedAt(Field field, Grade grade, Integer isAccepted,Access access);
+//    Optional<Report> findAllByFieldAndGradeAndIsAcceptedAndAccess_UserOrAccess_EveryOrderByCreatedAt(Field field, Grade grade, Integer isAccepted,Access access);
 }
