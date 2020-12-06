@@ -1,38 +1,14 @@
 package com.dsmpear.main.service.report;
 
-import com.dsmpear.main.entity.comment.Comment;
-import com.dsmpear.main.entity.comment.CommentRepository;
-import com.dsmpear.main.entity.member.MemberRepository;
-import com.dsmpear.main.entity.report.Access;
-import com.dsmpear.main.entity.report.Field;
-import com.dsmpear.main.entity.report.Report;
-import com.dsmpear.main.entity.report.ReportRepository;
-import com.dsmpear.main.entity.team.Team;
-import com.dsmpear.main.entity.team.TeamRepository;
-import com.dsmpear.main.entity.user.User;
-import com.dsmpear.main.entity.user.UserRepository;
-import com.dsmpear.main.exceptions.*;
-import com.dsmpear.main.payload.request.ReportRequest;
-import com.dsmpear.main.payload.response.ApplicationListResponse;
-import com.dsmpear.main.payload.response.ReportCommentsResponse;
-import com.dsmpear.main.payload.response.ReportContentResponse;
-import com.dsmpear.main.security.auth.AuthenticationFacade;
-import com.dsmpear.main.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Service
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService{
 
-    private final ReportRepository reportRepository;
+    /*private final ReportRepository reportRepository;
     private final UserRepository userRepository;
     private final AuthenticationFacade authenticationFacade;
     private final TeamRepository teamRepository;
@@ -186,7 +162,7 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public ApplicationListResponse searchReport(Pageable page, String mode, String query) {
-    /* 공사중
+    *//* 공사중
     용성짱이 알려줄 예정
 
 
@@ -205,11 +181,11 @@ public class ReportServiceImpl implements ReportService{
                 break;
             default:
                 break;
-        }*/
+        }*//*
         ApplicationListResponse a = null;
         return a;
 
     }
 
-
+*/
 }
