@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 @Builder
 public class NoticeResponse {
 
+    private Integer id;
+
     private String title;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

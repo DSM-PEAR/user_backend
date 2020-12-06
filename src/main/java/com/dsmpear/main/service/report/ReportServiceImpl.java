@@ -1,15 +1,11 @@
 package com.dsmpear.main.service.report;
 
+<<<<<<< HEAD
 import com.dsmpear.main.entity.comment.Comment;
 import com.dsmpear.main.entity.comment.CommentRepository;
 import com.dsmpear.main.entity.member.Member;
 import com.dsmpear.main.entity.member.MemberRepository;
-import com.dsmpear.main.entity.report.Access;
-import com.dsmpear.main.entity.report.Field;
-import com.dsmpear.main.entity.report.Report;
-import com.dsmpear.main.entity.report.ReportRepository;
-import com.dsmpear.main.entity.team.Team;
-import com.dsmpear.main.entity.team.TeamRepository;
+import com.dsmpear.main.entity.report.*;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.exceptions.PermissionDeniedException;
@@ -41,7 +37,6 @@ public class ReportServiceImpl implements ReportService{
     private final ReportRepository reportRepository;
     private final UserRepository userRepository;
     private final AuthenticationFacade authenticationFacade;
-    private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final CommentService commentService;
@@ -81,11 +76,14 @@ public class ReportServiceImpl implements ReportService{
                 .orElseThrow(ReportNotFoundException::new);
 
         // 보고서의 팀을 받아오자ㅏㅏ
-        Team team = teamRepository.findByReportId(reportId)
-                .orElseThrow(TeamNotFoundException::new);
+        List<User> users = userRepository.findAllByReportId(report.getReportId());
 
         if(isLogined) {
-            isMine = !memberRepository.findByTeamIdAndUserEmail(team.getId(), authenticationFacade.getUserEmail()).isEmpty();
+            for(User user : users) {
+                if(memberRepository.findByReportIdAndUserEmail(reportId, user.getEmail()) != null) {
+                    isMine = true;
+                }
+            }
 
             // 보고서를 볼 때 보는 보고서의 access가 ADMIN인지, 만약 admin이라면  현재 유저가 글쓴이가 맞는지 검사
             if (report.getAccess().equals(Access.ADMIN) && !isMine) {
@@ -202,12 +200,9 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public ReportListResponse searchReport(Pageable page, String mode, String query) {
-    /* 공사중
-    용성짱이 알려줄 예정
-
-
-    boolean isLogined= authenticationFacade.getUserEmail() == null;
-        ApplicationListResponse a = null;
+        boolean isLogined= authenticationFacade.getUserEmail() == null;
+        ReportListResponse a = null;
+        /*
         page = PageRequest.of(Math.max(0, page.getPageNumber()-1), page.getPageSize());
         Page<Report> reportPage;
         switch(mode) {
@@ -221,11 +216,9 @@ public class ReportServiceImpl implements ReportService{
                 break;
             default:
                 break;
-        }*/
-        ApplicationListResponse a = null;
+        }
+        ApplicationListResponse a = null;*/
         return a;
 
     }
-
-
 }
