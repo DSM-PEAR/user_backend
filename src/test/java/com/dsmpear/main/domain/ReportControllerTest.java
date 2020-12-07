@@ -1,4 +1,4 @@
-/*
+
 package com.dsmpear.main.domain;
 
 import com.dsmpear.main.entity.comment.Comment;
@@ -6,8 +6,6 @@ import com.dsmpear.main.entity.comment.CommentRepository;
 import com.dsmpear.main.entity.member.Member;
 import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.*;
-import com.dsmpear.main.entity.team.Team;
-import com.dsmpear.main.entity.team.TeamRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.exceptions.MemberNotFoundException;
@@ -56,9 +54,6 @@ public class ReportControllerTest {
     private UserRepository userRepository;
 
     @Autowired
-    private TeamRepository teamRepository;
-
-    @Autowired
     private MemberRepository memberRepository;
 
     @Autowired
@@ -99,7 +94,6 @@ public class ReportControllerTest {
     @After
     public void after() {
         memberRepository.deleteAll();
-        teamRepository.deleteAll();
         reportRepository.deleteAll();
         userRepository.deleteAll();
     }
@@ -132,9 +126,6 @@ public class ReportControllerTest {
     // 보고서 작성 실패 테스트(UserNotFound)
     @Test
     @Order(1)
-    */
-/*@WithMockUser(value = "test3@dsm.hs.kr",password="1234")*//*
-
     public void createReportTest2() throws Exception {
 
         ReportRequest request = ReportRequest.builder()
@@ -189,9 +180,7 @@ public class ReportControllerTest {
 
         Integer reportId = createReport();
 
-        Integer teamId = createTeam(reportId);
-
-        Integer memberId1 = addMember(teamId);
+        Integer memberId1 = addMember(reportId);
 
         mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
@@ -201,16 +190,13 @@ public class ReportControllerTest {
     // 보고서 보기 성공 테스트(EVERY꺼)
     @Test
     @Order(1)
-    */
-/*@WithMockUser(value = "test1@dsm.hs.kr",password="1234")*//*
-
+    @WithMockUser(value = "test1@dsm.hs.kr",password="1234")
     public void getReportTest1() throws Exception {
 
         Integer reportId = createReport();
 
-        Integer teamId = createTeam(reportId);
+        Integer memberId1 = addMember(reportId);
 
-        Integer memberId1 = addMember(teamId);
 
         mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
@@ -223,9 +209,7 @@ public class ReportControllerTest {
 
         Integer reportId = createReport();
 
-        Integer teamId = createTeam(reportId);
-
-        Integer memberId1 = addMember(teamId);
+        Integer memberId1 = addMember(reportId);
 
         mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
@@ -240,9 +224,7 @@ public class ReportControllerTest {
 
         Integer reportId = createReport();
 
-        Integer teamId = createTeam(reportId);
-
-        addMember(teamId);
+        addMember(reportId);
 
         ReportRequest request = ReportRequest.builder()
                 .title("2. 이승윤 돼지")
@@ -284,7 +266,7 @@ public class ReportControllerTest {
                 .isAccepted(1)
                 .build();
 
-        createTeam(reportId);
+        addMember(reportId);
 
         mvc.perform(patch("/report/"+reportId)
                 .content(new ObjectMapper().writeValueAsString(request))
@@ -311,7 +293,7 @@ public class ReportControllerTest {
                 .isAccepted(1)
                 .build();
 
-        createTeam(reportId);
+        addMember(reportId);
 
         mvc.perform(patch("/report/"+reportId)
                 .content(new ObjectMapper().writeValueAsString(request))
@@ -325,7 +307,7 @@ public class ReportControllerTest {
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void deleteReportTest() throws Exception {
         Integer reportId = createReport();
-        addMember(createTeam(reportId));
+        addMember(reportId);
 
         mvc.perform(delete("/report/"+reportId)).andDo(print())
                 .andExpect(status().isOk()).andDo(print());
@@ -337,7 +319,7 @@ public class ReportControllerTest {
     @WithMockUser(value = "test12@dsm.hs.kr",password="1234")
     public void deleteReportTest1() throws Exception {
         Integer reportId = createReport();
-        addMember(createTeam(reportId));
+        addMember(reportId);
 
         mvc.perform(delete("/report/"+reportId)).andDo(print())
                 .andExpect(status().isOk()).andDo(print());
@@ -348,7 +330,7 @@ public class ReportControllerTest {
     @Order(1)
     public void deleteReportTest2() throws Exception {
         Integer reportId = createReport();
-        addMember(createTeam(reportId));
+        addMember(reportId);
 
         mvc.perform(delete("/report/"+reportId)).andDo(print())
                 .andExpect(status().isOk()).andDo(print());
@@ -360,7 +342,7 @@ public class ReportControllerTest {
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
     public void createComment() throws Exception {
         Integer reportId = createReport();
-        addMember(createTeam(reportId));
+        addMember(reportId);
         Integer commentId1 = createComment(reportId);
 
         CommentRequest request = CommentRequest.builder()
@@ -381,7 +363,7 @@ public class ReportControllerTest {
     @Order(2)
     public void createComment1() throws Exception {
         Integer reportId = createReport();
-        addMember(createTeam(reportId));
+        addMember(reportId);
         Integer commentId1 = createComment(reportId);
 
         CommentRequest request = CommentRequest.builder()
@@ -403,7 +385,7 @@ public class ReportControllerTest {
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
     public void updateComment() throws Exception {
         Integer reportId = createReport();
-        addMember(createTeam(reportId));
+        addMember(reportId);
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
 
@@ -419,7 +401,7 @@ public class ReportControllerTest {
     @WithMockUser(value = "test22@dsm.hs.kr", password = "1234")
     public void updateComment2() throws Exception {
         Integer reportId = createReport();
-        addMember(createTeam(reportId));
+        addMember(reportId);
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
 
@@ -435,7 +417,7 @@ public class ReportControllerTest {
     @Order(2)
     public void updateComment1() throws Exception {
         Integer reportId = createReport();
-        addMember(createTeam(reportId));
+        addMember(reportId);
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
 
@@ -451,7 +433,7 @@ public class ReportControllerTest {
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
     public void deleteComment() throws Exception {
         Integer reportId = createReport();
-        addMember(createTeam(reportId));
+        addMember(reportId);
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
 
@@ -467,7 +449,7 @@ public class ReportControllerTest {
     @WithMockUser(value = "test1@dsm.hs.kr", password = "1234")
     public void deleteComment1() throws Exception {
         Integer reportId = createReport();
-        addMember(createTeam(reportId));
+        addMember(reportId);
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
 
@@ -482,7 +464,7 @@ public class ReportControllerTest {
     @Order(2)
     public void deleteComment2() throws Exception {
         Integer reportId = createReport();
-        addMember(createTeam(reportId));
+        addMember(reportId);
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
 
@@ -491,20 +473,10 @@ public class ReportControllerTest {
 
     }
 
-    private Integer createTeam(Integer reportId) {
-        return teamRepository.save(
-                Team.builder()
-                        .reportId(reportId)
-                        .name("first")
-                        .userEmail("tset@dsm.hs.kr")
-                        .build()
-        ).getId();
-    }
-
-    private Integer addMember(Integer teamId) {
+    private Integer addMember(Integer reportId) {
         return memberRepository.save(
                 Member.builder()
-                        .teamId(teamId)
+                        .reportId(reportId)
                         .userEmail("test@dsm.hs.kr")
                         .build()
         ).getId();
@@ -541,4 +513,4 @@ public class ReportControllerTest {
 
 
 
-}*/
+}
