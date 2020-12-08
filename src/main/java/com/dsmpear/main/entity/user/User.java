@@ -30,6 +30,9 @@ public class User {
     @Column(name = "auth_status", nullable = false)
     private Boolean authStatus;
 
+    @OneToMany
+    
+
     public void authenticatedSuccess() {
         this.authStatus = true;
     }

@@ -8,6 +8,7 @@ import com.dsmpear.main.payload.response.ReportListResponse;
 import com.dsmpear.main.service.report.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,8 +20,8 @@ public class ReportController {
 
     private final ReportService reportService;
 
-
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public void writeReport(@RequestBody @Valid ReportRequest reportRequest) {
         reportService.writeReport(reportRequest);
     }
@@ -31,6 +32,7 @@ public class ReportController {
     }
 
     @PatchMapping("/{reportId}")
+    @ResponseStatus(HttpStatus.CREATED)
     public Integer updateReport(@PathVariable Integer reportId, @RequestBody ReportRequest reportRequest) {
         return reportService.updateReport(reportId, reportRequest);
     }
