@@ -10,7 +10,6 @@ import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.exceptions.PermissionDeniedException;
 import com.dsmpear.main.exceptions.ReportNotFoundException;
-import com.dsmpear.main.exceptions.TeamNotFoundException;
 import com.dsmpear.main.exceptions.UserNotFoundException;
 import com.dsmpear.main.payload.request.ReportRequest;
 import com.dsmpear.main.payload.response.*;
@@ -219,7 +218,7 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public ReportListResponse getUserReportList(Pageable page, String email) {
-        boolean isLogined = authenticationFacade.isLogin();
+        /*boolean isLogined = authenticationFacade.isLogin();
 
         if(!isLogined) {
             throw new UserNotFoundException();
@@ -231,6 +230,8 @@ public class ReportServiceImpl implements ReportService{
                 .totalElements((int) reportPage.getTotalElements())
                 .totalPages(reportPage.getTotalPages())
                 .noticeResponses(noticeResponses)
-                .build();
+                .build();*/
+        ReportListResponse rep = null;
+        return null;
     }
 }
