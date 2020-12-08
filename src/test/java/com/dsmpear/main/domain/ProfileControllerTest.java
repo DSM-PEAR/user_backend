@@ -1,7 +1,6 @@
 package com.dsmpear.main.domain;
 
 import com.dsmpear.main.entity.report.ReportRepository;
-import com.dsmpear.main.entity.team.TeamRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import org.junit.After;
@@ -37,9 +36,6 @@ public class ProfileControllerTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private TeamRepository teamRepository;
 
     private MockMvc mvc;
 
