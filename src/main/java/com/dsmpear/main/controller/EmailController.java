@@ -14,6 +14,7 @@ import javax.validation.constraints.Email;
 @RequestMapping("/email")
 @RequiredArgsConstructor
 public class EmailController {
+
     private final UserService userService;
     private final EmailService emailService;
 
@@ -31,4 +32,5 @@ public class EmailController {
     public void notification(NotificationRequest request) {
         emailService.sendNotificationEmail(request);
     }
+
 }

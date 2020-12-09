@@ -23,4 +23,5 @@ public class Question{
 
     @Column(nullable = false, length = 150)
     private String description;
+
 }

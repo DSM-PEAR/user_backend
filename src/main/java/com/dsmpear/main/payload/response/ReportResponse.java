@@ -8,13 +8,16 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class NoticeResponse {
+public class ReportResponse {
 
-    private Integer id;
-
-    private String title;
+    private Integer reportId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
+    private String teamName;
+
+    private String title;
+
 }
+

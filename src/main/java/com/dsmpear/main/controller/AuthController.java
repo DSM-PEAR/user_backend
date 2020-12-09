@@ -13,6 +13,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
+
     private final AuthService authService;
 
     @PostMapping
@@ -24,4 +25,5 @@ public class AuthController {
     public AccessTokenResponse tokenRefresh(@RequestHeader("X-Refresh-Token") String refreshToken) {
         return authService.tokenRefresh(refreshToken);
     }
+
 }

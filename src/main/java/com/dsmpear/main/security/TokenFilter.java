@@ -14,6 +14,7 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 public class TokenFilter extends GenericFilterBean {
+
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
@@ -25,4 +26,5 @@ public class TokenFilter extends GenericFilterBean {
         }
         chain.doFilter(request, response);
     }
+
 }

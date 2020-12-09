@@ -1,6 +1,5 @@
 package com.dsmpear.main.entity.comment;
 
-import com.dsmpear.main.entity.team.Team;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -36,4 +36,5 @@ public class Comment {
         this.content = content;
         return this;
     }
+
 }

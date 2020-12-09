@@ -19,6 +19,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
+
     private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
@@ -60,4 +61,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

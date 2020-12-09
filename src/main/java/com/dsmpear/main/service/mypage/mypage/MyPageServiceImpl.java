@@ -34,7 +34,6 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public void setSelfIntro(String intro, String gitHub) {
-
         User student = userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
@@ -45,4 +44,5 @@ public class MyPageServiceImpl implements MyPageService {
         user.setGitHub(gitHub);
 
     }
+
 }
