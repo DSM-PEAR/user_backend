@@ -65,14 +65,14 @@ public class NoticeControllerTest {
                 .andExpect(status().isOk()).andDo(print());
     }
 
-    /*@Test
+    @Test
     public void  getNoticeContent_noId() throws Exception{
 
         int noticeId = createNotice("notice");
 
-        mvc.perform(get("/notice/"+5))
-                .andExpect(status().isNotFound());
-    }*/
+        mvc.perform(get("/notice/"+10000))
+                .andExpect(status().isNotFound()).andDo(print());
+    }
 
     public Integer createNotice(String str){
         return noticeRepository.save(
