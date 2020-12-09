@@ -1,6 +1,6 @@
 package com.dsmpear.main.entity.member;
 
-import com.dsmpear.main.entity.team.Team;
+import com.dsmpear.main.entity.report.Report;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,13 +20,13 @@ public class Member {
     private Integer id;
 
     @Column(nullable = false)
-    private Integer teamId;
+    private Integer reportId;
 
     @Column(length = 30,nullable = false)
     private String userEmail;
 
     @ManyToOne
-    @JoinColumn(name = "team")
-    private Team team;
+    @JoinColumn(name = "report")
+    private Report report;
 
 }

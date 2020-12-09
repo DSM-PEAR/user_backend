@@ -2,15 +2,14 @@ package com.dsmpear.main.domain;
 
 import com.dsmpear.main.entity.member.Member;
 import com.dsmpear.main.entity.member.MemberRepository;
-import com.dsmpear.main.entity.team.Team;
-import com.dsmpear.main.entity.team.TeamRepository;
+import com.dsmpear.main.entity.report.*;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.payload.request.MemberRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Test;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
-import org.junit.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +43,10 @@ public class MemberControllerTest {
     private UserRepository userRepository;
 
     @Autowired
-    private TeamRepository teamRepository;
+    private MemberRepository memberRepository;
 
     @Autowired
-    private MemberRepository memberRepository;
+    private ReportRepository reportRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -78,18 +77,24 @@ public class MemberControllerTest {
                         .build()
         );
 
-        teamRepository.save(
-                Team.builder()
-                        .name("랄랄라")
+        memberRepository.save(
+                Member.builder()
                         .reportId(1)
                         .userEmail("test@dsm.hs.kr")
                         .build()
         );
 
-        memberRepository.save(
-                Member.builder()
-                        .teamId(1)
-                        .userEmail("test@dsm.hs.kr")
+        reportRepository.save(
+                Report.builder()
+                        .title("")
+                        .description("내애용은 이승윤 돼지")
+                        .grade(Grade.GRADE2)
+                        .access(Access.EVERY)
+                        .field(Field.AI)
+                        .type(Type.TEAM)
+                        .isAccepted(0)
+                        .languages("자바")
+                        .fileName("이승윤 돼지")
                         .build()
         );
     }
