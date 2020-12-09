@@ -2,7 +2,6 @@ package com.dsmpear.main.domain;
 
 import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.ReportRepository;
-import com.dsmpear.main.entity.team.TeamRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import org.junit.After;
@@ -35,9 +34,6 @@ public class MyPageControllerTest {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private TeamRepository teamRepository;
 
     @Autowired
     private MemberRepository memberRepository;
