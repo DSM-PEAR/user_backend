@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -73,8 +74,27 @@ public class ProfileControllerTest {
 
     @Test
     public void getProfile () throws Exception {
-        mvc.perform(get("/profile/test@dsm.hs.kr"))
+        mvc.perform(get("/profile?user-email=test@dsm.hs.kr"))
                 .andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
+    @WithMockUser(username = "test@dsm.hs.kr",password = "1234")
+    public void getProfile_login () throws Exception {
+        mvc.perform(get("/profile?user-email=test@dsm.hs.kr"))
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
+    public void getProfile_bad () throws Exception {
+        mvc.perform(get("/profile?userEmail=test@dsm.hs.kr"))
+                .andExpect(status().isBadRequest()).andDo(print());
+    }
+
+    @Test
+    public void getProfile_noUser () throws Exception {
+        mvc.perform(get("/profile"))
+                .andExpect(status().isBadRequest()).andDo(print());
     }
 
     //권한에 따라 보고서 목록 보여주기

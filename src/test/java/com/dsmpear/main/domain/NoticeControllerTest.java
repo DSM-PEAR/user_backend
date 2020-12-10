@@ -2,14 +2,12 @@ package com.dsmpear.main.domain;
 
 import com.dsmpear.main.entity.notice.Notice;
 import com.dsmpear.main.entity.notice.NoticeRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -63,10 +61,17 @@ public class NoticeControllerTest {
 
         Integer noticeId = createNotice("notice");
 
-        mvc.perform(get("/notice/"+noticeId)
-                .content(new ObjectMapper().writeValueAsString(3))
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+        mvc.perform(get("/notice/"+noticeId))
                 .andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
+    public void  getNoticeContent_noId() throws Exception{
+
+        int noticeId = createNotice("notice");
+
+        mvc.perform(get("/notice/"+10000))
+                .andExpect(status().isNotFound()).andDo(print());
     }
 
     public Integer createNotice(String str){

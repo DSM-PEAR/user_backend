@@ -36,7 +36,7 @@ public class QuestionControllerTest {
     }
 
     @Test
-    public void test() throws Exception {
+    public void question() throws Exception {
 
         String email="test@dsm.hs.kr";
         String description="description";
@@ -49,4 +49,34 @@ public class QuestionControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andDo(print());
     }
+
+    /*@Test
+    public void question_noEmail() throws Exception {
+
+        String description="description";
+
+        QuestionRequest request = new QuestionRequest("",description);
+
+        mvc.perform(post("/question")
+                .content(new ObjectMapper()
+                        .writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest()).andDo(print());
+    }*/
+
+    /*@Test
+    public void question_noDescription() throws Exception {
+
+        String email="test@dsm.hs.kr";
+
+        QuestionRequest request = new QuestionRequest(email,null);
+
+        mvc.perform(post("/question")
+                .content(new ObjectMapper()
+                        .writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest());
+    }*/
+
+
 }
