@@ -7,6 +7,7 @@ import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.payload.request.MemberRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -84,6 +85,13 @@ public class MemberControllerTest {
                         .userEmail("test@dsm.hs.kr")
                         .build()
         );
+    }
+
+    @After
+    public void after () {
+        memberRepository.deleteAll();
+        reportRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
