@@ -22,7 +22,10 @@ public class ReportRequest {
     private String description;
 
     @NotNull
-    private Grade grade;
+    private String languages;
+
+    @NotNull
+    private Type type;
 
     @NotNull
     private Access access;
@@ -31,15 +34,15 @@ public class ReportRequest {
     private Field field;
 
     @NotNull
-    private Type type;
+    private Grade grade;
 
     @NotNull
-    private  Integer isAccepted;
-
-    @NotNull
-    private String languages;
+    private boolean isSubmitted;
 
     @NotNull
     private String fileName;
+
+    @NotNull
+    private String github;
 
 }

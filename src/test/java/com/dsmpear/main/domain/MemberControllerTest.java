@@ -92,8 +92,8 @@ public class MemberControllerTest {
                         .access(Access.EVERY)
                         .field(Field.AI)
                         .type(Type.TEAM)
-                        .isAccepted(0)
-                        .languages("자바")
+                        .isAccepted(false)
+                        .languages("언어")
                         .fileName("이승윤 돼지")
                         .build()
         );

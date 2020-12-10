@@ -32,6 +32,7 @@ public class ReportController {
 
     @PatchMapping("/{reportId}")
     public Integer updateReport(@PathVariable Integer reportId, @RequestBody ReportRequest reportRequest) {
+        System.out.println("asdfasd");
         return reportService.updateReport(reportId, reportRequest);
     }
 
