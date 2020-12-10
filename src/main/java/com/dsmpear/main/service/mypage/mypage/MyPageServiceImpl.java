@@ -18,10 +18,9 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public ProfilePageResponse getMyPage() {
-        User student = userRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotFoundException::new);
+        String userEmail = authenticationFacade.getUserEmail();
 
-        User user = userRepository.findByEmail(student.getEmail())
+        User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(UserNotFoundException::new);
 
         return ProfilePageResponse.builder()
