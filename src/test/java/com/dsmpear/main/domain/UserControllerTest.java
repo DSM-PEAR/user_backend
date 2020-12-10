@@ -87,9 +87,23 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(value = "apple@dsm.hs.kr",password = "1111")
-    public void getTeam() throws Exception{
+    public void getUser() throws Exception{
         mvc.perform(get("/account?name="))
                 .andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
+    @WithMockUser(value = "apple@dsm.hs.kr",password = "1111")
+    public void getUser_existUser() throws Exception{
+        mvc.perform(get("/account?name=홍길동"))
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
+    @WithMockUser(value = "apple@dsm.hs.kr",password = "1111")
+    public void getUser_bad() throws Exception{
+        mvc.perform(get("/account"))
+                .andExpect(status().isBadRequest()).andDo(print());
     }
 
 }

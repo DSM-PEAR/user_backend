@@ -68,7 +68,7 @@ public class MyPageControllerTest {
            memberRepository.deleteAll();
            reportRepository.deleteAll();
            userRepository.deleteAll();
-       }
+    }
 
     @Test
     @WithMockUser(value = "test@dsm.hs.kr", password = "1111")
