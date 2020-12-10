@@ -3,6 +3,7 @@ package com.dsmpear.main.controller;
 import com.dsmpear.main.payload.response.ProfilePageResponse;
 import com.dsmpear.main.service.mypage.mypage.MyPageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +20,7 @@ public class MyPageController {
     }
 
     @PutMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void setSelfIntro(@RequestParam String intro, @RequestParam String gitHub){
         myPageService.setSelfIntro(intro, gitHub);
     }
