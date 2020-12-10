@@ -2,17 +2,20 @@ package com.dsmpear.main.domain;
 
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
+import com.dsmpear.main.payload.response.SearchListResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -23,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class UserControllerTest {
+public class SearchControllerTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -37,73 +40,73 @@ public class UserControllerTest {
     private MockMvc mvc;
 
     @Before
-    public void setUp(){
+    public void setUp() throws Exception {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .build();
 
         userRepository.save(
                 User.builder()
-                        .email("apple@dsm.hs.kr")
+                        .email("test@dsm.hs.kr")
                         .name("홍길동")
                         .password(passwordEncoder.encode("1234"))
                         .authStatus(true)
+                        .selfIntro("hihihihi")
                         .build()
         );
-
         userRepository.save(
                 User.builder()
-                        .email("bear@dsm.hs.kr")
-                        .name("고jam")
+                        .email("tset@dsm.hs.kr")
+                        .name("고길동")
                         .password(passwordEncoder.encode("1234"))
                         .authStatus(true)
+                        .selfIntro("lalalala")
                         .build()
         );
-
         userRepository.save(
                 User.builder()
-                        .email("cat@dsm.hs.kr")
-                        .name("양jam")
+                        .email("ptest@dsm.hs.kr")
+                        .name("김길동")
                         .password(passwordEncoder.encode("1234"))
                         .authStatus(true)
+                        .selfIntro("lalalala")
                         .build()
         );
-
         userRepository.save(
                 User.builder()
-                        .email("dear@dsm.hs.kr")
-                        .name("강jam")
+                        .email("etest@dsm.hs.kr")
+                        .name("이길동")
                         .password(passwordEncoder.encode("1234"))
                         .authStatus(true)
+                        .selfIntro("lalalala")
                         .build()
         );
-
     }
 
     @After
-    public void after() {
+    public void after () {
         userRepository.deleteAll();
     }
 
+    //왜 다 404야..
     @Test
-    @WithMockUser(value = "apple@dsm.hs.kr",password = "1111")
-    public void getUser() throws Exception{
-        mvc.perform(get("/account?name="))
+    public void searchProfile () throws Exception {
+        mvc.perform(get("/search?mode=profile&keyword=길동&size=10&page=0")).andDo(print())
                 .andExpect(status().isOk()).andDo(print());
     }
 
     @Test
-    @WithMockUser(value = "apple@dsm.hs.kr",password = "1111")
-    public void getUser_existUser() throws Exception{
-        mvc.perform(get("/account?name=홍길동"))
+    public void searchProfile_noKeyword () throws Exception {
+        mvc.perform(get("/search?mode=profile&keyword=&size=10&page=0")).andDo(print())
                 .andExpect(status().isOk()).andDo(print());
     }
 
     @Test
-    @WithMockUser(value = "apple@dsm.hs.kr",password = "1111")
-    public void getUser_bad() throws Exception{
-        mvc.perform(get("/account"))
-                .andExpect(status().isBadRequest()).andDo(print());
+    public void searchProfile_notFound () throws Exception {
+        MvcResult result = mvc.perform(get("/search?mode=profile&keyword=동글이&size=10&page=0")).andReturn();
+
+        SearchListResponse response = new ObjectMapper().readValue(result.getResponse().getContentAsString(), SearchListResponse.class);
+        Assert.assertEquals(response.getTotalElements(), 0);
     }
 
 }
