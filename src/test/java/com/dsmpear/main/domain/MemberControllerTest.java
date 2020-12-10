@@ -5,6 +5,8 @@ import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.*;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
+import com.dsmpear.main.payload.request.MemberRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -24,6 +27,7 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -82,7 +86,7 @@ public class MemberControllerTest {
         );
     }
 
-    /*@Test
+    @Test
     @Order(1)
     @WithMockUser(username = "test@dsm.hs.kr",password = "1111")
     public void addMember() throws Exception {
@@ -93,9 +97,24 @@ public class MemberControllerTest {
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andDo(print());
-    }*/
+                .andExpect(status().is2xxSuccessful()).andDo(print());
+    }
 
+    @Test
+    @Order(1)
+    @WithMockUser(username = "",password = "")
+    public void addMember_noExistUser() throws Exception {
+        int reportId = addReport();
+
+        MemberRequest request = new MemberRequest(reportId,"tset@dsm.hs.kr");
+
+        mvc.perform(post("/member").
+                content(new ObjectMapper().writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound());
+    }
+
+    //로그인하지 않았을 때
     /*@Test
     @Order(1)
     public void addMember_noLogin() throws Exception {
@@ -106,7 +125,7 @@ public class MemberControllerTest {
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
     }*/
 
     @Test
@@ -127,18 +146,21 @@ public class MemberControllerTest {
                 .andExpect(status().is4xxClientError()).andDo(print());
     }
 
-    /*@Test
+    @Test
     @Order(2)
+    @WithMockUser(username = "",password = "")
     public void deleteMember_noLogin() throws Exception{
         int reportId = addReport();
 
         mvc.perform(delete("/member/"+reportId))
-                .andExpect(status().isUnauthorized());
-    }*/
+                .andExpect(status().isNotFound());
+    }
 
-    @WithMockUser(username = "test@dsm.hs.kr",password = "1111")
+    //로그인하지 않았을 때
+
+
     private Integer addReport() {
-        return reportRepository.save(
+        Integer reportId = reportRepository.save(
                 Report.builder()
                         .title("hello")
                         .description("test")
@@ -152,5 +174,13 @@ public class MemberControllerTest {
                         .createdAt(LocalDateTime.now())
                         .build()
         ).getReportId();
+
+        memberRepository.save(
+                Member.builder()
+                        .reportId(reportId)
+                        .userEmail("test@dsm.hs.kr")
+                        .build()
+        );
+        return reportId;
     }
 }
