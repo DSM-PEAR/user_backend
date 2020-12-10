@@ -5,13 +5,19 @@ import com.dsmpear.main.entity.verifynumber.VerifyNumberRepository;
 import com.dsmpear.main.exceptions.EmailSendFailedException;
 import com.dsmpear.main.payload.request.NotificationRequest;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 import java.util.Random;
 
 @Component
@@ -33,12 +39,22 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendAuthNumEmail(String sendTo) throws EmailSendFailedException {
+    public void sendAuthNumEmail(String sendTo) {
         String number = generateVerifyNumber();
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setSubject("회원가입 인증번호 안내 이메일입니다.");
-        message.setFrom(fromAddress);
-        message.setTo(sendTo);
+        String mailContent;
+        MimeMessage message = javaMailSender.createMimeMessage();
+
+        try {
+            message.setSubject("[PEAR] 인증번호 안내 메일입니다.");
+            message.setto(sendTo);
+            Document doc = Jsoup.connect("resources/email.html").get();
+            mailContent = doc.html();
+            mailContent = mailContent.replace("{%code%}", number);
+            message.setText(mailContent, "utf-8", "html");
+            javaMailSender.send(mailContent);
+        } catch (IOException | MessagingException e) {
+            throw new EmailSendFailedException();
+        }
 
         numberRepository.save(
                 VerifyNumber.builder()
