@@ -106,8 +106,6 @@ public class ReportServiceImpl implements ReportService{
                 isMine = !memberRepository.findByReportIdAndUserEmail(reportId, member.getUserEmail()).isEmpty();
             }
 
-            System.out.println("야");
-
             // 보고서를 볼 때 보는 보고서의 access가 ADMIN인지, 만약 admin이라면  현재 유저가 글쓴이가 맞는지 검사
             if(!isMine) {
                 if (report.getAccess().equals(Access.ADMIN)) {
