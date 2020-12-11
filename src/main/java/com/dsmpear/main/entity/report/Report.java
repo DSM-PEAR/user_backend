@@ -1,7 +1,10 @@
 package com.dsmpear.main.entity.report;
 
 import com.dsmpear.main.entity.member.Member;
+import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.payload.request.ReportRequest;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,8 +56,13 @@ public class Report {
     @Column(name = "file_name",nullable = false)
     private String fileName;
 
-    @OneToMany(cascade=CascadeType.ALL, mappedBy = "report")
+    @OneToMany(cascade=CascadeType.ALL, mappedBy = "report", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Member> members;
+
+    @OneToOne(mappedBy = "report")
+    @JsonBackReference
+    private UserReport userReport;
 
     public Report update(ReportRequest reportRequest) {
         this.title = reportRequest.getTitle();

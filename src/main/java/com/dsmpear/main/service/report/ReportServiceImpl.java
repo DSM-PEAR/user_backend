@@ -7,15 +7,12 @@ import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.*;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
+import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.exceptions.PermissionDeniedException;
 import com.dsmpear.main.exceptions.ReportNotFoundException;
-import com.dsmpear.main.exceptions.TeamNotFoundException;
 import com.dsmpear.main.exceptions.UserNotFoundException;
 import com.dsmpear.main.payload.request.ReportRequest;
-import com.dsmpear.main.payload.response.ApplicationListResponse;
-import com.dsmpear.main.payload.response.ReportCommentsResponse;
-import com.dsmpear.main.payload.response.ReportContentResponse;
-import com.dsmpear.main.payload.response.ReportListResponse;
+import com.dsmpear.main.payload.response.*;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import com.dsmpear.main.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +35,7 @@ public class ReportServiceImpl implements ReportService{
     private final AuthenticationFacade authenticationFacade;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
+    private final UserReportRepository userReportRepository;
     private final CommentService commentService;
 
     // 보고서 작성
@@ -216,5 +214,24 @@ public class ReportServiceImpl implements ReportService{
         ApplicationListResponse a = null;*/
         return a;
 
+    }
+
+    @Override
+    public ReportListResponse getUserReportList(Pageable page, String email) {
+        /*boolean isLogined = authenticationFacade.isLogin();
+
+        if(!isLogined) {
+            throw new UserNotFoundException();
+        }
+
+        List<Report> userReport = userReportRepository.findAllByUserEmail(email);
+
+        return ReportListResponse.builder()
+                .totalElements((int) reportPage.getTotalElements())
+                .totalPages(reportPage.getTotalPages())
+                .noticeResponses(noticeResponses)
+                .build();*/
+        ReportListResponse rep = null;
+        return null;
     }
 }
