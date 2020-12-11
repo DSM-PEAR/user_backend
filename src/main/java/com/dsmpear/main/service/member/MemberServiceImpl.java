@@ -4,6 +4,7 @@ import com.dsmpear.main.entity.member.Member;
 import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.Report;
 import com.dsmpear.main.entity.report.ReportRepository;
+import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.exceptions.*;
 import com.dsmpear.main.payload.request.MemberRequest;
@@ -23,13 +24,14 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void addMember(MemberRequest memberRequest) {
-        String userEmail = authenticationFacade.getUserEmail();
+        User user=userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
 
         Report report = reportRepository.findByReportId(memberRequest.getReportId())
                 .orElseThrow(ReportNotFoundException::new);
 
         //요청한 user가 팀 멤버인지 확인하기
-        memberRepository.findByReportIdAndUserEmail(report.getReportId(), userEmail)
+        memberRepository.findByReportIdAndUserEmail(report.getReportId(), user.getEmail())
                 .orElseThrow(UserNotMemberException::new);
 
         userRepository.findByEmail(memberRequest.getUserEmail())
@@ -43,20 +45,23 @@ public class MemberServiceImpl implements MemberService {
 
         memberRepository.save(
                 Member.builder()
-                    .reportId(report.getReportId())
-                    .userEmail(memberRequest.getUserEmail())
-                    .build()
+                        .reportId(report.getReportId())
+                        .userEmail(memberRequest.getUserEmail())
+                        .build()
         );
     }
 
     @Override
     public void deleteMember(Integer memberId) {
-        String userEmail = authenticationFacade.getUserEmail();
+        User user=userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
+
+
 
         Member member=memberRepository.findById(memberId)
                 .orElseThrow(UserNotMemberException::new);
 
-        if(userEmail.equals(member.getUserEmail())){
+        if(user.getEmail().equals(member.getUserEmail())){
             throw new UserEqualsMemberException();
         }
 
