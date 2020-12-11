@@ -4,10 +4,12 @@ import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.entity.verifynumber.VerifyNumber;
 import com.dsmpear.main.entity.verifynumber.VerifyNumberRepository;
+import com.dsmpear.main.entity.verifyuser.VerifyUser;
+import com.dsmpear.main.entity.verifyuser.VerifyUserRepository;
 import com.dsmpear.main.exceptions.*;
 import com.dsmpear.main.exceptions.InvalidEmailAddressException;
 import com.dsmpear.main.exceptions.UserIsAlreadyRegisteredException;
-import com.dsmpear.main.exceptions.UserNotFoundException;
+import com.dsmpear.main.payload.request.EmailVerifyRequest;
 import com.dsmpear.main.payload.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final VerifyNumberRepository numberRepository;
+    private final VerifyUserRepository verifyUserRepository;
 
     @Override
     public void register(RegisterRequest request) {
@@ -31,31 +34,26 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepository.findByEmail(request.getEmail());
         if (user.isPresent())
             throw new UserIsAlreadyRegisteredException();
-        userRepository.save(
-                User.builder()
-                    .email(request.getEmail())
-                    .password(passwordEncoder.encode(request.getPassword()))
-                    .name(request.getName())
-                    .authStatus(false)
-                    .build()
-        );
-    }
 
-    @Override
-    public void verify(String number, String email) {
-        VerifyNumber verifyNumber = numberRepository.findByEmail(email)
-                .orElseThrow(NumberNotFoundException::new);
-
-        if (!verifyNumber.verifyNumber(number))
-            throw new InvalidVerifyNumberException();
-
-        userRepository.findByEmail(email)
-                .map(user -> {
-                    user.authenticatedSuccess();
-                    return user;
+        verifyUserRepository.findByEmail(request.getEmail())
+                .map(verifyUser -> {
+                    return userRepository.save(
+                            User.builder()
+                                    .email(request.getEmail())
+                                    .password(passwordEncoder.encode(request.getPassword()))
+                                    .name(request.getName())
+                                    .authStatus(true)
+                                    .build()
+                    );
                 })
-                .map(userRepository::save)
                 .orElseThrow(UserNotFoundException::new);
     }
 
+    @Override
+    public void verify(EmailVerifyRequest request) {
+        numberRepository.findByEmail(request.getEmail())
+                .filter(verifyNumber -> verifyNumber.verifyNumber(request.getNumber()))
+                .map(verifyNumber -> verifyUserRepository.save(new VerifyUser(request.getEmail())))
+                .orElseThrow(NumberNotFoundException::new);
+    }
 }

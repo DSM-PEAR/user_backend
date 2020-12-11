@@ -7,6 +7,7 @@ import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.payload.request.MemberRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -24,6 +25,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -83,49 +85,111 @@ public class MemberControllerTest {
                         .userEmail("test@dsm.hs.kr")
                         .build()
         );
+    }
 
-        reportRepository.save(
-                Report.builder()
-                        .title("")
-                        .description("내애용은 이승윤 돼지")
-                        .grade(Grade.GRADE2)
-                        .access(Access.EVERY)
-                        .field(Field.AI)
-                        .type(Type.TEAM)
-                        .isAccepted(false)
-                        .languages("언어")
-                        .fileName("이승윤 돼지")
-                        .build()
-        );
+
+    @After
+    public void after () {
+        memberRepository.deleteAll();
+        reportRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     @Order(1)
     @WithMockUser(username = "test@dsm.hs.kr",password = "1111")
     public void addMember() throws Exception {
-        MemberRequest request = new MemberRequest(1,"tset@dsm.hs.kr");
+        int reportId = addReport();
+
+        MemberRequest request = new MemberRequest(reportId,"tset@dsm.hs.kr");
 
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().is2xxSuccessful()).andDo(print());
     }
 
-    /*@Test
-    @Order(2)
-    @WithMockUser(value = "test@dsm.hs.kr",password = "1111")
-    void deleteMember() throws Exception {
+    @Test
+    @Order(1)
+    @WithMockUser(username = "",password = "")
+    public void addMember_noExistUser() throws Exception {
+        int reportId = addReport();
 
-        mvc.perform(delete("/member/2"))
-                .andExpect(status().isOk()).andDo(print());
+        MemberRequest request = new MemberRequest(reportId,"tset@dsm.hs.kr");
+
+        mvc.perform(post("/member").
+                content(new ObjectMapper().writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound());
+    }
+
+    //로그인하지 않았을 때
+    /*@Test
+    @Order(1)
+    public void addMember_noLogin() throws Exception {
+        int reportId = addReport();
+
+        MemberRequest request = new MemberRequest(reportId,"tset@dsm.hs.kr");
+
+        mvc.perform(post("/member").
+                content(new ObjectMapper().writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound());
     }*/
 
     @Test
     @Order(2)
     @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
     public void deleteMember() throws Exception{
+        int reportId = addReport();
 
-        mvc.perform(delete("/member/1"))
+        mvc.perform(delete("/member/"+reportId))
                 .andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
+    @Order(2)
+    @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
+    public void deleteMember_noId() throws Exception{
+        mvc.perform(delete("/member"))
+                .andExpect(status().is4xxClientError()).andDo(print());
+    }
+
+    @Test
+    @Order(2)
+    @WithMockUser(username = "",password = "")
+    public void deleteMember_noLogin() throws Exception{
+        int reportId = addReport();
+
+        mvc.perform(delete("/member/"+reportId))
+                .andExpect(status().isNotFound());
+    }
+
+    //로그인하지 않았을 때
+
+
+    private Integer addReport() {
+        Integer reportId = reportRepository.save(
+                Report.builder()
+                        .title("hello")
+                        .description("test")
+                        .grade(Grade.GRADE2)
+                        .access(Access.EVERY)
+                        .field(Field.AI)
+                        .type(Type.TEAM)
+                        .isAccepted(true)
+                        .languages("test")
+                        .fileName("test")
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        ).getReportId();
+
+        memberRepository.save(
+                Member.builder()
+                        .reportId(reportId)
+                        .userEmail("test@dsm.hs.kr")
+                        .build()
+        );
+        return reportId;
     }
 }

@@ -63,7 +63,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void test() throws Exception {
+    void signInTest() throws Exception {
         SignInRequest signInRequest = new SignInRequest("aaaa@dsm.hs.kr", "1111");
 
         mvc.perform(post("/auth").content(new ObjectMapper().writeValueAsString(signInRequest))
