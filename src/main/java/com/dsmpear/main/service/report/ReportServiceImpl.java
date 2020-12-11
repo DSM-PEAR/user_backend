@@ -12,7 +12,9 @@ import com.dsmpear.main.exceptions.PermissionDeniedException;
 import com.dsmpear.main.exceptions.ReportNotFoundException;
 import com.dsmpear.main.exceptions.UserNotFoundException;
 import com.dsmpear.main.payload.request.ReportRequest;
-import com.dsmpear.main.payload.response.*;
+import com.dsmpear.main.payload.response.ReportCommentsResponse;
+import com.dsmpear.main.payload.response.ReportContentResponse;
+import com.dsmpear.main.payload.response.ReportListResponse;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import com.dsmpear.main.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +46,7 @@ public class ReportServiceImpl implements ReportService{
         if(authenticationFacade.isLogin() == false) {
             throw new UserNotFoundException();
         }
-        reportRepository.save(
+        Report report = reportRepository.save(
                 Report.builder()
                         .title(reportRequest.getTitle())
                         .description(reportRequest.getDescription())
@@ -56,6 +58,13 @@ public class ReportServiceImpl implements ReportService{
                         .isAccepted(0)
                         .languages(reportRequest.getLanguages())
                         .fileName(reportRequest.getFileName())
+                        .build()
+        );
+
+        memberRepository.save(
+                Member.builder()
+                        .reportId(report.getReportId())
+                        .userEmail(authenticationFacade.getUserEmail())
                         .build()
         );
     }
