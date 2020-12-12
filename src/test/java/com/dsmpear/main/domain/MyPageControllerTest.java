@@ -64,7 +64,7 @@ public class MyPageControllerTest {
     }
 
     @After
-       public void after () {
+    public void after() {
            memberRepository.deleteAll();
            reportRepository.deleteAll();
            userRepository.deleteAll();
@@ -72,7 +72,7 @@ public class MyPageControllerTest {
 
     @Test
     @WithMockUser(value = "test@dsm.hs.kr", password = "1111")
-    public void getMyProfile_test () throws Exception {
+    public void getMyProfile_test() throws Exception {
     mvc.perform(get("/user/profile"))
              .andExpect(status().isOk()).andDo(print());
     }
