@@ -14,10 +14,7 @@ import com.dsmpear.main.exceptions.ReportNotFoundException;
 import com.dsmpear.main.exceptions.TeamNotFoundException;
 import com.dsmpear.main.exceptions.UserNotFoundException;
 import com.dsmpear.main.payload.request.ReportRequest;
-import com.dsmpear.main.payload.response.ApplicationListResponse;
-import com.dsmpear.main.payload.response.ReportCommentsResponse;
-import com.dsmpear.main.payload.response.ReportContentResponse;
-import com.dsmpear.main.payload.response.ReportListResponse;
+import com.dsmpear.main.payload.response.*;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import com.dsmpear.main.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -212,20 +209,42 @@ public class ReportServiceImpl implements ReportService{
         boolean isLogined = authenticationFacade.isLogin();
         User user = null;
 
+        System.out.println(type + " " + field + " " + grade);
+
         if (isLogined) {
             user = userRepository.findByEmail(authenticationFacade.getUserEmail())
                     .orElseThrow(UserNotFoundException::new);
         }
-        page = PageRequest.of(Math.max(0, page.getPageNumber() - 1), page.getPageSize());
+
+        List<ReportResponse> reportResponses = new ArrayList<>();
         Page<Report> reportPage;
 
-        ReportListResponse reportListResponse = null;
-        return reportListResponse;
-/*        List<Report> reports = reportRepository.findAllByAccess_EveryAndFieldAndTypeAndGradeAndIsAcceptedTrueAAndIsSubmittedTrue(field, type, grade);
 
-        for(Report report : reports) {
+        if(type == null && field == null) {
+            reportPage = reportRepository.findAllByAccessAndGradeAndIsAcceptedTrueAndIsSubmittedTrue(Access.EVERY, grade, page);
+        }else if(type == null) {
+            reportPage = reportRepository.findAllByAccessAndFieldAndGradeAndIsAcceptedTrueAndIsSubmittedTrue(Access.EVERY, field, grade, page);
+        }else if(field == null) {
+            reportPage = reportRepository.findAllByAccessAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrue(Access.EVERY, type, grade, page);
+        }else {
+            reportPage = reportRepository.findAllByAccessAndFieldAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrue(Access.EVERY, field, type, grade, page);
+        }
 
-        }*/
+        for(Report report : reportPage) {
+            reportResponses.add(
+                    ReportResponse.builder()
+                            .reportId(report.getReportId())
+                            .title(report.getTitle())
+                            .createdAt(report.getCreatedAt())
+                            .build()
+            );
+        }
+
+        return ReportListResponse.builder()
+                .totalElements((int) reportPage.getTotalElements())
+                .totalPages(reportPage.getTotalPages())
+                .reportResponses(reportResponses)
+                .build();
     }
 
     @Override
