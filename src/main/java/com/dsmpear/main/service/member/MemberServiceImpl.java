@@ -43,9 +43,10 @@ public class MemberServiceImpl implements MemberService {
 
         memberRepository.save(
                 Member.builder()
-                    .reportId(report.getReportId())
-                    .userEmail(memberRequest.getUserEmail())
-                    .build()
+                        .reportId(report.getReportId())
+                        .userEmail(memberRequest.getUserEmail())
+                        .report(reportRepository.findByReportId(report.getReportId()).get())
+                        .build()
         );
     }
 

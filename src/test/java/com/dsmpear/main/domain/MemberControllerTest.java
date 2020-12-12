@@ -123,7 +123,7 @@ public class MemberControllerTest {
     }
 
     //로그인하지 않았을 때
-    /*@Test
+    @Test
     @Order(1)
     public void addMember_noLogin() throws Exception {
         int reportId = addReport();
@@ -133,8 +133,8 @@ public class MemberControllerTest {
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotFound());
-    }*/
+                .andExpect(status().isForbidden());
+    }
 
     @Test
     @Order(2)
