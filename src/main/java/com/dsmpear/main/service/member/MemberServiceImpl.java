@@ -47,14 +47,7 @@ public class MemberServiceImpl implements MemberService {
                 Member.builder()
                         .reportId(report.getReportId())
                         .userEmail(memberRequest.getUserEmail())
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
                         .report(reportRepository.findByReportId(report.getReportId()).get())
->>>>>>> d46ff744b60a23a25af807ee4833722e28fef005
-=======
-                        .report(reportRepository.findByReportId(report.getReportId()).get())
->>>>>>> b5c128b249e9bede1b97a1c34e0ddd6a474173d3
                         .build()
         );
     }
