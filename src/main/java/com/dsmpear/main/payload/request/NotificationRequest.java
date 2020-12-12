@@ -5,8 +5,9 @@ import lombok.Getter;
 @Getter
 public class NotificationRequest {
 
-    private String context;
+    private String boardId;
 
-    private String target_id;
+    private String email;
 
+    private boolean isAccepted;
 }
