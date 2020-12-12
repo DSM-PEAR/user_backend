@@ -1,5 +1,6 @@
 package com.dsmpear.main.security;
 
+import com.dsmpear.main.MainApplication;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles({"test"})
 public class AuthenticationFacadeTest {
     @Autowired
