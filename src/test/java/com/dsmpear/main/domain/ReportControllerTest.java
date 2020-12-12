@@ -126,7 +126,7 @@ public class ReportControllerTest {
         mvc.perform(post("/report")
                 .content(requests)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().is2xxSuccessful()).andDo(print());
 
     }
 
@@ -162,7 +162,7 @@ public class ReportControllerTest {
     public void createReportTest3() throws Exception {
 
         ReportRequest request = ReportRequest.builder()
-                .title("1. 이승윤 돼지")
+                .title("")
                 .description("내애용은 이승윤 돼지")
                 .grade(Grade.GRADE2)
                 .access(Access.EVERY)
@@ -177,7 +177,7 @@ public class ReportControllerTest {
         mvc.perform(post("/report")
                 .content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().is4xxClientError()).andDo(print());
 
     }
 
@@ -253,7 +253,7 @@ public class ReportControllerTest {
         mvc.perform(patch("/report/"+reportId)
                 .content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().is2xxSuccessful()).andDo(print());
     }
 
     // 보고서 업데이트 실패 테스트(userNotMemer)
