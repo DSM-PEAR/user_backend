@@ -29,8 +29,8 @@ public class EmailController {
     }
 
     @PostMapping("/notification")
-    public void notification(NotificationRequest request) {
-        emailService.sendNotificationEmail(request);
+    public void notification(NotificationRequest request, @RequestHeader("Authorization") String secretKey) {
+        emailService.sendNotificationEmail(request, secretKey);
     }
 
 }
