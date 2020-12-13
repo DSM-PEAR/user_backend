@@ -498,7 +498,7 @@ public class ReportControllerTest {
 
         mvc.perform(get("/report/filter?field=AI&type=SOLE&grade=GRADE1")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().is4xxClientError()).andDo(print());
     }
 
     // 보고서 목록(타입 없음)
@@ -515,7 +515,7 @@ public class ReportControllerTest {
 
         mvc.perform(get("/report/filter?field=AI&grade=GRADE1")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().is4xxClientError()).andDo(print());
     }
 
 
@@ -533,7 +533,7 @@ public class ReportControllerTest {
 
         mvc.perform(get("/report/filter?grade=GRADE1&type=TEAM")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().is4xxClientError()).andDo(print());
     }
 
     // 보고서 목록 실패(학년 없음)

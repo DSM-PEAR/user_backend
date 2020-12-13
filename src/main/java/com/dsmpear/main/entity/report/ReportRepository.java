@@ -17,7 +17,7 @@ public interface ReportRepository extends CrudRepository<Report,Integer> {
     // 필터가 분야, 타입 모두 적용시 ORM
     Page<Report> findAllByAccessAndFieldAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrue(Access access, Field field, Type type, Grade grade, Pageable page);
 
-    // 필터가 분야, 타입 모두 적용시 ORM
+    // 필터가 학년만 적용시 ORM
     Page<Report> findAllByAccessAndGradeAndIsAcceptedTrueAndIsSubmittedTrue(Access access, Grade grade, Pageable page);
 
     // 필터가 타입만 적용시 ORM
