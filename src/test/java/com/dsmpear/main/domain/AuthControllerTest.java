@@ -1,5 +1,6 @@
-package com.dsmpear.main;
+package com.dsmpear.main.domain;
 
+import com.dsmpear.main.MainApplication;
 import com.dsmpear.main.entity.refreshtoken.RefreshToken;
 import com.dsmpear.main.entity.refreshtoken.RefreshTokenRepository;
 import com.dsmpear.main.entity.user.User;
