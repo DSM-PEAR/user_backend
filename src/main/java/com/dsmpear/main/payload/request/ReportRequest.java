@@ -1,13 +1,16 @@
 package com.dsmpear.main.payload.request;
 
-import lombok.*;
+import com.dsmpear.main.entity.report.Access;
+import com.dsmpear.main.entity.report.Field;
+import com.dsmpear.main.entity.report.Grade;
+import com.dsmpear.main.entity.report.Type;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-import com.dsmpear.main.entity.report.*;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -22,7 +25,10 @@ public class ReportRequest {
     private String description;
 
     @NotNull
-    private Grade grade;
+    private String languages;
+
+    @NotNull
+    private Type type;
 
     @NotNull
     private Access access;
@@ -31,15 +37,15 @@ public class ReportRequest {
     private Field field;
 
     @NotNull
-    private Type type;
+    private Grade grade;
 
     @NotNull
-    private  Integer isAccepted;
-
-    @NotNull
-    private String languages;
+    private boolean isSubmitted;
 
     @NotNull
     private String fileName;
+
+    @NotNull
+    private String github;
 
 }
