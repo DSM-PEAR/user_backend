@@ -2,12 +2,17 @@ package com.dsmpear.main.domain;
 
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
+import com.dsmpear.main.entity.verifyuser.VerifyUser;
+import com.dsmpear.main.entity.verifyuser.VerifyUserRepository;
+import com.dsmpear.main.payload.request.RegisterRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -17,6 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,6 +38,9 @@ public class UserControllerTest {
     private UserRepository userRepository;
 
     @Autowired
+    private VerifyUserRepository verifyUserRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     private MockMvc mvc;
@@ -41,6 +50,10 @@ public class UserControllerTest {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .build();
+
+        verifyUserRepository.save(
+                new VerifyUser("smoothbear@dsm.hs.kr")
+        );
 
         userRepository.save(
                 User.builder()
@@ -83,6 +96,32 @@ public class UserControllerTest {
     @After
     public void after() {
         userRepository.deleteAll();
+        verifyUserRepository.deleteAll();
+    }
+
+
+    @Test
+    public void registerUser() throws Exception {
+        mvc.perform(post("/account").content(new ObjectMapper()
+                .writeValueAsString(new RegisterRequest("smoothbear", "1111", "smoothbear@dsm.hs.kr")))
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isCreated()).andDo(print());
+    }
+
+    @Test
+    public void registerUserWithEmailExcept() throws Exception {
+        mvc.perform(post("/account").content(new ObjectMapper()
+                .writeValueAsString(new RegisterRequest("smoothbear", "1111", "smoothbear@naver.com")))
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isForbidden()).andDo(print());
+    }
+
+    @Test
+    public void registerUserWithUserNotFoundExcept() throws Exception {
+        mvc.perform(post("/account").content(new ObjectMapper()
+                .writeValueAsString(new RegisterRequest("smoothbear", "1111", "smoothbear@dsm.hs.kr")))
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotFound()).andDo(print());
     }
 
     @Test
@@ -105,5 +144,4 @@ public class UserControllerTest {
         mvc.perform(get("/account"))
                 .andExpect(status().isBadRequest()).andDo(print());
     }
-
 }

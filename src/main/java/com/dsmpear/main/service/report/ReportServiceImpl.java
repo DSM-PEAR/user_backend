@@ -11,15 +11,20 @@ import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.exceptions.PermissionDeniedException;
 import com.dsmpear.main.exceptions.ReportNotFoundException;
-import com.dsmpear.main.exceptions.TeamNotFoundException;
 import com.dsmpear.main.exceptions.UserNotFoundException;
 import com.dsmpear.main.payload.request.ReportRequest;
+<<<<<<< HEAD
 import com.dsmpear.main.payload.response.*;
+=======
+import com.dsmpear.main.payload.response.ReportCommentsResponse;
+import com.dsmpear.main.payload.response.ReportContentResponse;
+import com.dsmpear.main.payload.response.ReportListResponse;
+import com.dsmpear.main.payload.response.ReportResponse;
+>>>>>>> 425d191eda7450eb2b991534eda7cd68a7a28a7b
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import com.dsmpear.main.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 

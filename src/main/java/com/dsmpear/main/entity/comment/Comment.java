@@ -1,5 +1,7 @@
 package com.dsmpear.main.entity.comment;
 
+import com.dsmpear.main.entity.report.Report;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +33,11 @@ public class Comment {
 
     @Column(nullable = false)
     private String content;
+
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "comment")
+    private Report report;
 
     public Comment updateContent(String content) {
         this.content = content;

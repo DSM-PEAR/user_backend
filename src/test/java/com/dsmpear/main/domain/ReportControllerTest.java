@@ -8,8 +8,6 @@ import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.*;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
-import com.dsmpear.main.exceptions.MemberNotFoundException;
-import com.dsmpear.main.exceptions.TeamNotFoundException;
 import com.dsmpear.main.payload.request.CommentRequest;
 import com.dsmpear.main.payload.request.MemberRequest;
 import com.dsmpear.main.payload.request.ReportRequest;
@@ -481,7 +479,79 @@ public class ReportControllerTest {
 
         mvc.perform(delete("/comment/"+commentId1)).andDo(print())
                 .andExpect(status().isForbidden()).andDo(print());
+<<<<<<< HEAD
+=======
 
+    }
+
+    // 보고서 목록 성공(필터 둘다)
+    @Test
+    @Order(1)
+    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
+    public void getReportListTest1() throws Exception {
+
+        Integer reportId = createReport();
+        Integer reportId1 = createReport();
+        Integer reportId2 = createReport();
+
+        Integer memberId1 = addMember(reportId);
+
+        mvc.perform(get("/report/filter?field=AI&type=SOLE&grade=GRADE1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+    // 보고서 목록(타입 없음)
+    @Test
+    @Order(1)
+    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
+    public void getReportListTest2() throws Exception {
+
+        Integer reportId = createReport();
+        Integer reportId1 = createReport();
+        Integer reportId2 = createReport();
+
+        Integer memberId1 = addMember(reportId);
+
+        mvc.perform(get("/report/filter?field=AI&grade=GRADE1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+
+    // 보고서 목록(필드 없음)
+    @Test
+    @Order(1)
+    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
+    public void getReportListTest3() throws Exception {
+
+        Integer reportId = createReport();
+        Integer reportId1 = createReport();
+        Integer reportId2 = createReport();
+
+        Integer memberId1 = addMember(reportId);
+>>>>>>> 425d191eda7450eb2b991534eda7cd68a7a28a7b
+
+        mvc.perform(get("/report/filter?grade=GRADE1&type=TEAM")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+    // 보고서 목록 실패(학년 없음)
+    @Test
+    @Order(1)
+    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
+    public void getReportListTest4() throws Exception {
+
+        Integer reportId = createReport();
+        Integer reportId1 = createReport();
+        Integer reportId2 = createReport();
+
+        Integer memberId1 = addMember(reportId);
+
+        mvc.perform(get("/report/filter?type=TEAM&field=AI")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().is4xxClientError()).andDo(print());
     }
 
     // 보고서 목록 성공(필터 둘다)
