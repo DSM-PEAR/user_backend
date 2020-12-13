@@ -102,6 +102,12 @@ public class SearchControllerTest {
     }
 
     @Test
+    public void searchProfile_full () throws Exception {
+        mvc.perform(get("/search?mode=profile&keyword=이길동&size=10&page=0")).andDo(print())
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
     public void searchProfile_notFound () throws Exception {
         MvcResult result = mvc.perform(get("/search?mode=profile&keyword=동글이&size=10&page=0")).andReturn();
 
