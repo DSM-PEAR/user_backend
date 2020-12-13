@@ -15,8 +15,6 @@ public class ReportResponse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
-    private String teamName;
-
     private String title;
 
 }
