@@ -1,8 +1,9 @@
 package com.dsmpear.main.payload.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter
+@Getter @AllArgsConstructor
 public class NotificationRequest {
 
     private String boardId;
