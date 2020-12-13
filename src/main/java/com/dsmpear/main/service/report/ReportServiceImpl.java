@@ -39,6 +39,7 @@ public class ReportServiceImpl implements ReportService{
     private final AuthenticationFacade authenticationFacade;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
+    private final UserReportRepository userReportRepository;
     private final CommentService commentService;
     private final UserReportRepository userReportRepository;
 
@@ -67,6 +68,7 @@ public class ReportServiceImpl implements ReportService{
                         .build()
         );
 
+
         System.out.println(reportRequest.getTitle());
 
         memberRepository.save(
@@ -82,7 +84,6 @@ public class ReportServiceImpl implements ReportService{
                     .reportId(report.getReportId())
                     .build()
         );
-
     }
 
     // 보고서 보기
@@ -271,5 +272,24 @@ public class ReportServiceImpl implements ReportService{
         ApplicationListResponse a = null;*/
         return a;
 
+    }
+
+    @Override
+    public ReportListResponse getUserReportList(Pageable page, String email) {
+        /*boolean isLogined = authenticationFacade.isLogin();
+
+        if(!isLogined) {
+            throw new UserNotFoundException();
+        }
+
+        List<Report> userReport = userReportRepository.findAllByUserEmail(email);
+
+        return ReportListResponse.builder()
+                .totalElements((int) reportPage.getTotalElements())
+                .totalPages(reportPage.getTotalPages())
+                .noticeResponses(noticeResponses)
+                .build();*/
+        ReportListResponse rep = null;
+        return null;
     }
 }
