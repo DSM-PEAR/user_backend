@@ -1,5 +1,7 @@
-package com.dsmpear.main;
+package com.dsmpear.main.domain;
 
+import com.dsmpear.main.MainApplication;
+import com.dsmpear.main.entity.refreshtoken.RefreshToken;
 import com.dsmpear.main.entity.refreshtoken.RefreshTokenRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
@@ -19,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,6 +41,9 @@ public class AuthControllerTest {
     private RefreshTokenRepository tokenRepository;
 
     @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @BeforeEach
@@ -54,12 +60,21 @@ public class AuthControllerTest {
                 .name("aaaa")
                 .build()
         );
+
+        refreshTokenRepository.save(
+                RefreshToken.builder()
+                .email("smoothbear@dsm.hs.kr")
+                .refreshToken("eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDc4NjY1OTQsInN1YiI6ImFhYWFAZHNtLmhzLmtyIiwiZXhwIjoxNjA3ODgxNTk0LCJ0eXBlIjoicmVmcmVzaF90b2tlbiJ9.PaFogQhIeAo-PvyqQTxmPE3HCDyJSTknME0LwfefNsg")
+                .refreshExp(500L)
+                .build()
+        );
     }
 
     @AfterEach
     public void exit() {
         userRepository.deleteAll();
         tokenRepository.deleteAll();
+        refreshTokenRepository.deleteAll();
     }
 
     @Test
@@ -69,5 +84,19 @@ public class AuthControllerTest {
         mvc.perform(post("/auth").content(new ObjectMapper().writeValueAsString(signInRequest))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
+    void refreshTokenTest() throws Exception {
+        mvc.perform(put("/auth")
+            .header("X-Refresh-Token", "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDc4NjY1OTQsInN1YiI6ImFhYWFAZHNtLmhzLmtyIiwiZXhwIjoxNjA3ODgxNTk0LCJ0eXBlIjoicmVmcmVzaF90b2tlbiJ9.PaFogQhIeAo-PvyqQTxmPE3HCDyJSTknME0LwfefNsg")
+        ).andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
+    void refreshTokenTestWithExpect() throws Exception {
+        mvc.perform(put("/auth")
+                .header("X-Refresh-Token", "apple")
+        ).andExpect(status().isForbidden()).andDo(print());
     }
 }

@@ -87,6 +87,7 @@ public class MemberControllerTest {
         );
     }
 
+
     @After
     public void after () {
         memberRepository.deleteAll();
@@ -176,7 +177,7 @@ public class MemberControllerTest {
                         .access(Access.EVERY)
                         .field(Field.AI)
                         .type(Type.TEAM)
-                        .isAccepted(0)
+                        .isAccepted(true)
                         .languages("test")
                         .fileName("test")
                         .createdAt(LocalDateTime.now())

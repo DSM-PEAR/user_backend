@@ -1,11 +1,15 @@
 package com.dsmpear.main.entity.user;
 
+import com.dsmpear.main.entity.report.Report;
+import com.dsmpear.main.entity.userreport.UserReport;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "user_tbl")
@@ -29,6 +33,11 @@ public class User {
 
     @Column(name = "auth_status", nullable = false)
     private Boolean authStatus;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @JoinColumn(name = "user_report")
+    private List<UserReport> userReport;
 
     public void authenticatedSuccess() {
         this.authStatus = true;

@@ -1,12 +1,14 @@
 package com.dsmpear.main.payload.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter
+@Getter @AllArgsConstructor
 public class NotificationRequest {
 
-    private String context;
+    private String boardId;
 
-    private String target_id;
+    private String email;
 
+    private boolean isAccepted;
 }
