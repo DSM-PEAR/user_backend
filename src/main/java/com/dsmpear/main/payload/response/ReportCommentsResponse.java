@@ -19,6 +19,8 @@ public class ReportCommentsResponse {
 
     private String userEmail;
 
+    private String userName;
+
     private Boolean isMine;
 
 }
