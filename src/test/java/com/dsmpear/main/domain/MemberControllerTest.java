@@ -10,10 +10,9 @@ import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.payload.request.MemberRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,8 +28,7 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -60,7 +58,7 @@ public class MemberControllerTest {
 
     private MockMvc mvc;
 
-    @PostConstruct
+    @Before
     public void setUp(){
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
@@ -70,7 +68,7 @@ public class MemberControllerTest {
                 User.builder()
                         .email("test@dsm.hs.kr")
                         .name("홍길동")
-                        .password(passwordEncoder.encode("1234"))
+                        .password(passwordEncoder.encode("1111"))
                         .authStatus(true)
                         .build()
         );
@@ -79,15 +77,17 @@ public class MemberControllerTest {
                 User.builder()
                         .email("tset@dsm.hs.kr")
                         .name("고길동")
-                        .password(passwordEncoder.encode("1234"))
+                        .password(passwordEncoder.encode("1111"))
                         .authStatus(true)
                         .build()
         );
 
-        memberRepository.save(
-                Member.builder()
-                        .reportId(1)
-                        .userEmail("test@dsm.hs.kr")
+        userRepository.save(
+                User.builder()
+                        .email("dsm@dsm.hs.kr")
+                        .name("강아지")
+                        .password(passwordEncoder.encode("1111"))
+                        .authStatus(true)
                         .build()
         );
     }
@@ -98,6 +98,15 @@ public class MemberControllerTest {
         memberRepository.deleteAll();
         reportRepository.deleteAll();
         userRepository.deleteAll();
+        userReportRepository.deleteAll();
+    }
+
+    @Test
+    public void getMember() throws Exception {
+        Integer reportId = addReport();
+
+        mvc.perform(get("/member/"+reportId+"?size=1&page=1"))
+                .andExpect(status().isOk()).andDo(print());
     }
 
     @Test
@@ -106,7 +115,7 @@ public class MemberControllerTest {
     public void addMember() throws Exception {
         int reportId = addReport();
 
-        MemberRequest request = new MemberRequest(reportId,"tset@dsm.hs.kr");
+        MemberRequest request = new MemberRequest(reportId,"dsm@dsm.hs.kr");
 
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
@@ -120,7 +129,7 @@ public class MemberControllerTest {
     public void addMember_noExistUser() throws Exception {
         int reportId = addReport();
 
-        MemberRequest request = new MemberRequest(reportId,"tset@dsm.hs.kr");
+        MemberRequest request = new MemberRequest(reportId,"dsm@dsm.hs.kr");
 
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
@@ -135,7 +144,7 @@ public class MemberControllerTest {
     public void addMember_noLogin() throws Exception {
         int reportId = addReport();
 
-        MemberRequest request = new MemberRequest(reportId,"tset@dsm.hs.kr");
+        MemberRequest request = new MemberRequest(reportId,"dsm@dsm.hs.kr");
 
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
@@ -198,9 +207,23 @@ public class MemberControllerTest {
                         .build()
         );
 
+        memberRepository.save(
+                Member.builder()
+                .reportId(reportId)
+                .userEmail("tset@dsm.hs.kr")
+                .build()
+        );
+
         userReportRepository.save(
                 UserReport.builder()
                         .userEmail("test@dsm.hs.kr")
+                        .reportId(reportId)
+                        .build()
+        );
+
+        userReportRepository.save(
+                UserReport.builder()
+                        .userEmail("tset@dsm.hs.kr")
                         .reportId(reportId)
                         .build()
         );
