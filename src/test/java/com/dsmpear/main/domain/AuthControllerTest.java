@@ -1,5 +1,6 @@
-package com.dsmpear.main;
+package com.dsmpear.main.domain;
 
+import com.dsmpear.main.MainApplication;
 import com.dsmpear.main.entity.refreshtoken.RefreshToken;
 import com.dsmpear.main.entity.refreshtoken.RefreshTokenRepository;
 import com.dsmpear.main.entity.user.User;
@@ -19,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -72,6 +74,7 @@ public class AuthControllerTest {
     @AfterEach
     public void exit() {
         userRepository.deleteAll();
+        
         tokenRepository.deleteAll();
         refreshTokenRepository.deleteAll();
     }
