@@ -51,6 +51,7 @@ public class ReportServiceImpl implements ReportService{
             throw new UserNotFoundException();
         }
 
+
         Report report = reportRepository.save(
                 Report.builder()
                         .title(reportRequest.getTitle())
@@ -68,7 +69,6 @@ public class ReportServiceImpl implements ReportService{
                         .build()
         );
 
-        System.out.println(reportRequest.getTitle());
 
         memberRepository.save(
             Member.builder()
@@ -211,8 +211,6 @@ public class ReportServiceImpl implements ReportService{
     public ReportListResponse getReportList(Pageable page, Type type, Field field, Grade grade) {
         boolean isLogined = authenticationFacade.isLogin();
         User user = null;
-
-        System.out.println(type + " " + field + " " + grade);
 
         if (isLogined) {
             user = userRepository.findByEmail(authenticationFacade.getUserEmail())
