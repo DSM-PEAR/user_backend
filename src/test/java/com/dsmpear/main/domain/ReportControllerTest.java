@@ -8,6 +8,8 @@ import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.*;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
+import com.dsmpear.main.entity.userreport.UserReport;
+import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.payload.request.CommentRequest;
 import com.dsmpear.main.payload.request.ReportRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,6 +61,9 @@ public class ReportControllerTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserReportRepository userReportRepository;
 
     private MockMvc mvc;
 
@@ -560,7 +565,8 @@ public class ReportControllerTest {
     }
 
     private Integer createReport() throws Exception {
-        return reportRepository.save(
+
+       Integer reportId = reportRepository.save(
                 Report.builder()
                         .title("하아암수")
                         .description("이승윤 돼애애애지")
@@ -576,6 +582,15 @@ public class ReportControllerTest {
                         .languages("어어너ㅓㅓㅓ너ㅓ")
                         .build()
         ).getReportId();
+
+        userReportRepository.save(
+                UserReport.builder()
+                        .userEmail("test@dsm.hs.kr")
+                        .reportId(reportId)
+                        .build()
+        );
+
+        return reportId;
     }
 
     private Integer createComment(Integer reportId) throws Exception {
@@ -588,7 +603,5 @@ public class ReportControllerTest {
                 .build()
         ).getId();
     }
-
-
 
 }
