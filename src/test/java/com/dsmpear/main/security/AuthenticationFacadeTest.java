@@ -11,8 +11,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MainApplication.class)
@@ -33,5 +32,11 @@ public class AuthenticationFacadeTest {
     @WithMockUser(value = "smoothbear@dsm.hs.kr", password = "1111")
     public void testIsLogin() {
         assertTrue(authenticationFacade.isLogin());
+    }
+
+    @Test
+    @DisplayName("notLogin Test")
+    public void testNotLogin() {
+        assertFalse(authenticationFacade.isLogin());
     }
 }
