@@ -10,12 +10,12 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchListResponse extends PageResponse {
+public class SearchProfileResponse extends PageResponse {
 
     private List<UserResponse> userResponses;
 
     @Builder
-    public SearchListResponse(int totalElements, int totalPages, List<UserResponse> userResponses) {
+    public SearchProfileResponse(int totalElements, int totalPages, List<UserResponse> userResponses) {
         super(totalElements, totalPages);
         this.userResponses = userResponses;
     }

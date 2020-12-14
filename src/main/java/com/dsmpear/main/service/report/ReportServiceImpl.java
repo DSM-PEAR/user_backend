@@ -21,6 +21,7 @@ import com.dsmpear.main.security.auth.AuthenticationFacade;
 import com.dsmpear.main.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -249,27 +250,4 @@ public class ReportServiceImpl implements ReportService{
                 .build();
     }
 
-    @Override
-    public ReportListResponse searchReport(Pageable page, String mode, String query) {
-        boolean isLogined= authenticationFacade.getUserEmail() == null;
-        ReportListResponse a = null;
-        /*
-        page = PageRequest.of(Math.max(0, page.getPageNumber()-1), page.getPageSize());
-        Page<Report> reportPage;
-        switch(mode) {
-            case "title":
-                reportPage = reportRepository
-                        .findAllByTitleContainsOrderByCreatedAt(page,query);
-                break;
-            case "languages":
-                reportPage = reportRepository
-                        .findAllByLanguagesContainsOrderByCreatedAt(page, query);
-                break;
-            default:
-                break;
-        }
-        ApplicationListResponse a = null;*/
-        return a;
-
-    }
 }
