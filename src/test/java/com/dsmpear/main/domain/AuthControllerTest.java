@@ -75,6 +75,7 @@ public class AuthControllerTest {
     public void exit() {
         userRepository.deleteAll();
         tokenRepository.deleteAll();
+        
         refreshTokenRepository.deleteAll();
     }
 
