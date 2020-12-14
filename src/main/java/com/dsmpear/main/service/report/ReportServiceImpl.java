@@ -206,7 +206,7 @@ public class ReportServiceImpl implements ReportService{
             memberRepository.deleteById(member.getId());
         }
 
-        UserReport userReport = userReportRepository.findByReportId(reportId)
+        UserReport userReport = userReportRepository.findByReportIdAndUserEmail(reportId,user.getEmail())
                 .orElseThrow(ReportNotFoundException::new);
 
         userReportRepository.deleteById(userReport.getReportId());

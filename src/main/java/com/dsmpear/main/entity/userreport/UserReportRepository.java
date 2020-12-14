@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface UserReportRepository extends CrudRepository<UserReport,Integer> {
     List<UserReport> findAllByUserEmail(String email);
 
-    Optional<UserReport> findByReportId(Integer reportId);
+    Optional<UserReport> findByReportIdAndUserEmail(Integer reportId, String userEmail);
 }
