@@ -28,4 +28,12 @@ public class UserReport {
 
     @Column(name = "report_id", nullable = false)
     private Integer reportId;
+    @ManyToOne
+    @JsonBackReference
+    private Report members;
+
+    @OneToOne
+    @JsonManagedReference
+    @JoinColumn(name = "report_id")
+    private Report report;
 }
