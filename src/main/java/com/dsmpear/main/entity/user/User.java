@@ -34,11 +34,6 @@ public class User {
     @Column(name = "auth_status", nullable = false)
     private Boolean authStatus;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    @JsonManagedReference
-    @JoinColumn(name = "user_report")
-    private List<UserReport> userReport;
-
     public void authenticatedSuccess() {
         this.authStatus = true;
     }
