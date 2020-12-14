@@ -74,6 +74,13 @@ public class JwtTokenProviderTest {
     @DisplayName("resolveToken test")
     public void testResolveTokenWithNull() {
         MockHttpServletRequest request = new MockHttpServletRequest();
+        assertNull(jwtTokenProvider.resolveToken(request));
+    }
+
+    @Test
+    @DisplayName("resolveToken test")
+    public void testResolveTokenWithInvalidPrefix() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader("Authorization", "access-token");
         assertNull(jwtTokenProvider.resolveToken(request));
     }
