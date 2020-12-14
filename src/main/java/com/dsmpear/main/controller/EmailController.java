@@ -24,12 +24,12 @@ public class EmailController {
     }
 
     @PutMapping("/auth")
-    public void verifyAccount(@Valid EmailVerifyRequest request) {
+    public void verifyAccount(@RequestBody @Valid EmailVerifyRequest request) {
         userService.verify(request);
     }
 
     @PostMapping("/notification")
-    public void notification(NotificationRequest request, @RequestHeader("Authorization") String secretKey) {
+    public void notification(@RequestBody @Valid NotificationRequest request, @RequestHeader("Authorization") String secretKey) {
         emailService.sendNotificationEmail(request, secretKey);
     }
 

@@ -100,7 +100,16 @@ public class EmailControllerTest {
     }
 
     @Test
-    public void notificationTestWithfalse() throws Exception {
+    public void notificationTestWithBadRequest() throws Exception {
+        mvc.perform(post("/email/notification")
+                .content(new ObjectMapper().writeValueAsString(new NotificationRequest("smoothbear@dsm.hs.kr", "",true))
+                ).contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "abcabc")
+        ).andExpect(status().isUnauthorized()).andDo(print());
+    }
+
+    @Test
+    public void notificationTestWithFalse() throws Exception {
         mvc.perform(post("/email/notification")
                 .content(new ObjectMapper().writeValueAsString(new NotificationRequest("1000", "smoothbear@dsm.hs.kr", "Say no!",false))
                 ).contentType(MediaType.APPLICATION_JSON)
