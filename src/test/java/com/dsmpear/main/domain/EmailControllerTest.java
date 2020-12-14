@@ -54,14 +54,6 @@ public class EmailControllerTest {
         verifyNumberRepository.deleteAll();
     }
 
-
-    @Test
-    public void authNumEmailTest() throws Exception {
-        mvc.perform(get("/email/auth")
-            .param("email", "smoothbear@dsm.hs.kr")
-        ).andExpect(status().isOk()).andDo(print());
-    }
-
     @Test
     public void authNumEmailTestWithBadRequest() throws Exception {
         mvc.perform(get("/email/auth")
@@ -90,15 +82,6 @@ public class EmailControllerTest {
     }
 
     @Test
-    public void notificationTest() throws Exception {
-        mvc.perform(post("/email/notification")
-                .content(new ObjectMapper().writeValueAsString(new NotificationRequest("1000", "smoothbear@dsm.hs.kr", "", true))
-                ).contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "secret")
-        ).andExpect(status().isOk()).andDo(print());
-    }
-
-    @Test
     public void notificationTestWithSecretKeyNotMatchedExcept() throws Exception {
         mvc.perform(post("/email/notification")
                 .content(new ObjectMapper().writeValueAsString(new NotificationRequest("1000", "smoothbear@dsm.hs.kr", "",true))
@@ -110,18 +93,9 @@ public class EmailControllerTest {
     @Test
     public void notificationTestWithBadRequest() throws Exception {
         mvc.perform(post("/email/notification")
-                .content(new ObjectMapper().writeValueAsString(new NotificationRequest("smoothbear@dsm.hs.kr", "",true))
+                .content(new ObjectMapper().writeValueAsString(NotificationRequest.builder().body("안됨").email("smoothbear@dsm.hs.kr").build())
                 ).contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "abcabc")
         ).andExpect(status().isBadRequest()).andDo(print());
-    }
-
-    @Test
-    public void notificationTestWithFalse() throws Exception {
-        mvc.perform(post("/email/notification")
-                .content(new ObjectMapper().writeValueAsString(new NotificationRequest("1000", "smoothbear@dsm.hs.kr", "Say no!",false))
-                ).contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "secret")
-        ).andExpect(status().isUnauthorized()).andDo(print());
     }
 }

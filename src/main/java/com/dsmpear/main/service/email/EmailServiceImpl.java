@@ -41,12 +41,20 @@ public class EmailServiceImpl implements EmailService {
     @Value("${secret.key}")
     private String secretKey;
 
-    @Async
     @Override
-    public void sendNotificationEmail(NotificationRequest request, String secretKey) {
+    public void notificationEmail(NotificationRequest request, String secretKey) {
         if (!passwordEncoder.matches(secretKey, this.secretKey))
             throw new SecretKeyNotMatchedException();
 
+        sendNotificationEmail(request);
+    }
+
+    @Override
+    public void authNumEmail(String sendTo) {
+        sendAuthNumEmail(sendTo);
+    }
+
+    public void sendNotificationEmail(NotificationRequest request) {
         Configuration configuration = new Configuration()
                 .domain(domain)
                 .apiKey(apiKey)
@@ -66,7 +74,6 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Async
-    @Override
     public void sendAuthNumEmail(String sendTo) {
         String number = generateVerifyNumber();
 

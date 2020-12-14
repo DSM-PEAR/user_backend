@@ -1,29 +1,24 @@
 package com.dsmpear.main.payload.request;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
-@Getter @AllArgsConstructor
+@Getter @AllArgsConstructor @NoArgsConstructor @Builder
 public class NotificationRequest {
 
-    @NotNull
+    @NotNull(message = "잘못된 내용이 없는지 확인해주세요.")
     private String boardId;
 
-    @NotNull
+    @NotNull(message = "잘못된 내용이 없는지 확인해주세요.")
     private String email;
 
-    @NotNull
+    @NotNull(message = "잘못된 내용이 없는지 확인해주세요.")
     private String body;
 
-    @NotNull
+    @NotNull(message = "잘못된 내용이 없는지 확인해주세요.")
     private boolean isAccepted;
-
-    public NotificationRequest(String email, String body, boolean isAccepted) {
-        this.email = email;
-        this.body = body;
-        this.isAccepted = isAccepted;
-    }
 }

@@ -1,5 +1,6 @@
 package com.dsmpear.main.domain;
 
+import com.dsmpear.main.MainApplication;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.entity.verifyuser.VerifyUser;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles("test")
 public class UserControllerTest {
 
@@ -52,7 +53,7 @@ public class UserControllerTest {
                 .build();
 
         verifyUserRepository.save(
-                new VerifyUser("smoothbear@dsm.hs.kr")
+                VerifyUser.builder().email("smoothbear@dsm.hs.kr").build()
         );
 
         userRepository.save(
@@ -119,7 +120,7 @@ public class UserControllerTest {
     @Test
     public void registerUserWithUserNotFoundExcept() throws Exception {
         mvc.perform(post("/account").content(new ObjectMapper()
-                .writeValueAsString(new RegisterRequest("smoothbear", "1111", "smoothbear@dsm.hs.kr")))
+                .writeValueAsString(new RegisterRequest("smoothbear", "1111", "smoo@dsm.hs.kr")))
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotFound()).andDo(print());
     }
