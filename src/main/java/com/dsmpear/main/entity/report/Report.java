@@ -1,8 +1,9 @@
 package com.dsmpear.main.entity.report;
 
 import com.dsmpear.main.entity.member.Member;
+import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.payload.request.ReportRequest;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -62,6 +63,10 @@ public class Report {
 
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "report")
     private List<Member> members;
+
+    @OneToOne(mappedBy = "report")
+    @JsonBackReference
+    private UserReport userReport;
 
     public Report update(ReportRequest reportRequest) {
         this.title = reportRequest.getTitle();
