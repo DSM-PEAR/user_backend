@@ -63,8 +63,6 @@ public class SearchServiceImpl implements SearchService{
             );
         }
 
-        System.out.println(reportResponses);
-
         return ReportListResponse.builder()
                 .totalElements((int) reportPage.getTotalElements())
                 .totalPages(reportPage.getTotalPages())
