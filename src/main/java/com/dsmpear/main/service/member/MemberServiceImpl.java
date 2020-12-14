@@ -10,10 +10,15 @@ import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.exceptions.*;
 import com.dsmpear.main.payload.request.MemberRequest;
+import com.dsmpear.main.payload.response.MemberListResponse;
+import com.dsmpear.main.payload.response.MemberResponse;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,6 +31,32 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final ReportRepository reportRepository;
     private final UserReportRepository userReportRepository;
+
+    @Override
+    public MemberListResponse getMember(Integer reportId, Pageable page) {
+        Page<Member> memberPage = memberRepository.findAllByReportId(reportId, page);
+
+        List<MemberResponse> memberResponses = new ArrayList<>();
+
+        reportRepository.findByReportId(reportId)
+                .orElseThrow(ReportNotFoundException::new);
+
+        for(Member member:memberPage){
+            memberResponses.add(
+              MemberResponse.builder()
+                      .memberId(member.getId())
+                      .memberEmail(member.getUserEmail())
+                      .memberName(member.getUserEmail())
+                      .build()
+            );
+        }
+
+        return MemberListResponse.builder()
+                .totalElements(memberPage.getNumberOfElements())
+                .totalPages(memberPage.getTotalPages())
+                .memberResponses(memberResponses)
+                .build();
+    }
 
     @Override
     public void addMember(MemberRequest memberRequest) {
