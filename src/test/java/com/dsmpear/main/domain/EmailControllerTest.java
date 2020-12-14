@@ -1,13 +1,14 @@
 package com.dsmpear.main.domain;
 
+import com.dsmpear.main.MainApplication;
 import com.dsmpear.main.entity.verifynumber.VerifyNumber;
 import com.dsmpear.main.entity.verifynumber.VerifyNumberRepository;
 import com.dsmpear.main.payload.request.EmailVerifyRequest;
 import com.dsmpear.main.payload.request.NotificationRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles("test")
 public class EmailControllerTest {
     @Autowired
@@ -34,7 +35,7 @@ public class EmailControllerTest {
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setup() {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
@@ -48,17 +49,16 @@ public class EmailControllerTest {
         );
     }
 
-    @After
+    @AfterEach
     public void after() {
         verifyNumberRepository.deleteAll();
     }
 
-
     @Test
-    public void authNumEmailTest() throws Exception {
+    public void authNumEmailTestWithBadRequest() throws Exception {
         mvc.perform(get("/email/auth")
-            .param("email", "smoothbear@dsm.hs.kr")
-        ).andExpect(status().isOk()).andDo(print());
+                .param("email", "smoothbear")
+        ).andExpect(status().isBadRequest()).andDo(print());
     }
 
     @Test
@@ -82,15 +82,6 @@ public class EmailControllerTest {
     }
 
     @Test
-    public void notificationTest() throws Exception {
-        mvc.perform(post("/email/notification")
-                .content(new ObjectMapper().writeValueAsString(new NotificationRequest("1000", "smoothbear@dsm.hs.kr", "", true))
-                ).contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "secret")
-        ).andExpect(status().isOk()).andDo(print());
-    }
-
-    @Test
     public void notificationTestWithSecretKeyNotMatchedExcept() throws Exception {
         mvc.perform(post("/email/notification")
                 .content(new ObjectMapper().writeValueAsString(new NotificationRequest("1000", "smoothbear@dsm.hs.kr", "",true))
@@ -100,11 +91,11 @@ public class EmailControllerTest {
     }
 
     @Test
-    public void notificationTestWithfalse() throws Exception {
+    public void notificationTestWithBadRequest() throws Exception {
         mvc.perform(post("/email/notification")
-                .content(new ObjectMapper().writeValueAsString(new NotificationRequest("1000", "smoothbear@dsm.hs.kr", "Say no!",false))
+                .content(new ObjectMapper().writeValueAsString(NotificationRequest.builder().body("안됨").email("smoothbear@dsm.hs.kr").build())
                 ).contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "secret")
-        ).andExpect(status().isUnauthorized()).andDo(print());
+                .header("Authorization", "abcabc")
+        ).andExpect(status().isBadRequest()).andDo(print());
     }
 }
