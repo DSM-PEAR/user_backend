@@ -36,7 +36,7 @@ class AuthDetailsTest {
 
     @Test
     void getPassword() {
-        assertNotNull(authDetails.getPassword());
+        assertNull(authDetails.getPassword());
     }
 
     @Test
