@@ -51,6 +51,7 @@ public class ReportServiceImpl implements ReportService{
             throw new UserNotFoundException();
         }
 
+
         Report report = reportRepository.save(
                 Report.builder()
                         .title(reportRequest.getTitle())
