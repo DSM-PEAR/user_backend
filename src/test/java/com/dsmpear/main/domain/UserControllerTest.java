@@ -6,9 +6,9 @@ import com.dsmpear.main.entity.verifyuser.VerifyUser;
 import com.dsmpear.main.entity.verifyuser.VerifyUserRepository;
 import com.dsmpear.main.payload.request.RegisterRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,7 +45,7 @@ public class UserControllerTest {
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setUp(){
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
@@ -93,7 +93,7 @@ public class UserControllerTest {
 
     }
 
-    @After
+    @AfterEach
     public void after() {
         userRepository.deleteAll();
         verifyUserRepository.deleteAll();

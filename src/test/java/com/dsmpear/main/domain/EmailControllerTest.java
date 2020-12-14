@@ -5,9 +5,9 @@ import com.dsmpear.main.entity.verifynumber.VerifyNumberRepository;
 import com.dsmpear.main.payload.request.EmailVerifyRequest;
 import com.dsmpear.main.payload.request.NotificationRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,7 +34,7 @@ public class EmailControllerTest {
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setup() {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
@@ -48,7 +48,7 @@ public class EmailControllerTest {
         );
     }
 
-    @After
+    @AfterEach
     public void after() {
         verifyNumberRepository.deleteAll();
     }
@@ -59,6 +59,13 @@ public class EmailControllerTest {
         mvc.perform(get("/email/auth")
             .param("email", "smoothbear@dsm.hs.kr")
         ).andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
+    public void authNumEmailTestWithBadRequest() throws Exception {
+        mvc.perform(get("/email/auth")
+                .param("email", "smoothbear")
+        ).andExpect(status().isBadRequest()).andDo(print());
     }
 
     @Test
@@ -105,7 +112,7 @@ public class EmailControllerTest {
                 .content(new ObjectMapper().writeValueAsString(new NotificationRequest("smoothbear@dsm.hs.kr", "",true))
                 ).contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "abcabc")
-        ).andExpect(status().isUnauthorized()).andDo(print());
+        ).andExpect(status().isBadRequest()).andDo(print());
     }
 
     @Test
