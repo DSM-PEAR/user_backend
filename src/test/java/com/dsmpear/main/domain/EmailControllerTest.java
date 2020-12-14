@@ -84,7 +84,7 @@ public class EmailControllerTest {
     @Test
     public void notificationTest() throws Exception {
         mvc.perform(post("/email/notification")
-                .content(new ObjectMapper().writeValueAsString(new NotificationRequest("1000", "smoothbear@dsm.hs.kr", true))
+                .content(new ObjectMapper().writeValueAsString(new NotificationRequest("1000", "smoothbear@dsm.hs.kr", "", true))
                 ).contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "secret")
         ).andExpect(status().isOk()).andDo(print());
@@ -93,9 +93,18 @@ public class EmailControllerTest {
     @Test
     public void notificationTestWithSecretKeyNotMatchedExcept() throws Exception {
         mvc.perform(post("/email/notification")
-                .content(new ObjectMapper().writeValueAsString(new NotificationRequest("1000", "smoothbear@dsm.hs.kr", true))
+                .content(new ObjectMapper().writeValueAsString(new NotificationRequest("1000", "smoothbear@dsm.hs.kr", "",true))
                 ).contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "abcabc")
+        ).andExpect(status().isUnauthorized()).andDo(print());
+    }
+
+    @Test
+    public void notificationTestWithfalse() throws Exception {
+        mvc.perform(post("/email/notification")
+                .content(new ObjectMapper().writeValueAsString(new NotificationRequest("1000", "smoothbear@dsm.hs.kr", "Say no!",false))
+                ).contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "secret")
         ).andExpect(status().isUnauthorized()).andDo(print());
     }
 }

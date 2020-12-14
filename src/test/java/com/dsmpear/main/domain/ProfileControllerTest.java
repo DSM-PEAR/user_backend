@@ -64,6 +64,24 @@ public class ProfileControllerTest {
                         .selfIntro("lalalala")
                         .build()
         );
+        userRepository.save(
+                User.builder()
+                        .email("ptest@dsm.hs.kr")
+                        .name("김길동")
+                        .password(passwordEncoder.encode("1234"))
+                        .authStatus(true)
+                        .selfIntro("lalalala")
+                        .build()
+        );
+        userRepository.save(
+                User.builder()
+                        .email("etest@dsm.hs.kr")
+                        .name("이길동")
+                        .password(passwordEncoder.encode("1234"))
+                        .authStatus(true)
+                        .selfIntro("lalalala")
+                        .build()
+        );
     }
 
     @After
@@ -83,12 +101,6 @@ public class ProfileControllerTest {
     public void getProfile_login () throws Exception {
         mvc.perform(get("/profile?user-email=test@dsm.hs.kr"))
                 .andExpect(status().isOk()).andDo(print());
-    }
-
-    @Test
-    public void getProfile_bad () throws Exception {
-        mvc.perform(get("/profile?userEmail=test@dsm.hs.kr"))
-                .andExpect(status().isBadRequest()).andDo(print());
     }
 
     @Test

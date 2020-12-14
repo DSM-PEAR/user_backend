@@ -10,5 +10,7 @@ public class NotificationRequest {
 
     private String email;
 
+    private String body;
+
     private boolean isAccepted;
 }
