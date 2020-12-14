@@ -134,7 +134,7 @@ public class EmailServiceImpl implements EmailService {
             body = body.replace("{{accepted}}", "거부");
         }
 
-        return body.replace("{{board_url}}", url + "report/" + request.getBoardId());
+        return body.replace("{{board_url}}", url + "report/" + request.getBoardId()).replace("{{body}}", request.getBody());
     }
 
 }
