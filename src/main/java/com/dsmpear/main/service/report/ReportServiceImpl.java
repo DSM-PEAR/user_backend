@@ -41,7 +41,6 @@ public class ReportServiceImpl implements ReportService{
     private final CommentRepository commentRepository;
     private final UserReportRepository userReportRepository;
     private final CommentService commentService;
-    private final UserReportRepository userReportRepository;
 
     // 보고서 작성
     @Override
