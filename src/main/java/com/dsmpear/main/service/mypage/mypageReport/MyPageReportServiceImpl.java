@@ -29,11 +29,14 @@ public class MyPageReportServiceImpl implements MyPageReportService{
     public ProfileReportListResponse getReport(Pageable page) {
         String email = authenticationFacade.getUserEmail();;
 
-        Page<Report> reportPage = userReportRepository.findAllByUserEmail(email, page);
+        Page<UserReport> reportPage = userReportRepository.findAllByUserEmail(email, page);
 
         List<MyPageReportResponse> myPageReportResponses = new ArrayList<>();
 
-        for(Report report : reportPage){
+        for(UserReport userReport : reportPage){
+            Report report = reportRepository.findByReportId(userReport.getReportId())
+                    .orElseThrow(ReportNotFoundException::new);
+
             myPageReportResponses.add(
                     MyPageReportResponse.builder()
                             .reportId(report.getReportId())
