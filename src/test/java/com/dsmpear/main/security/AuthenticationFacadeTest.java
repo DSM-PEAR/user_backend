@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MainApplication.class)
@@ -25,5 +26,12 @@ public class AuthenticationFacadeTest {
     @WithMockUser(value = "aaaa@dsm.hs.kr", password = "1111")
     public void testGetUserEmail() {
         assertEquals("aaaa@dsm.hs.kr", authenticationFacade.getUserEmail());
+    }
+
+    @Test
+    @DisplayName("isLogin Test")
+    @WithMockUser(value = "smoothbear@dsm.hs.kr", password = "1111")
+    public void testIsLogin() {
+        assertTrue(authenticationFacade.isLogin());
     }
 }
