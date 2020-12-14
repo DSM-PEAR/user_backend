@@ -19,7 +19,4 @@ public interface ReportService {
 
     ReportListResponse getReportList(Pageable page, Type type, Field field, Grade grade);
 
-    ReportListResponse searchReport(Pageable page, String mode, String query);
-
-    ReportListResponse getUserReportList(Pageable page, String email);
 }

@@ -1,6 +1,7 @@
 package com.dsmpear.main.controller;
 
-import com.dsmpear.main.payload.response.SearchListResponse;
+import com.dsmpear.main.payload.response.ReportListResponse;
+import com.dsmpear.main.payload.response.SearchProfileResponse;
 import com.dsmpear.main.service.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -16,11 +17,16 @@ public class SearchController {
 
     private final SearchService searchService;
 
-    @GetMapping
-    public SearchListResponse searchProfile(@RequestParam("mode") String mode,
-                                            @RequestParam("keyword") String keyword,
-                                            Pageable page){
-        return searchService.getSearchList(mode,keyword,page);
+    @GetMapping("/profile")
+    public SearchProfileResponse searchProfile(@RequestParam("keyword") String keyword,
+                                               Pageable page){
+        return searchService.searchProfile(keyword,page);
+    }
+
+    @GetMapping("/report")
+    public ReportListResponse reportListResponse(@RequestParam("keyword") String keyword,
+                                                 Pageable page) {
+        return searchService.searchReportByTitle(page,keyword);
     }
 
 }

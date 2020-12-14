@@ -64,10 +64,6 @@ public class Report {
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "report")
     private List<Member> members;
 
-    @OneToOne(mappedBy = "report")
-    @JsonBackReference
-    private UserReport userReport;
-
     public Report update(ReportRequest reportRequest) {
         this.title = reportRequest.getTitle();
         this.description = reportRequest.getDescription();

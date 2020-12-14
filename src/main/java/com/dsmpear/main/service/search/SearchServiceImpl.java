@@ -1,8 +1,13 @@
 package com.dsmpear.main.service.search;
 
+import com.dsmpear.main.entity.report.Access;
+import com.dsmpear.main.entity.report.Report;
+import com.dsmpear.main.entity.report.ReportRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
-import com.dsmpear.main.payload.response.SearchListResponse;
+import com.dsmpear.main.payload.response.ReportListResponse;
+import com.dsmpear.main.payload.response.ReportResponse;
+import com.dsmpear.main.payload.response.SearchProfileResponse;
 import com.dsmpear.main.payload.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,60 +22,52 @@ import java.util.List;
 public class SearchServiceImpl implements SearchService{
 
     private final UserRepository userRepository;
+    private final ReportRepository reportRepository;
 
     @Override
-    public SearchListResponse getSearchList(String mode, String keyword, Pageable page) {
+    public SearchProfileResponse searchProfile(String keyword, Pageable page) {
 
         List<UserResponse> userResponses = new ArrayList<>();
-        Page<User> userPage = null;
 
-        if(mode.equals("profile")){
-            userResponses = getProfileList(keyword, page);
-            userPage = userPage(keyword, page);
+        Page<User> userPage = userRepository.findAllByNameContains(keyword, page);
+
+        for (User user : userPage) {
+            userResponses.add(
+                    UserResponse.builder()
+                            .name(user.getName())
+                            .email(user.getEmail())
+                            .build()
+            );
         }
 
-        return SearchListResponse.builder()
+        return SearchProfileResponse.builder()
                 .totalElements(userPage.getNumberOfElements())
                 .totalPages(userPage.getTotalPages())
                 .userResponses(userResponses)
                 .build();
-
-
-
     }
 
-    private List<UserResponse> getProfileList(String keyword, Pageable page){
-        Page<User> userPage = userRepository.findAllByNameContains(keyword, page);
+    @Override
+    public ReportListResponse searchReportByTitle(Pageable page, String title) {
+        Page<Report> reportPage = reportRepository.findAllByAccessAndIsAcceptedTrueAndIsSubmittedTrueAndTitleContaining(Access.EVERY, title, page);
 
-        List<UserResponse> userResponses = new ArrayList<>();
+        List<ReportResponse> reportResponses = new ArrayList<>();
 
-        for (User user : userPage) {
-            userResponses.add(
-                    UserResponse.builder()
-                            .name(user.getName())
-                            .email(user.getEmail())
+        for(Report report : reportPage) {
+            reportResponses.add(
+                    ReportResponse.builder()
+                            .reportId(report.getReportId())
+                            .title(report.getTitle())
+                            .createdAt(report.getCreatedAt())
                             .build()
             );
         }
 
-        return userResponses;
+        return ReportListResponse.builder()
+                .totalElements((int) reportPage.getTotalElements())
+                .totalPages(reportPage.getTotalPages())
+                .reportResponses(reportResponses)
+                .build();
+
     }
-
-    private Page<User> userPage(String keyword, Pageable page) {
-        Page<User> userPage = userRepository.findAllByNameContains(keyword, page);
-
-        List<UserResponse> userResponses = new ArrayList<>();
-
-        for (User user : userPage) {
-            userResponses.add(
-                    UserResponse.builder()
-                            .name(user.getName())
-                            .email(user.getEmail())
-                            .build()
-            );
-        }
-
-        return userPage;
-    }
-
 }

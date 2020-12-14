@@ -1,14 +1,15 @@
 package com.dsmpear.main.domain;
 
+import com.dsmpear.main.MainApplication;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.entity.verifyuser.VerifyUser;
 import com.dsmpear.main.entity.verifyuser.VerifyUserRepository;
 import com.dsmpear.main.payload.request.RegisterRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles("test")
 public class UserControllerTest {
 
@@ -45,14 +46,14 @@ public class UserControllerTest {
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setUp(){
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .build();
 
         verifyUserRepository.save(
-                new VerifyUser("smoothbear@dsm.hs.kr")
+                VerifyUser.builder().email("smoothbear@dsm.hs.kr").build()
         );
 
         userRepository.save(
@@ -93,7 +94,7 @@ public class UserControllerTest {
 
     }
 
-    @After
+    @AfterEach
     public void after() {
         userRepository.deleteAll();
         verifyUserRepository.deleteAll();
@@ -119,7 +120,7 @@ public class UserControllerTest {
     @Test
     public void registerUserWithUserNotFoundExcept() throws Exception {
         mvc.perform(post("/account").content(new ObjectMapper()
-                .writeValueAsString(new RegisterRequest("smoothbear", "1111", "smoothbear@dsm.hs.kr")))
+                .writeValueAsString(new RegisterRequest("smoothbear", "1111", "smoo@dsm.hs.kr")))
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotFound()).andDo(print());
     }

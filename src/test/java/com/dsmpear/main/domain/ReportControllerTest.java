@@ -116,7 +116,6 @@ public class ReportControllerTest {
                 .build();
 
         String requests = new ObjectMapper().writeValueAsString(request);
-        System.out.println(requests);
 
 
         mvc.perform(post("/report")

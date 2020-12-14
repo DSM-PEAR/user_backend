@@ -2,13 +2,14 @@ package com.dsmpear.main.payload.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Getter @Setter @NotNull @AllArgsConstructor
+@Getter @Setter @NotNull @AllArgsConstructor @NoArgsConstructor
 public class RegisterRequest {
 
     @NotBlank(message = "이름을 입력해주세요.")

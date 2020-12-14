@@ -5,6 +5,8 @@ import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.*;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
+import com.dsmpear.main.entity.userreport.UserReport;
+import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.payload.request.MemberRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
@@ -46,6 +48,9 @@ public class MemberControllerTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private UserReportRepository userReportRepository;
 
     @Autowired
     private ReportRepository reportRepository;
@@ -106,7 +111,7 @@ public class MemberControllerTest {
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().is2xxSuccessful()).andDo(print());
+                .andExpect(status().isCreated()).andDo(print());
     }
 
     @Test
@@ -120,12 +125,13 @@ public class MemberControllerTest {
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isForbidden());
     }
 
     //로그인하지 않았을 때
     @Test
     @Order(1)
+    @WithMockUser()
     public void addMember_noLogin() throws Exception {
         int reportId = addReport();
 
@@ -144,7 +150,7 @@ public class MemberControllerTest {
         int reportId = addReport();
 
         mvc.perform(delete("/member/"+reportId))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isForbidden()).andDo(print());
     }
 
     @Test
@@ -162,7 +168,7 @@ public class MemberControllerTest {
         int reportId = addReport();
 
         mvc.perform(delete("/member/"+reportId))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isForbidden());
     }
 
     //로그인하지 않았을 때
@@ -172,15 +178,16 @@ public class MemberControllerTest {
         Integer reportId = reportRepository.save(
                 Report.builder()
                         .title("hello")
-                        .description("test")
+                        .description("hihello")
                         .grade(Grade.GRADE2)
                         .access(Access.EVERY)
                         .field(Field.AI)
                         .type(Type.TEAM)
-                        .isAccepted(true)
-                        .languages("test")
-                        .fileName("test")
+                        .isSubmitted(false)
                         .createdAt(LocalDateTime.now())
+                        .github("깃허브으")
+                        .languages("자바")
+                        .fileName("이승윤 돼지")
                         .build()
         ).getReportId();
 
@@ -190,6 +197,14 @@ public class MemberControllerTest {
                         .userEmail("test@dsm.hs.kr")
                         .build()
         );
+
+        userReportRepository.save(
+                UserReport.builder()
+                        .userEmail("test@dsm.hs.kr")
+                        .reportId(reportId)
+                        .build()
+        );
+
         return reportId;
     }
 }
