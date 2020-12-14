@@ -21,6 +21,7 @@ import com.dsmpear.main.security.auth.AuthenticationFacade;
 import com.dsmpear.main.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -39,8 +40,8 @@ public class ReportServiceImpl implements ReportService{
     private final AuthenticationFacade authenticationFacade;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
-    private final UserReportRepository userReportRepository;
     private final CommentService commentService;
+    private final UserReportRepository userReportRepository;
 
     // 보고서 작성
     @Override
@@ -49,6 +50,7 @@ public class ReportServiceImpl implements ReportService{
         if(authenticationFacade.isLogin() == false) {
             throw new UserNotFoundException();
         }
+
 
         Report report = reportRepository.save(
                 Report.builder()
@@ -68,8 +70,6 @@ public class ReportServiceImpl implements ReportService{
         );
 
 
-        System.out.println(reportRequest.getTitle());
-
         memberRepository.save(
             Member.builder()
                     .reportId(report.getReportId())
@@ -83,6 +83,7 @@ public class ReportServiceImpl implements ReportService{
                     .reportId(report.getReportId())
                     .build()
         );
+
     }
 
     // 보고서 보기
@@ -211,8 +212,6 @@ public class ReportServiceImpl implements ReportService{
         boolean isLogined = authenticationFacade.isLogin();
         User user = null;
 
-        System.out.println(type + " " + field + " " + grade);
-
         if (isLogined) {
             user = userRepository.findByEmail(authenticationFacade.getUserEmail())
                     .orElseThrow(UserNotFoundException::new);
@@ -249,46 +248,4 @@ public class ReportServiceImpl implements ReportService{
                 .build();
     }
 
-    @Override
-    public ReportListResponse searchReport(Pageable page, String mode, String query) {
-        boolean isLogined= authenticationFacade.getUserEmail() == null;
-        ReportListResponse a = null;
-        /*
-        page = PageRequest.of(Math.max(0, page.getPageNumber()-1), page.getPageSize());
-        Page<Report> reportPage;
-        switch(mode) {
-            case "title":
-                reportPage = reportRepository
-                        .findAllByTitleContainsOrderByCreatedAt(page,query);
-                break;
-            case "languages":
-                reportPage = reportRepository
-                        .findAllByLanguagesContainsOrderByCreatedAt(page, query);
-                break;
-            default:
-                break;
-        }
-        ApplicationListResponse a = null;*/
-        return a;
-
-    }
-
-    @Override
-    public ReportListResponse getUserReportList(Pageable page, String email) {
-        /*boolean isLogined = authenticationFacade.isLogin();
-
-        if(!isLogined) {
-            throw new UserNotFoundException();
-        }
-
-        List<Report> userReport = userReportRepository.findAllByUserEmail(email);
-
-        return ReportListResponse.builder()
-                .totalElements((int) reportPage.getTotalElements())
-                .totalPages(reportPage.getTotalPages())
-                .noticeResponses(noticeResponses)
-                .build();*/
-        ReportListResponse rep = null;
-        return null;
-    }
 }
