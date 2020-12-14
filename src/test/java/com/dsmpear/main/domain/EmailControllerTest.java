@@ -1,5 +1,6 @@
 package com.dsmpear.main.domain;
 
+import com.dsmpear.main.MainApplication;
 import com.dsmpear.main.entity.verifynumber.VerifyNumber;
 import com.dsmpear.main.entity.verifynumber.VerifyNumberRepository;
 import com.dsmpear.main.payload.request.EmailVerifyRequest;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles("test")
 public class EmailControllerTest {
     @Autowired
