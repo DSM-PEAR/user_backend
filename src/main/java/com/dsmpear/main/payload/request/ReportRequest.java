@@ -48,4 +48,6 @@ public class ReportRequest {
     @NotNull
     private String github;
 
+    private String teamName;
+
 }

@@ -118,6 +118,7 @@ public class ReportControllerTest {
                 .github("깃허브으")
                 .languages("자바")
                 .fileName("이승윤 돼지")
+                .teamName("이름")
                 .build();
 
         String requests = new ObjectMapper().writeValueAsString(request);
@@ -146,6 +147,7 @@ public class ReportControllerTest {
                 .github("깃허브으")
                 .languages("자바")
                 .fileName("이승윤 돼지")
+                .teamName("dfas")
                 .build();
 
         mvc.perform(post("/report")
@@ -172,6 +174,7 @@ public class ReportControllerTest {
                 .github("깃허브으")
                 .languages("자바")
                 .fileName("이승윤 돼지")
+                .teamName("dfas")
                 .build();
 
         mvc.perform(post("/report")
@@ -246,6 +249,7 @@ public class ReportControllerTest {
                 .fileName("돼지")
                 .isSubmitted(false)
                 .github("깃허브ㅡ")
+                .teamName("dfas")
                 .build();
 
 
@@ -276,6 +280,7 @@ public class ReportControllerTest {
                 .fileName("돼지")
                 .isSubmitted(false)
                 .github("깃허브ㅡ")
+                .teamName("dfas")
                 .build();
 
         addMember(reportId);
@@ -305,6 +310,7 @@ public class ReportControllerTest {
                 .fileName("돼지")
                 .isSubmitted(false)
                 .github("깃허브ㅡ")
+                .teamName("dfas")
                 .build();
 
         addMember(reportId);
@@ -580,6 +586,7 @@ public class ReportControllerTest {
                         .fileName("파아아일")
                         .github("기이이잇허브")
                         .languages("어어너ㅓㅓㅓ너ㅓ")
+                        .teamName("asdf")
                         .build()
         ).getReportId();
 
