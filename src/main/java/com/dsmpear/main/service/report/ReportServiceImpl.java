@@ -102,7 +102,9 @@ public class ReportServiceImpl implements ReportService{
 
         if(isLogined) {
             for(Member member : members) {
-                isMine = !memberRepository.findByReportIdAndUserEmail(reportId, member.getUserEmail()).isEmpty();
+                if(!memberRepository.findByReportIdAndUserEmail(reportId, member.getUserEmail()).isEmpty()) {
+                    isMine = true;
+                }
             }
 
             // 보고서를 볼 때 보는 보고서의 access가 ADMIN인지, 만약 admin이라면  현재 유저가 글쓴이가 맞는지 검사
@@ -203,6 +205,11 @@ public class ReportServiceImpl implements ReportService{
         for(Member member : members) {
             memberRepository.deleteById(member.getId());
         }
+
+        UserReport userReport = userReportRepository.findByReportIdAndUserEmail(reportId,user.getEmail())
+                .orElseThrow(ReportNotFoundException::new);
+
+        userReportRepository.deleteById(userReport.getReportId());
 
         reportRepository.deleteById(reportId);
     }
