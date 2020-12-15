@@ -126,7 +126,6 @@ public class MemberControllerTest {
 
     //로그인하지 않았을 때
     @Test
-    @Order(1)
     @WithMockUser()
     public void addMember_noLogin() throws Exception {
         int reportId = addReport();
