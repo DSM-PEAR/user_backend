@@ -64,7 +64,7 @@ public class MyPageControllerTest {
     }
 
     @After
-       public void after () {
+    public void after() {
            memberRepository.deleteAll();
            reportRepository.deleteAll();
            userRepository.deleteAll();
@@ -72,14 +72,32 @@ public class MyPageControllerTest {
 
     @Test
     @WithMockUser(value = "test@dsm.hs.kr", password = "1111")
-    public void getMyProfile () throws Exception {
+    public void getMyProfile_test() throws Exception {
     mvc.perform(get("/user/profile"))
              .andExpect(status().isOk()).andDo(print());
     }
 
     @Test
+    @WithMockUser(value = "tset@dsm.hs.kr", password = "1111")
+    public void getMyProfile_tset () throws Exception {
+        mvc.perform(get("/user/profile"))
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
     @WithMockUser(value = "test@dsm.hs.kr", password = "1111")
-    public void modifySelfIntro () throws Exception {
+    public void modifySelfIntro_test () throws Exception {
+
+        mvc.perform(put("/user/profile")
+                .param("intro", "hihihihi")
+                .param("gitHub","https://github.com/syxxn")
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
+    @WithMockUser(value = "tset@dsm.hs.kr", password = "1111")
+    public void modifySelfIntro_tset () throws Exception {
 
         mvc.perform(put("/user/profile")
                 .param("intro", "hihihihi")

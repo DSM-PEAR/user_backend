@@ -1,7 +1,9 @@
 package com.dsmpear.main.entity.report;
 
 import com.dsmpear.main.entity.member.Member;
+import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.payload.request.ReportRequest;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,13 +47,19 @@ public class Report {
     private Type type;
 
     @Column(name = "is_accepted", nullable = false)
-    private int isAccepted;
+    private boolean isAccepted;
 
-    @Column(nullable = false)
-    private String languages;
+    @Column(name = "is_submitted", nullable = false)
+    private boolean isSubmitted;
 
     @Column(name = "file_name",nullable = false)
     private String fileName;
+
+    @Column(nullable = false)
+    private String github;
+
+    @Column(nullable = false)
+    private String languages;
 
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "report")
     private List<Member> members;
@@ -59,12 +67,14 @@ public class Report {
     public Report update(ReportRequest reportRequest) {
         this.title = reportRequest.getTitle();
         this.description = reportRequest.getDescription();
+        this.languages = reportRequest.getLanguages();
         this.type = reportRequest.getType();
         this.access = reportRequest.getAccess();
         this.field = reportRequest.getField();
         this.grade = reportRequest.getGrade();
+        this.isSubmitted = reportRequest.isSubmitted();
         this.fileName = reportRequest.getFileName();
-        this.languages = reportRequest.getLanguages();
+        this.github = reportRequest.getGithub();
         return this;
     }
 

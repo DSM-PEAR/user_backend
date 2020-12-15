@@ -5,13 +5,14 @@ import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.*;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
+import com.dsmpear.main.entity.userreport.UserReport;
+import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.payload.request.MemberRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,8 +28,7 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -48,6 +48,9 @@ public class MemberControllerTest {
     private MemberRepository memberRepository;
 
     @Autowired
+    private UserReportRepository userReportRepository;
+
+    @Autowired
     private ReportRepository reportRepository;
 
     @Autowired
@@ -55,7 +58,7 @@ public class MemberControllerTest {
 
     private MockMvc mvc;
 
-    @PostConstruct
+    @Before
     public void setUp(){
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
@@ -65,7 +68,7 @@ public class MemberControllerTest {
                 User.builder()
                         .email("test@dsm.hs.kr")
                         .name("홍길동")
-                        .password(passwordEncoder.encode("1234"))
+                        .password(passwordEncoder.encode("1111"))
                         .authStatus(true)
                         .build()
         );
@@ -74,24 +77,36 @@ public class MemberControllerTest {
                 User.builder()
                         .email("tset@dsm.hs.kr")
                         .name("고길동")
-                        .password(passwordEncoder.encode("1234"))
+                        .password(passwordEncoder.encode("1111"))
                         .authStatus(true)
                         .build()
         );
 
-        memberRepository.save(
-                Member.builder()
-                        .reportId(1)
-                        .userEmail("test@dsm.hs.kr")
+        userRepository.save(
+                User.builder()
+                        .email("dsm@dsm.hs.kr")
+                        .name("강아지")
+                        .password(passwordEncoder.encode("1111"))
+                        .authStatus(true)
                         .build()
         );
     }
+
 
     @After
     public void after () {
         memberRepository.deleteAll();
         reportRepository.deleteAll();
         userRepository.deleteAll();
+        userReportRepository.deleteAll();
+    }
+
+    @Test
+    public void getMember() throws Exception {
+        Integer reportId = addReport();
+
+        mvc.perform(get("/member/"+reportId+"?size=1&page=1"))
+                .andExpect(status().isOk()).andDo(print());
     }
 
     @Test
@@ -100,12 +115,12 @@ public class MemberControllerTest {
     public void addMember() throws Exception {
         int reportId = addReport();
 
-        MemberRequest request = new MemberRequest(reportId,"tset@dsm.hs.kr");
+        MemberRequest request = new MemberRequest(reportId,"dsm@dsm.hs.kr");
 
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().is2xxSuccessful()).andDo(print());
+                .andExpect(status().isCreated()).andDo(print());
     }
 
     @Test
@@ -114,27 +129,28 @@ public class MemberControllerTest {
     public void addMember_noExistUser() throws Exception {
         int reportId = addReport();
 
-        MemberRequest request = new MemberRequest(reportId,"tset@dsm.hs.kr");
+        MemberRequest request = new MemberRequest(reportId,"dsm@dsm.hs.kr");
 
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isForbidden());
     }
 
     //로그인하지 않았을 때
-    /*@Test
+    @Test
     @Order(1)
+    @WithMockUser()
     public void addMember_noLogin() throws Exception {
         int reportId = addReport();
 
-        MemberRequest request = new MemberRequest(reportId,"tset@dsm.hs.kr");
+        MemberRequest request = new MemberRequest(reportId,"dsm@dsm.hs.kr");
 
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotFound());
-    }*/
+                .andExpect(status().isForbidden());
+    }
 
     @Test
     @Order(2)
@@ -143,7 +159,7 @@ public class MemberControllerTest {
         int reportId = addReport();
 
         mvc.perform(delete("/member/"+reportId))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isForbidden()).andDo(print());
     }
 
     @Test
@@ -161,7 +177,7 @@ public class MemberControllerTest {
         int reportId = addReport();
 
         mvc.perform(delete("/member/"+reportId))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isForbidden());
     }
 
     //로그인하지 않았을 때
@@ -171,15 +187,16 @@ public class MemberControllerTest {
         Integer reportId = reportRepository.save(
                 Report.builder()
                         .title("hello")
-                        .description("test")
+                        .description("hihello")
                         .grade(Grade.GRADE2)
                         .access(Access.EVERY)
                         .field(Field.AI)
                         .type(Type.TEAM)
-                        .isAccepted(0)
-                        .languages("test")
-                        .fileName("test")
+                        .isSubmitted(false)
                         .createdAt(LocalDateTime.now())
+                        .github("깃허브으")
+                        .languages("자바")
+                        .fileName("이승윤 돼지")
                         .build()
         ).getReportId();
 
@@ -189,6 +206,28 @@ public class MemberControllerTest {
                         .userEmail("test@dsm.hs.kr")
                         .build()
         );
+
+        memberRepository.save(
+                Member.builder()
+                .reportId(reportId)
+                .userEmail("tset@dsm.hs.kr")
+                .build()
+        );
+
+        userReportRepository.save(
+                UserReport.builder()
+                        .userEmail("test@dsm.hs.kr")
+                        .reportId(reportId)
+                        .build()
+        );
+
+        userReportRepository.save(
+                UserReport.builder()
+                        .userEmail("tset@dsm.hs.kr")
+                        .reportId(reportId)
+                        .build()
+        );
+
         return reportId;
     }
 }
