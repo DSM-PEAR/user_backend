@@ -9,10 +9,10 @@ import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.payload.request.MemberRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+//import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -35,7 +34,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MemberControllerTest {
 
     @Autowired
@@ -58,7 +56,7 @@ public class MemberControllerTest {
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setUp(){
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
@@ -92,8 +90,7 @@ public class MemberControllerTest {
         );
     }
 
-
-    @After
+    @AfterEach
     public void after () {
         memberRepository.deleteAll();
         reportRepository.deleteAll();
@@ -102,15 +99,6 @@ public class MemberControllerTest {
     }
 
     @Test
-    public void getMember() throws Exception {
-        Integer reportId = addReport();
-
-        mvc.perform(get("/member/"+reportId+"?size=1&page=1"))
-                .andExpect(status().isOk()).andDo(print());
-    }
-
-    @Test
-    @Order(1)
     @WithMockUser(username = "test@dsm.hs.kr",password = "1111")
     public void addMember() throws Exception {
         int reportId = addReport();
@@ -124,7 +112,6 @@ public class MemberControllerTest {
     }
 
     @Test
-    @Order(1)
     @WithMockUser(username = "",password = "")
     public void addMember_noExistUser() throws Exception {
         int reportId = addReport();
@@ -153,7 +140,6 @@ public class MemberControllerTest {
     }
 
     @Test
-    @Order(2)
     @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
     public void deleteMember() throws Exception{
         int reportId = addReport();
@@ -163,7 +149,6 @@ public class MemberControllerTest {
     }
 
     @Test
-    @Order(2)
     @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
     public void deleteMember_noId() throws Exception{
         mvc.perform(delete("/member"))
@@ -171,7 +156,6 @@ public class MemberControllerTest {
     }
 
     @Test
-    @Order(2)
     @WithMockUser(username = "",password = "")
     public void deleteMember_noLogin() throws Exception{
         int reportId = addReport();
