@@ -2,9 +2,9 @@ package com.dsmpear.main.domain;
 
 import com.dsmpear.main.entity.notice.Notice;
 import com.dsmpear.main.entity.notice.NoticeRepository;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,14 +33,14 @@ public class NoticeControllerTest {
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .build();
     }
 
-    @After
+    @AfterEach
     public void deleteAll(){
         noticeRepository.deleteAll();;
     }
