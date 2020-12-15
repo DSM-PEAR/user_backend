@@ -120,7 +120,7 @@ public class ProfileControllerTest {
         mvc.perform(get("/profile"))
                 .andExpect(status().isBadRequest()).andDo(print());
     }
-
+/*
     //보고서 목록
     @Test
     public void  getReportList() throws Exception{
@@ -271,5 +271,5 @@ public class ProfileControllerTest {
         );
 
         return reportId;
-    }
+    }*/
 }
