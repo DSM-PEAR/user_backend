@@ -1,9 +1,11 @@
 package com.dsmpear.main.service.profile.profileReport;
 
+import com.dsmpear.main.entity.report.Access;
 import com.dsmpear.main.entity.report.Report;
 import com.dsmpear.main.entity.report.ReportRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
+import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.exceptions.ReportNotFoundException;
 import com.dsmpear.main.exceptions.UserNotFoundException;
@@ -24,35 +26,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProfileReportServiceImpl implements ProfileReportService{
 
+    private final UserRepository userRepository;
     private final ReportRepository reportRepository;
     private final UserReportRepository userReportRepository;
-    private final UserRepository userRepository;
+    private final AuthenticationFacade authenticationFacade;
 
     @Override
     public ProfileReportListResponse getReport(String userEmail, Pageable page) {
-            User user = userRepository.findByEmail(userEmail)
-                    .orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(UserNotFoundException::new);
 
-            Page<Report> reportPage = userReportRepository.findAllByUserEmail(user.getEmail(), page);
+        Page<UserReport> reportPage = userReportRepository.findAllByUserEmail(user.getEmail(), page);
 
-            List<ProfileReportResponse> profileReportResponses = new ArrayList<>();
+        List<ProfileReportResponse> profileReportResponses = new ArrayList<>();
 
-            for(Report reports : reportPage){
-                Report report = reportRepository.findByReportId(reports.getReportId())
-                        .orElseThrow(ReportNotFoundException::new);
-                profileReportResponses.add(
-                        ProfileReportResponse.builder()
-                                .reportId(report.getReportId())
-                                .title(report.getTitle())
-                                .createdAt(report.getCreatedAt())
-                                .build()
-                );
-            }
-            return ProfileReportListResponse.builder()
-                    .totalElements(reportPage.getNumberOfElements())
-                    .totalPages(reportPage.getTotalPages())
-                    .profileReportResponses(profileReportResponses)
-                    .build();
+        /*for(UserReport userReport : reportPage){
+            Report report = reportRepository.findAllByAccessAndIsAccepted(Access.EVERY, true)
+                    .orElseThrow(ReportNotFoundException::new);
+
+            profileReportResponses.add(
+                    ProfileReportResponse.builder()
+                            .reportId(report.getReportId())
+                            .title(report.getTitle())
+                            .createdAt(report.getCreatedAt())
+                            .build()
+            );
+        }*/
+        return ProfileReportListResponse.builder()
+                .totalElements(reportPage.getNumberOfElements())
+                .totalPages(reportPage.getTotalPages())
+                .profileReportResponses(profileReportResponses)
+                .build();
     }
 
 }
