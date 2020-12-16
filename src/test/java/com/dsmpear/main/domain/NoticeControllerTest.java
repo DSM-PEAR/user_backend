@@ -1,15 +1,14 @@
 package com.dsmpear.main.domain;
 
+import com.dsmpear.main.MainApplication;
 import com.dsmpear.main.entity.notice.Notice;
 import com.dsmpear.main.entity.notice.NoticeRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,9 +22,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles("test")
-public class NoticeControllerTest {
+class NoticeControllerTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -35,14 +34,14 @@ public class NoticeControllerTest {
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .build();
     }
 
-    @After
+    @AfterEach
     public void deleteAll(){
         noticeRepository.deleteAll();;
     }
@@ -53,6 +52,7 @@ public class NoticeControllerTest {
         createNotice("notice1");
         createNotice("notice2");
         createNotice("notice3");
+        createNotice("notice4");
 
         mvc.perform(get("/notice"))
                 .andExpect(status().isOk()).andDo(print());
@@ -63,13 +63,20 @@ public class NoticeControllerTest {
 
         Integer noticeId = createNotice("notice");
 
-        mvc.perform(get("/notice/"+noticeId)
-                .content(new ObjectMapper().writeValueAsString(3))
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
+        mvc.perform(get("/notice/"+noticeId))
                 .andExpect(status().isOk()).andDo(print());
     }
 
-    public Integer createNotice(String str){
+    @Test
+    public void  getNoticeContent_noId() throws Exception{
+
+        createNotice("notice");
+
+        mvc.perform(get("/notice/"+10000))
+                .andExpect(status().isNotFound()).andDo(print());
+    }
+
+    private Integer createNotice(String str){
         return noticeRepository.save(
                 Notice.builder()
                         .title(str)
