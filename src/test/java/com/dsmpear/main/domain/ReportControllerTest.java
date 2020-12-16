@@ -12,7 +12,10 @@ import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.payload.request.CommentRequest;
 import com.dsmpear.main.payload.request.ReportRequest;
+import com.dsmpear.main.payload.response.ReportContentResponse;
+import com.dsmpear.main.payload.response.ReportResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
@@ -25,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -65,6 +69,7 @@ public class ReportControllerTest {
 
     @BeforeEach
     public void setUp() {
+
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .build();
@@ -184,7 +189,11 @@ public class ReportControllerTest {
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void getReportTest() throws Exception {
 
-        Integer reportId = createReport();
+        String expected = "expect";
+
+        Integer reportId = createReport(expected);
+        Integer reportId1 = createReport("애는 좀 다르고");
+        Integer reportId2 = createReport("이건 정상적이게 비슷");
 
         Integer memberId1 = addMember(reportId);
 
@@ -198,7 +207,7 @@ public class ReportControllerTest {
     @WithMockUser(value = "test1@dsm.hs.kr",password="1234")
     public void getReportTest1() throws Exception {
 
-        Integer reportId = createReport();
+        Integer reportId = createReport("이건 정상적이게");
 
         Integer memberId1 = addMember(reportId);
 
@@ -211,7 +220,7 @@ public class ReportControllerTest {
     @Test
     public void getReportTest2() throws Exception {
 
-        Integer reportId = createReport();
+        Integer reportId = createReport("이건 정상적이게");
 
         Integer memberId1 = addMember(reportId);
 
@@ -225,7 +234,7 @@ public class ReportControllerTest {
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void updateReportTest() throws Exception {
 
-        Integer reportId = createReport();
+        Integer reportId = createReport("이건 정상적이게");
 
         addMember(reportId);
 
@@ -256,7 +265,7 @@ public class ReportControllerTest {
     @WithMockUser(value = "test1@dsm.hs.kr",password="1234")
     public void updateReportTest1() throws Exception {
 
-        Integer reportId = createReport();
+        Integer reportId = createReport("이건 정상적이게");
 
 
         ReportRequest request = ReportRequest.builder()
@@ -285,7 +294,7 @@ public class ReportControllerTest {
     @Test
     public void updateReportTest2() throws Exception {
 
-        Integer reportId = createReport();
+        Integer reportId = createReport("이건 정상적이게");
 
 
         ReportRequest request = ReportRequest.builder()
@@ -314,7 +323,7 @@ public class ReportControllerTest {
     @Test
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void deleteReportTest() throws Exception {
-        Integer reportId = createReport();
+        Integer reportId = createReport("휅");
         addMember(reportId);
 
         mvc.perform(delete("/report/"+reportId)).andDo(print())
@@ -325,7 +334,7 @@ public class ReportControllerTest {
     @Test
     @WithMockUser(value = "test12@dsm.hs.kr",password="1234")
     public void deleteReportTest1() throws Exception {
-        Integer reportId = createReport();
+        Integer reportId = createReport("헑");
         addMember(reportId);
 
         mvc.perform(delete("/report/"+reportId)).andDo(print())
@@ -335,7 +344,7 @@ public class ReportControllerTest {
     // 보고서 삭제 실패 테스트
     @Test
     public void deleteReportTest2() throws Exception {
-        Integer reportId = createReport();
+        Integer reportId = createReport("핡");
         addMember(reportId);
 
         mvc.perform(delete("/report/"+reportId)).andDo(print())
@@ -346,7 +355,7 @@ public class ReportControllerTest {
     @Test
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
     public void createComment() throws Exception {
-        Integer reportId = createReport();
+        Integer reportId = createReport("흹");
         addMember(reportId);
         Integer commentId1 = createComment(reportId);
 
@@ -366,7 +375,7 @@ public class ReportControllerTest {
     // 댓글 작성 실패 테스트
     @Test
     public void createComment1() throws Exception {
-        Integer reportId = createReport();
+        Integer reportId = createReport("쭯");
         addMember(reportId);
         Integer commentId1 = createComment(reportId);
 
@@ -387,7 +396,7 @@ public class ReportControllerTest {
     @Test
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
     public void updateComment() throws Exception {
-        Integer reportId = createReport();
+        Integer reportId = createReport("똷");
         addMember(reportId);
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
@@ -401,7 +410,7 @@ public class ReportControllerTest {
     @Test
     @WithMockUser(value = "test22@dsm.hs.kr", password = "1234")
     public void updateComment2() throws Exception {
-        Integer reportId = createReport();
+        Integer reportId = createReport("끫");
         addMember(reportId);
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
@@ -416,7 +425,7 @@ public class ReportControllerTest {
     // 댓글 수정 실패 테스트
     @Test
     public void updateComment1() throws Exception {
-        Integer reportId = createReport();
+        Integer reportId = createReport("제엥ㅁ냐ㅐ럼니ㅏㅇ");
         addMember(reportId);
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
@@ -431,7 +440,7 @@ public class ReportControllerTest {
     @Test
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
     public void deleteComment() throws Exception {
-        Integer reportId = createReport();
+        Integer reportId = createReport("제에에에에에ㅔ에에목");
         addMember(reportId);
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
@@ -445,7 +454,7 @@ public class ReportControllerTest {
     @Test
     @WithMockUser(value = "test1@dsm.hs.kr", password = "1234")
     public void deleteComment1() throws Exception {
-        Integer reportId = createReport();
+        Integer reportId = createReport("제에에에목");
         addMember(reportId);
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
@@ -458,7 +467,7 @@ public class ReportControllerTest {
 
     @Test
     public void deleteComment2() throws Exception {
-        Integer reportId = createReport();
+        Integer reportId = createReport("제에목");
         addMember(reportId);
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
@@ -467,72 +476,6 @@ public class ReportControllerTest {
                 .andExpect(status().isForbidden()).andDo(print());
 
     }
-
-    // 보고서 목록 성공(필터 둘다)
-    @Test
-    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
-    public void getReportListTest1() throws Exception {
-
-        Integer reportId = createReport();
-        Integer reportId1 = createReport();
-        Integer reportId2 = createReport();
-
-        Integer memberId1 = addMember(reportId);
-
-        mvc.perform(get("/report/filter?field=AI&type=SOLE&grade=GRADE1")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().is4xxClientError()).andDo(print());
-    }
-
-    // 보고서 목록(타입 없음)
-    @Test
-    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
-    public void getReportListTest2() throws Exception {
-
-        Integer reportId = createReport();
-        Integer reportId1 = createReport();
-        Integer reportId2 = createReport();
-
-        Integer memberId1 = addMember(reportId);
-
-        mvc.perform(get("/report/filter?field=AI&grade=GRADE1")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().is4xxClientError()).andDo(print());
-    }
-
-
-    // 보고서 목록(필드 없음)
-    @Test
-    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
-    public void getReportListTest3() throws Exception {
-
-        Integer reportId = createReport();
-        Integer reportId1 = createReport();
-        Integer reportId2 = createReport();
-
-        Integer memberId1 = addMember(reportId);
-
-        mvc.perform(get("/report/filter?grade=GRADE1&type=TEAM")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().is4xxClientError()).andDo(print());
-    }
-
-    // 보고서 목록 실패(학년 없음)
-    @Test
-    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
-    public void getReportListTest4() throws Exception {
-
-        Integer reportId = createReport();
-        Integer reportId1 = createReport();
-        Integer reportId2 = createReport();
-
-        Integer memberId1 = addMember(reportId);
-
-        mvc.perform(get("/report/filter?type=TEAM&field=AI")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().is4xxClientError()).andDo(print());
-    }
-
 
     private Integer addMember(Integer reportId) {
         return memberRepository.save(
@@ -544,11 +487,11 @@ public class ReportControllerTest {
         ).getId();
     }
 
-    private Integer createReport() throws Exception {
+    private Integer createReport(String title) throws Exception {
 
         Integer reportId = reportRepository.save(
                 Report.builder()
-                        .title("하아암수")
+                        .title(title)
                         .description("이승윤 돼애애애지")
                         .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                         .grade(Grade.GRADE1)

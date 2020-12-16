@@ -232,13 +232,13 @@ public class ReportServiceImpl implements ReportService{
 
 
         if(type == null && field == null) {
-            reportPage = reportRepository.findAllByAccessAndGradeAndIsAcceptedTrueAndIsSubmittedTrue(Access.EVERY, grade, page);
+            reportPage = reportRepository.findAllByAccessAndGradeAndAcceptedTrueAndSubmittedTrueOrderByCreatedAt(Access.EVERY, grade, page);
         }else if(type == null) {
-            reportPage = reportRepository.findAllByAccessAndFieldAndGradeAndIsAcceptedTrueAndIsSubmittedTrue(Access.EVERY, field, grade, page);
+            reportPage = reportRepository.findAllByAccessAndFieldAndGradeAndAcceptedTrueAndSubmittedTrueOrderByCreatedAt(Access.EVERY, field, grade, page);
         }else if(field == null) {
-            reportPage = reportRepository.findAllByAccessAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrue(Access.EVERY, type, grade, page);
+            reportPage = reportRepository.findAllByAccessAndTypeAndGradeAndAcceptedTrueAndSubmittedTrueOrderByCreatedAt(Access.EVERY, type, grade, page);
         }else {
-            reportPage = reportRepository.findAllByAccessAndFieldAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrue(Access.EVERY, field, type, grade, page);
+            reportPage = reportRepository.findAllByAccessAndFieldAndTypeAndGradeAndAcceptedTrueAndSubmittedTrueOrderByCreatedAt(Access.EVERY, field, type, grade, page);
         }
 
         for(Report report : reportPage) {
