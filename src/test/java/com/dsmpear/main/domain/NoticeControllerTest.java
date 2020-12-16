@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class NoticeControllerTest {
+class NoticeControllerTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -68,13 +68,13 @@ public class NoticeControllerTest {
     @Test
     public void  getNoticeContent_noId() throws Exception{
 
-        int noticeId = createNotice("notice");
+        createNotice("notice");
 
         mvc.perform(get("/notice/"+10000))
                 .andExpect(status().isNotFound()).andDo(print());
     }
 
-    public Integer createNotice(String str){
+    private Integer createNotice(String str){
         return noticeRepository.save(
                 Notice.builder()
                         .title(str)
