@@ -10,9 +10,7 @@ import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.payload.request.MemberRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,14 +25,14 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles("test")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class MemberControllerTest {
 
     @Autowired
@@ -91,6 +89,7 @@ class MemberControllerTest {
         );
     }
 
+
     @AfterEach
     public void after () {
         memberRepository.deleteAll();
@@ -100,6 +99,15 @@ class MemberControllerTest {
     }
 
     @Test
+    public void getMember() throws Exception {
+        Integer reportId = addReport();
+
+        mvc.perform(get("/member/"+reportId+"?size=1&page=1"))
+                .andExpect(status().isOk()).andDo(print());
+    }
+
+    @Test
+    @Order(1)
     @WithMockUser(username = "test@dsm.hs.kr",password = "1111")
     public void addMember() throws Exception {
         int reportId = addReport();
@@ -113,6 +121,7 @@ class MemberControllerTest {
     }
 
     @Test
+    @Order(1)
     @WithMockUser(username = "",password = "")
     public void addMember_noExistUser() throws Exception {
         int reportId = addReport();
@@ -127,6 +136,7 @@ class MemberControllerTest {
 
     //로그인하지 않았을 때
     @Test
+    @Order(1)
     @WithMockUser()
     public void addMember_noLogin() throws Exception {
         int reportId = addReport();
@@ -140,6 +150,7 @@ class MemberControllerTest {
     }
 
     @Test
+    @Order(2)
     @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
     public void deleteMember() throws Exception{
         int reportId = addReport();
@@ -149,6 +160,7 @@ class MemberControllerTest {
     }
 
     @Test
+    @Order(2)
     @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
     public void deleteMember_noId() throws Exception{
         mvc.perform(delete("/member"))
@@ -156,6 +168,7 @@ class MemberControllerTest {
     }
 
     @Test
+    @Order(2)
     @WithMockUser(username = "",password = "")
     public void deleteMember_noLogin() throws Exception{
         int reportId = addReport();
@@ -180,7 +193,8 @@ class MemberControllerTest {
                         .createdAt(LocalDateTime.now())
                         .github("깃허브으")
                         .languages("자바")
-                        .fileName("이승윤 돼지")
+                        .fileName("나는야 천재")
+                        .teamName("룰루랄라")
                         .build()
         ).getReportId();
 
@@ -193,9 +207,9 @@ class MemberControllerTest {
 
         memberRepository.save(
                 Member.builder()
-                .reportId(reportId)
-                .userEmail("tset@dsm.hs.kr")
-                .build()
+                        .reportId(reportId)
+                        .userEmail("tset@dsm.hs.kr")
+                        .build()
         );
 
         userReportRepository.save(
