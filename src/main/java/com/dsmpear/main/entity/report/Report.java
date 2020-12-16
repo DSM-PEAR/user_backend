@@ -61,6 +61,9 @@ public class Report {
     @Column(nullable = false)
     private String languages;
 
+    @Column(nullable = false, name = "team_name")
+    private String teamName;
+
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "report")
     private List<Member> members;
 
