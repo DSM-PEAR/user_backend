@@ -1,6 +1,6 @@
-
 package com.dsmpear.main.domain;
 
+import com.dsmpear.main.MainApplication;
 import com.dsmpear.main.entity.comment.Comment;
 import com.dsmpear.main.entity.comment.CommentRepository;
 import com.dsmpear.main.entity.member.Member;
@@ -13,20 +13,17 @@ import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.payload.request.CommentRequest;
 import com.dsmpear.main.payload.request.ReportRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -39,9 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles("test")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ReportControllerTest {
 
     @Autowired
@@ -67,7 +63,7 @@ public class ReportControllerTest {
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
@@ -94,16 +90,17 @@ public class ReportControllerTest {
 
     }
 
-    @After
+    @AfterEach
     public void after() {
         memberRepository.deleteAll();
         reportRepository.deleteAll();
         userRepository.deleteAll();
+        commentRepository.deleteAll();
+        userReportRepository.deleteAll();
     }
 
     // 보고서 작성 성공 테스트
     @Test
-    @Order(1)
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void createReportTest() throws Exception {
 
@@ -133,7 +130,6 @@ public class ReportControllerTest {
 
     // 보고서 작성 실패 테스트(UserNotFound)
     @Test
-    @Order(1)
     public void createReportTest2() throws Exception {
 
         ReportRequest request = ReportRequest.builder()
@@ -159,7 +155,6 @@ public class ReportControllerTest {
 
     // 보고서 작성 실패 테스트(InvalidData인데 에러메세지는 없음)
     @Test
-    @Order(1)
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void createReportTest3() throws Exception {
 
@@ -186,7 +181,6 @@ public class ReportControllerTest {
 
     // 보고서 보기 성공 테스트
     @Test
-    @Order(1)
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void getReportTest() throws Exception {
 
@@ -201,7 +195,6 @@ public class ReportControllerTest {
 
     // 보고서 보기 성공 테스트(EVERY꺼)
     @Test
-    @Order(1)
     @WithMockUser(value = "test1@dsm.hs.kr",password="1234")
     public void getReportTest1() throws Exception {
 
@@ -216,7 +209,6 @@ public class ReportControllerTest {
     }
 
     @Test
-    @Order(1)
     public void getReportTest2() throws Exception {
 
         Integer reportId = createReport();
@@ -230,7 +222,6 @@ public class ReportControllerTest {
 
     // 보고서 업데이트 성공 테스트
     @Test
-    @Order(1)
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void updateReportTest() throws Exception {
 
@@ -262,7 +253,6 @@ public class ReportControllerTest {
 
     // 보고서 업데이트 실패 테스트(userNotMemer)
     @Test
-    @Order(1)
     @WithMockUser(value = "test1@dsm.hs.kr",password="1234")
     public void updateReportTest1() throws Exception {
 
@@ -293,7 +283,6 @@ public class ReportControllerTest {
 
     // 보고서 업데이트 실패 테스트(UserNotFound)
     @Test
-    @Order(1)
     public void updateReportTest2() throws Exception {
 
         Integer reportId = createReport();
@@ -323,7 +312,6 @@ public class ReportControllerTest {
 
     // 보고서 삭제 성공 테스트
     @Test
-    @Order(1)
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void deleteReportTest() throws Exception {
         Integer reportId = createReport();
@@ -335,7 +323,6 @@ public class ReportControllerTest {
 
     // 보고서 삭제 실패 테스트
     @Test
-    @Order(1)
     @WithMockUser(value = "test12@dsm.hs.kr",password="1234")
     public void deleteReportTest1() throws Exception {
         Integer reportId = createReport();
@@ -347,7 +334,6 @@ public class ReportControllerTest {
 
     // 보고서 삭제 실패 테스트
     @Test
-    @Order(1)
     public void deleteReportTest2() throws Exception {
         Integer reportId = createReport();
         addMember(reportId);
@@ -358,7 +344,6 @@ public class ReportControllerTest {
 
     // 댓글 작성 성공 테스트
     @Test
-    @Order(2)
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
     public void createComment() throws Exception {
         Integer reportId = createReport();
@@ -380,7 +365,6 @@ public class ReportControllerTest {
 
     // 댓글 작성 실패 테스트
     @Test
-    @Order(2)
     public void createComment1() throws Exception {
         Integer reportId = createReport();
         addMember(reportId);
@@ -401,7 +385,6 @@ public class ReportControllerTest {
 
     // 댓글 수정 성공 테스트
     @Test
-    @Order(2)
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
     public void updateComment() throws Exception {
         Integer reportId = createReport();
@@ -416,7 +399,6 @@ public class ReportControllerTest {
     }
 
     @Test
-    @Order(2)
     @WithMockUser(value = "test22@dsm.hs.kr", password = "1234")
     public void updateComment2() throws Exception {
         Integer reportId = createReport();
@@ -433,7 +415,6 @@ public class ReportControllerTest {
 
     // 댓글 수정 실패 테스트
     @Test
-    @Order(2)
     public void updateComment1() throws Exception {
         Integer reportId = createReport();
         addMember(reportId);
@@ -448,7 +429,6 @@ public class ReportControllerTest {
 
     // 댓글 삭제 성공 테스트
     @Test
-    @Order(2)
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
     public void deleteComment() throws Exception {
         Integer reportId = createReport();
@@ -463,7 +443,6 @@ public class ReportControllerTest {
 
 
     @Test
-    @Order(2)
     @WithMockUser(value = "test1@dsm.hs.kr", password = "1234")
     public void deleteComment1() throws Exception {
         Integer reportId = createReport();
@@ -478,7 +457,6 @@ public class ReportControllerTest {
 
 
     @Test
-    @Order(2)
     public void deleteComment2() throws Exception {
         Integer reportId = createReport();
         addMember(reportId);
@@ -492,7 +470,6 @@ public class ReportControllerTest {
 
     // 보고서 목록 성공(필터 둘다)
     @Test
-    @Order(1)
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void getReportListTest1() throws Exception {
 
@@ -509,7 +486,6 @@ public class ReportControllerTest {
 
     // 보고서 목록(타입 없음)
     @Test
-    @Order(1)
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void getReportListTest2() throws Exception {
 
@@ -527,7 +503,6 @@ public class ReportControllerTest {
 
     // 보고서 목록(필드 없음)
     @Test
-    @Order(1)
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void getReportListTest3() throws Exception {
 
@@ -544,7 +519,6 @@ public class ReportControllerTest {
 
     // 보고서 목록 실패(학년 없음)
     @Test
-    @Order(1)
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void getReportListTest4() throws Exception {
 
@@ -572,7 +546,7 @@ public class ReportControllerTest {
 
     private Integer createReport() throws Exception {
 
-       Integer reportId = reportRepository.save(
+        Integer reportId = reportRepository.save(
                 Report.builder()
                         .title("하아암수")
                         .description("이승윤 돼애애애지")
@@ -603,11 +577,11 @@ public class ReportControllerTest {
     private Integer createComment(Integer reportId) throws Exception {
         return commentRepository.save(
                 Comment.builder()
-                .reportId(reportId)
-                .userEmail("test@dsm.hs.kr")
-                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                .content("아이야아이야")
-                .build()
+                        .reportId(reportId)
+                        .userEmail("test@dsm.hs.kr")
+                        .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                        .content("아이야아이야")
+                        .build()
         ).getId();
     }
 
