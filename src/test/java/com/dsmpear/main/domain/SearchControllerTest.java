@@ -1,16 +1,17 @@
 package com.dsmpear.main.domain;
 
+import com.dsmpear.main.MainApplication;
 import com.dsmpear.main.entity.report.*;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.payload.response.ReportListResponse;
 import com.dsmpear.main.payload.response.SearchProfileResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles("test")
 public class SearchControllerTest {
 
@@ -46,7 +47,7 @@ public class SearchControllerTest {
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
@@ -116,7 +117,7 @@ public class SearchControllerTest {
 
     }
 
-    @After
+    @AfterEach
     public void after () {
         userRepository.deleteAll();
         reportRepository.deleteAll();
@@ -197,6 +198,7 @@ public class SearchControllerTest {
                 .isSubmitted(true)
                 .languages("언어다ㅏ")
                 .type(Type.TEAM)
+                .teamName("팀이름이다아ㅏ")
                 .build()
         );
     }

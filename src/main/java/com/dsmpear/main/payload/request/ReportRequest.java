@@ -40,12 +40,14 @@ public class ReportRequest {
     private Grade grade;
 
     @NotNull
-    private boolean isSubmitted;
+    private Boolean isSubmitted;
 
     @NotNull
     private String fileName;
 
     @NotNull
     private String github;
+
+    private String teamName;
 
 }

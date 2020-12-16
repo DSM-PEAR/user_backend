@@ -50,7 +50,9 @@ public class ReportServiceImpl implements ReportService{
         if(authenticationFacade.isLogin() == false) {
             throw new UserNotFoundException();
         }
-
+        String teamName = reportRequest.getTeamName()==null?
+                userRepository.findByEmail(authenticationFacade.getUserEmail()).get().getName()
+                :reportRequest.getTeamName();
 
         Report report = reportRepository.save(
                 Report.builder()
@@ -62,10 +64,11 @@ public class ReportServiceImpl implements ReportService{
                         .field(reportRequest.getField())
                         .type(reportRequest.getType())
                         .isAccepted(false)
-                        .isSubmitted(reportRequest.isSubmitted())
+                        .isSubmitted(reportRequest.getIsSubmitted())
                         .fileName(reportRequest.getFileName())
                         .github(reportRequest.getGithub())
                         .languages(reportRequest.getLanguages())
+                        .teamName(teamName)
                         .build()
         );
 
@@ -111,9 +114,9 @@ public class ReportServiceImpl implements ReportService{
             if(!isMine) {
                 if (report.getAccess().equals(Access.ADMIN)) {
                     throw new PermissionDeniedException();
-                } else if (!report.isAccepted()) {
+                } else if (!report.getIsAccepted()) {
                     throw new PermissionDeniedException();
-                } else if(!report.isSubmitted()) {
+                } else if(!report.getIsSubmitted()) {
                     throw new PermissionDeniedException();
                 }
             }
@@ -157,7 +160,7 @@ public class ReportServiceImpl implements ReportService{
                 .fileName(report.getFileName())
                 .createdAt(report.getCreatedAt())
                 .description(report.getDescription())
-                .isMine(isMine)
+                .mine(isMine)
                 .comments(commentsResponses)
                 .build();
     }
@@ -184,10 +187,10 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public void deleteReport(Integer reportId) {
-        User user = null;
+        Member user = null;
         boolean isMine = false;
         if(authenticationFacade.isLogin()) {
-            memberRepository.findByReportIdAndUserEmail(reportId, authenticationFacade.getUserEmail())
+            user = memberRepository.findByReportIdAndUserEmail(reportId, authenticationFacade.getUserEmail())
                     .orElseThrow(UserNotFoundException::new);
         }else {
             throw new UserNotFoundException();
@@ -206,7 +209,7 @@ public class ReportServiceImpl implements ReportService{
             memberRepository.deleteById(member.getId());
         }
 
-        UserReport userReport = userReportRepository.findByReportIdAndUserEmail(reportId,user.getEmail())
+        UserReport userReport = userReportRepository.findByReportIdAndUserEmail(reportId,user.getUserEmail())
                 .orElseThrow(ReportNotFoundException::new);
 
         userReportRepository.deleteById(userReport.getReportId());
@@ -229,13 +232,13 @@ public class ReportServiceImpl implements ReportService{
 
 
         if(type == null && field == null) {
-            reportPage = reportRepository.findAllByAccessAndGradeAndIsAcceptedTrueAndIsSubmittedTrue(Access.EVERY, grade, page);
+            reportPage = reportRepository.findAllByAccessAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, grade, page);
         }else if(type == null) {
-            reportPage = reportRepository.findAllByAccessAndFieldAndGradeAndIsAcceptedTrueAndIsSubmittedTrue(Access.EVERY, field, grade, page);
+            reportPage = reportRepository.findAllByAccessAndFieldAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, field, grade, page);
         }else if(field == null) {
-            reportPage = reportRepository.findAllByAccessAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrue(Access.EVERY, type, grade, page);
+            reportPage = reportRepository.findAllByAccessAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, type, grade, page);
         }else {
-            reportPage = reportRepository.findAllByAccessAndFieldAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrue(Access.EVERY, field, type, grade, page);
+            reportPage = reportRepository.findAllByAccessAndFieldAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, field, type, grade, page);
         }
 
         for(Report report : reportPage) {
