@@ -52,6 +52,7 @@ class NoticeControllerTest {
         createNotice("notice1");
         createNotice("notice2");
         createNotice("notice3");
+        createNotice("notice4");
 
         mvc.perform(get("/notice"))
                 .andExpect(status().isOk()).andDo(print());
