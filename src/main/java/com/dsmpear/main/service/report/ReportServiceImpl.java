@@ -50,7 +50,9 @@ public class ReportServiceImpl implements ReportService{
         if(authenticationFacade.isLogin() == false) {
             throw new UserNotFoundException();
         }
-
+        String teamName = reportRequest.getTeamName()==null?
+                userRepository.findByEmail(authenticationFacade.getUserEmail()).get().getName()
+                :reportRequest.getTeamName();
 
         Report report = reportRepository.save(
                 Report.builder()
@@ -66,6 +68,7 @@ public class ReportServiceImpl implements ReportService{
                         .fileName(reportRequest.getFileName())
                         .github(reportRequest.getGithub())
                         .languages(reportRequest.getLanguages())
+                        .teamName(teamName)
                         .build()
         );
 
@@ -184,10 +187,10 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public void deleteReport(Integer reportId) {
-        User user = null;
+        Member user = null;
         boolean isMine = false;
         if(authenticationFacade.isLogin()) {
-            memberRepository.findByReportIdAndUserEmail(reportId, authenticationFacade.getUserEmail())
+            user = memberRepository.findByReportIdAndUserEmail(reportId, authenticationFacade.getUserEmail())
                     .orElseThrow(UserNotFoundException::new);
         }else {
             throw new UserNotFoundException();
@@ -206,7 +209,7 @@ public class ReportServiceImpl implements ReportService{
             memberRepository.deleteById(member.getId());
         }
 
-        UserReport userReport = userReportRepository.findByReportIdAndUserEmail(reportId,user.getEmail())
+        UserReport userReport = userReportRepository.findByReportIdAndUserEmail(reportId,user.getUserEmail())
                 .orElseThrow(ReportNotFoundException::new);
 
         userReportRepository.deleteById(userReport.getReportId());
