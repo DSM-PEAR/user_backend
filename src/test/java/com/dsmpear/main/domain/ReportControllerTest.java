@@ -1,6 +1,7 @@
 package com.dsmpear.main.domain;
 
 import com.dsmpear.main.MainApplication;
+import com.dsmpear.main.config.ObjectMapperConfiguration;
 import com.dsmpear.main.entity.comment.Comment;
 import com.dsmpear.main.entity.comment.CommentRepository;
 import com.dsmpear.main.entity.member.Member;
@@ -13,6 +14,7 @@ import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.payload.request.CommentRequest;
 import com.dsmpear.main.payload.request.ReportRequest;
 import com.dsmpear.main.payload.response.ReportContentResponse;
+import com.dsmpear.main.payload.response.ReportListResponse;
 import com.dsmpear.main.payload.response.ReportResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
@@ -65,6 +67,9 @@ public class ReportControllerTest {
     @Autowired
     private UserReportRepository userReportRepository;
 
+    @Autowired
+    private ObjectMapperConfiguration objectMapperConfiguration;
+
     private MockMvc mvc;
 
     @BeforeEach
@@ -116,14 +121,14 @@ public class ReportControllerTest {
                 .access(Access.EVERY)
                 .field(Field.AI)
                 .type(Type.TEAM)
-                .isSubmitted(false)
+                .submitted(false)
                 .github("깃허브으")
                 .languages("자바")
                 .fileName("이승윤 돼지")
                 .teamName("이름")
                 .build();
 
-        String requests = new ObjectMapper().writeValueAsString(request);
+        String requests = objectMapperConfiguration.objectMapper().writeValueAsString(request);
 
 
         mvc.perform(post("/report")
@@ -144,7 +149,7 @@ public class ReportControllerTest {
                 .access(Access.EVERY)
                 .field(Field.AI)
                 .type(Type.TEAM)
-                .isSubmitted(false)
+                .submitted(false)
                 .github("깃허브으")
                 .languages("자바")
                 .fileName("이승윤 돼지")
@@ -152,7 +157,7 @@ public class ReportControllerTest {
                 .build();
 
         mvc.perform(post("/report")
-                .content(new ObjectMapper().writeValueAsString(request))
+                .content(objectMapperConfiguration.objectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
                 .andExpect(status().isNotFound()).andDo(print());
 
@@ -170,7 +175,7 @@ public class ReportControllerTest {
                 .access(Access.EVERY)
                 .field(Field.AI)
                 .type(Type.TEAM)
-                .isSubmitted(false)
+                .submitted(false)
                 .github("깃허브으")
                 .languages("자바")
                 .fileName("이승윤 돼지")
@@ -178,7 +183,7 @@ public class ReportControllerTest {
                 .build();
 
         mvc.perform(post("/report")
-                .content(new ObjectMapper().writeValueAsString(request))
+                .content(objectMapperConfiguration.objectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
                 .andExpect(status().is4xxClientError()).andDo(print());
 
@@ -191,15 +196,18 @@ public class ReportControllerTest {
 
         String expected = "expect";
 
-        Integer reportId = createReport(expected);
         Integer reportId1 = createReport("애는 좀 다르고");
+        Integer reportId = createReport(expected);
         Integer reportId2 = createReport("이건 정상적이게 비슷");
 
         Integer memberId1 = addMember(reportId);
 
-        mvc.perform(get("/report/"+reportId)
+        MvcResult mvcResult = mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk()).andDo(print()).andReturn();
+
+        ReportContentResponse response = objectMapperConfiguration.objectMapper().readValue(mvcResult.getResponse().getContentAsString(), ReportContentResponse.class);
+        Assert.assertEquals(response.getTitle(), expected);
     }
 
     // 보고서 보기 성공 테스트(EVERY꺼)
@@ -207,14 +215,19 @@ public class ReportControllerTest {
     @WithMockUser(value = "test1@dsm.hs.kr",password="1234")
     public void getReportTest1() throws Exception {
 
-        Integer reportId = createReport("이건 정상적이게");
+        String expected = "expected";
+
+        Integer reportId = createReport(expected);
 
         Integer memberId1 = addMember(reportId);
 
 
-        mvc.perform(get("/report/"+reportId)
+        MvcResult mvcResult = mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk()).andDo(print()).andReturn();
+
+        ReportContentResponse response = objectMapperConfiguration.objectMapper().readValue(mvcResult.getResponse().getContentAsString(), ReportContentResponse.class);
+        Assert.assertEquals(response.getTitle(), expected);
     }
 
     @Test
@@ -247,7 +260,7 @@ public class ReportControllerTest {
                 .grade(Grade.GRADE1)
                 .field(Field.AI)
                 .fileName("돼지")
-                .isSubmitted(false)
+                .submitted(false)
                 .github("깃허브ㅡ")
                 .teamName("dfas")
                 .build();
@@ -277,7 +290,7 @@ public class ReportControllerTest {
                 .grade(Grade.GRADE1)
                 .field(Field.AI)
                 .fileName("돼지")
-                .isSubmitted(false)
+                .submitted(false)
                 .github("깃허브ㅡ")
                 .teamName("dfas")
                 .build();
@@ -287,7 +300,7 @@ public class ReportControllerTest {
         mvc.perform(patch("/report/"+reportId)
                 .content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isNotFound()).andDo(print());
+                .andExpect(status().is4xxClientError()).andDo(print());
     }
 
     // 보고서 업데이트 실패 테스트(UserNotFound)
@@ -306,7 +319,7 @@ public class ReportControllerTest {
                 .grade(Grade.GRADE1)
                 .field(Field.AI)
                 .fileName("돼지")
-                .isSubmitted(false)
+                .submitted(false)
                 .github("깃허브ㅡ")
                 .teamName("dfas")
                 .build();
@@ -316,7 +329,7 @@ public class ReportControllerTest {
         mvc.perform(patch("/report/"+reportId)
                 .content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isNotFound()).andDo(print());
+                .andExpect(status().is4xxClientError()).andDo(print());
     }
 
     // 보고서 삭제 성공 테스트

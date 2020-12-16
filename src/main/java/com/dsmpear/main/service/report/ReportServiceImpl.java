@@ -160,7 +160,7 @@ public class ReportServiceImpl implements ReportService{
                 .fileName(report.getFileName())
                 .createdAt(report.getCreatedAt())
                 .description(report.getDescription())
-                .isMine(isMine)
+                .mine(isMine)
                 .comments(commentsResponses)
                 .build();
     }
