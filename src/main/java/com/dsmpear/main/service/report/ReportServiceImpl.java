@@ -50,7 +50,9 @@ public class ReportServiceImpl implements ReportService{
         if(authenticationFacade.isLogin() == false) {
             throw new UserNotFoundException();
         }
-
+        String teamName = reportRequest.getTeamName()==null?
+                userRepository.findByEmail(authenticationFacade.getUserEmail()).get().getName()
+                :reportRequest.getTeamName();
 
         Report report = reportRepository.save(
                 Report.builder()
@@ -66,6 +68,7 @@ public class ReportServiceImpl implements ReportService{
                         .fileName(reportRequest.getFileName())
                         .github(reportRequest.getGithub())
                         .languages(reportRequest.getLanguages())
+                        .teamName(teamName)
                         .build()
         );
 
@@ -102,7 +105,9 @@ public class ReportServiceImpl implements ReportService{
 
         if(isLogined) {
             for(Member member : members) {
-                isMine = !memberRepository.findByReportIdAndUserEmail(reportId, member.getUserEmail()).isEmpty();
+                if(!memberRepository.findByReportIdAndUserEmail(reportId, member.getUserEmail()).isEmpty()) {
+                    isMine = true;
+                }
             }
 
             // 보고서를 볼 때 보는 보고서의 access가 ADMIN인지, 만약 admin이라면  현재 유저가 글쓴이가 맞는지 검사
@@ -182,10 +187,10 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public void deleteReport(Integer reportId) {
-        User user = null;
+        Member user = null;
         boolean isMine = false;
         if(authenticationFacade.isLogin()) {
-            memberRepository.findByReportIdAndUserEmail(reportId, authenticationFacade.getUserEmail())
+            user = memberRepository.findByReportIdAndUserEmail(reportId, authenticationFacade.getUserEmail())
                     .orElseThrow(UserNotFoundException::new);
         }else {
             throw new UserNotFoundException();
@@ -203,6 +208,11 @@ public class ReportServiceImpl implements ReportService{
         for(Member member : members) {
             memberRepository.deleteById(member.getId());
         }
+
+        UserReport userReport = userReportRepository.findByReportIdAndUserEmail(reportId,user.getUserEmail())
+                .orElseThrow(ReportNotFoundException::new);
+
+        userReportRepository.deleteById(userReport.getReportId());
 
         reportRepository.deleteById(reportId);
     }

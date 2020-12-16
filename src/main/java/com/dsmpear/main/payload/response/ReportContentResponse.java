@@ -38,4 +38,6 @@ public class ReportContentResponse {
 
     private List<ReportCommentsResponse> comments;
 
+    private String teamName;
+
 }
