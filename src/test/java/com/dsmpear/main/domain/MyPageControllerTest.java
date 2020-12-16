@@ -1,5 +1,6 @@
 package com.dsmpear.main.domain;
 
+import com.dsmpear.main.MainApplication;
 import com.dsmpear.main.entity.member.Member;
 import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.*;
@@ -7,9 +8,9 @@ import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,9 +31,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles("test")
-public class MyPageControllerTest {
+class MyPageControllerTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -54,7 +55,7 @@ public class MyPageControllerTest {
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
@@ -80,7 +81,7 @@ public class MyPageControllerTest {
         );
     }
 
-    @After
+    @AfterEach
     public void after() {
            memberRepository.deleteAll();
            reportRepository.deleteAll();
@@ -154,6 +155,7 @@ public class MyPageControllerTest {
                         .github("https://github.com")
                         .languages("자바, C")
                         .fileName("안녕한가파일")
+                        .teamName("룰루랄라")
                         .build()
         ).getReportId();
 
@@ -188,6 +190,7 @@ public class MyPageControllerTest {
                         .github("https://github.com")
                         .languages("자바, C")
                         .fileName("안녕한가파일")
+                        .teamName("룰루랄라")
                         .build()
         ).getReportId();
 
@@ -222,6 +225,7 @@ public class MyPageControllerTest {
                         .github("https://github.com")
                         .languages("자바, C")
                         .fileName("안녕한가파일")
+                        .teamName("룰루랄라")
                         .build()
         ).getReportId();
 
@@ -256,6 +260,7 @@ public class MyPageControllerTest {
                         .github("https://github.com")
                         .languages("자바, C")
                         .fileName("안녕한가파일")
+                        .teamName("룰루랄라")
                         .build()
         ).getReportId();
 

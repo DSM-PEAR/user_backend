@@ -1,5 +1,6 @@
 package com.dsmpear.main.domain;
 
+import com.dsmpear.main.MainApplication;
 import com.dsmpear.main.entity.member.Member;
 import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.*;
@@ -9,9 +10,6 @@ import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.payload.request.MemberRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -33,10 +30,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class MemberControllerTest {
+class MemberControllerTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -58,7 +55,7 @@ public class MemberControllerTest {
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setUp(){
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
@@ -93,7 +90,7 @@ public class MemberControllerTest {
     }
 
 
-    @After
+    @AfterEach
     public void after () {
         memberRepository.deleteAll();
         reportRepository.deleteAll();
@@ -196,7 +193,8 @@ public class MemberControllerTest {
                         .createdAt(LocalDateTime.now())
                         .github("깃허브으")
                         .languages("자바")
-                        .fileName("이승윤 돼지")
+                        .fileName("나는야 천재")
+                        .teamName("룰루랄라")
                         .build()
         ).getReportId();
 
@@ -209,9 +207,9 @@ public class MemberControllerTest {
 
         memberRepository.save(
                 Member.builder()
-                .reportId(reportId)
-                .userEmail("tset@dsm.hs.kr")
-                .build()
+                        .reportId(reportId)
+                        .userEmail("tset@dsm.hs.kr")
+                        .build()
         );
 
         userReportRepository.save(
