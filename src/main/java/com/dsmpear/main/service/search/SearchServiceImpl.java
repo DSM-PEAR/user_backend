@@ -49,7 +49,7 @@ public class SearchServiceImpl implements SearchService{
 
     @Override
     public ReportListResponse searchReportByTitle(Pageable page, String title) {
-        Page<Report> reportPage = reportRepository.findAllByAccessAndAcceptedTrueAndSubmittedTrueAndTitleContainingOrderByCreatedAt(Access.EVERY, title, page);
+        Page<Report> reportPage = reportRepository.findAllByAccessAndIsAcceptedTrueAndIsSubmittedTrueAndTitleContainingOrderByCreatedAtDesc(Access.EVERY, title, page);
 
         List<ReportResponse> reportResponses = new ArrayList<>();
 

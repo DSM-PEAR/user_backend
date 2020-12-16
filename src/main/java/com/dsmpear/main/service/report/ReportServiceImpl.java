@@ -64,7 +64,7 @@ public class ReportServiceImpl implements ReportService{
                         .field(reportRequest.getField())
                         .type(reportRequest.getType())
                         .isAccepted(false)
-                        .isSubmitted(reportRequest.isSubmitted())
+                        .isSubmitted(reportRequest.getIsSubmitted())
                         .fileName(reportRequest.getFileName())
                         .github(reportRequest.getGithub())
                         .languages(reportRequest.getLanguages())
@@ -114,9 +114,9 @@ public class ReportServiceImpl implements ReportService{
             if(!isMine) {
                 if (report.getAccess().equals(Access.ADMIN)) {
                     throw new PermissionDeniedException();
-                } else if (!report.isAccepted()) {
+                } else if (!report.getIsAccepted()) {
                     throw new PermissionDeniedException();
-                } else if(!report.isSubmitted()) {
+                } else if(!report.getIsSubmitted()) {
                     throw new PermissionDeniedException();
                 }
             }
@@ -232,13 +232,13 @@ public class ReportServiceImpl implements ReportService{
 
 
         if(type == null && field == null) {
-            reportPage = reportRepository.findAllByAccessAndGradeAndAcceptedTrueAndSubmittedTrueOrderByCreatedAt(Access.EVERY, grade, page);
+            reportPage = reportRepository.findAllByAccessAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, grade, page);
         }else if(type == null) {
-            reportPage = reportRepository.findAllByAccessAndFieldAndGradeAndAcceptedTrueAndSubmittedTrueOrderByCreatedAt(Access.EVERY, field, grade, page);
+            reportPage = reportRepository.findAllByAccessAndFieldAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, field, grade, page);
         }else if(field == null) {
-            reportPage = reportRepository.findAllByAccessAndTypeAndGradeAndAcceptedTrueAndSubmittedTrueOrderByCreatedAt(Access.EVERY, type, grade, page);
+            reportPage = reportRepository.findAllByAccessAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, type, grade, page);
         }else {
-            reportPage = reportRepository.findAllByAccessAndFieldAndTypeAndGradeAndAcceptedTrueAndSubmittedTrueOrderByCreatedAt(Access.EVERY, field, type, grade, page);
+            reportPage = reportRepository.findAllByAccessAndFieldAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, field, type, grade, page);
         }
 
         for(Report report : reportPage) {
