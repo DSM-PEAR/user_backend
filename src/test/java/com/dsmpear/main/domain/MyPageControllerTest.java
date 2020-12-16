@@ -155,6 +155,7 @@ class MyPageControllerTest {
                         .github("https://github.com")
                         .languages("자바, C")
                         .fileName("안녕한가파일")
+                        .teamName("룰루랄라")
                         .build()
         ).getReportId();
 
@@ -189,6 +190,7 @@ class MyPageControllerTest {
                         .github("https://github.com")
                         .languages("자바, C")
                         .fileName("안녕한가파일")
+                        .teamName("룰루랄라")
                         .build()
         ).getReportId();
 
@@ -223,6 +225,7 @@ class MyPageControllerTest {
                         .github("https://github.com")
                         .languages("자바, C")
                         .fileName("안녕한가파일")
+                        .teamName("룰루랄라")
                         .build()
         ).getReportId();
 
@@ -257,6 +260,7 @@ class MyPageControllerTest {
                         .github("https://github.com")
                         .languages("자바, C")
                         .fileName("안녕한가파일")
+                        .teamName("룰루랄라")
                         .build()
         ).getReportId();
 
