@@ -129,7 +129,7 @@ class ProfileControllerTest {
 
         addReport_sub_false("test@dsm.hs.kr");
         addReport_sub_false("tset@dsm.hs.kr");
-        addReport_sub_false_("test@dsm.hs.kr");
+        addReport_sub_false("test@dsm.hs.kr");
         addReport_sub_true("test@dsm.hs.kr");
         addReport_sub_true_("tset@dsm.hs.kr");
 
@@ -144,7 +144,7 @@ class ProfileControllerTest {
 
         addReport_sub_false("test@dsm.hs.kr");
         addReport_sub_false("tset@dsm.hs.kr");
-        addReport_sub_false_("test@dsm.hs.kr");
+        addReport_sub_false("test@dsm.hs.kr");
         addReport_sub_true("test@dsm.hs.kr");
         addReport_sub_true_("tset@dsm.hs.kr");
 
@@ -157,7 +157,7 @@ class ProfileControllerTest {
 
         addReport_sub_false("test@dsm.hs.kr");
         addReport_sub_false("tset@dsm.hs.kr");
-        addReport_sub_false_("test@dsm.hs.kr");
+        addReport_sub_false("test@dsm.hs.kr");
         addReport_sub_true("test@dsm.hs.kr");
         addReport_sub_true_("tset@dsm.hs.kr");
 
@@ -170,7 +170,7 @@ class ProfileControllerTest {
 
         addReport_sub_false("test@dsm.hs.kr");
         addReport_sub_false("tset@dsm.hs.kr");
-        addReport_sub_false_("test@dsm.hs.kr");
+        addReport_sub_false("test@dsm.hs.kr");
         addReport_sub_true("test@dsm.hs.kr");
         addReport_sub_true_("tset@dsm.hs.kr");
 
@@ -212,41 +212,6 @@ class ProfileControllerTest {
         );
     }
 
-    private void addReport_sub_false_(String email) {
-        Integer reportId = reportRepository.save(
-                Report.builder()
-                        .title("hello")
-                        .description("hihello")
-                        .grade(Grade.GRADE2)
-                        .access(Access.ADMIN)
-                        .field(Field.WEB)
-                        .type(Type.TEAM)
-                        .isSubmitted(false)
-                        .accepted(2)
-                        .isAccepted(0)
-                        .createdAt(LocalDateTime.now())
-                        .github("https://github.com")
-                        .languages("자바, C")
-                        .fileName("안녕한가파일")
-                        .teamName("룰루랄라")
-                        .build()
-        ).getReportId();
-
-        memberRepository.save(
-                Member.builder()
-                        .reportId(reportId)
-                        .userEmail(email)
-                        .build()
-        );
-
-        userReportRepository.save(
-                UserReport.builder()
-                        .userEmail(email)
-                        .reportId(reportId)
-                        .build()
-        );
-    }
-
     private void addReport_sub_true(String email) {
         Integer reportId = reportRepository.save(
                 Report.builder()
@@ -259,7 +224,6 @@ class ProfileControllerTest {
                         .isSubmitted(false)
                         .accepted(2)
                         .isSubmitted(true)
-                        .isAccepted(2)
                         .createdAt(LocalDateTime.now())
                         .github("https://github.com")
                         .languages("자바, C")
@@ -293,7 +257,7 @@ class ProfileControllerTest {
                         .field(Field.WEB)
                         .type(Type.TEAM)
                         .isSubmitted(false)
-                        .isAccepted(0)
+                        .accepted(0)
                         .createdAt(LocalDateTime.now())
                         .github("https://github.com")
                         .languages("자바, C")
