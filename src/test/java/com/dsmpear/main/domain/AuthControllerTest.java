@@ -6,6 +6,7 @@ import com.dsmpear.main.entity.refreshtoken.RefreshTokenRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.payload.request.SignInRequest;
+import com.dsmpear.main.security.JwtTokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,16 +43,23 @@ public class AuthControllerTest {
     private RefreshTokenRepository tokenRepository;
 
     @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
     private RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    String accessToken;
 
     @BeforeEach
     public void setup() {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .build();
+
+        accessToken = jwtTokenProvider.generateAccessToken("smoothbear@dsm.hs.kr");
 
         userRepository.save(
                 User.builder()
@@ -100,6 +108,13 @@ public class AuthControllerTest {
     void refreshTokenTestWithExpect() throws Exception {
         mvc.perform(put("/auth")
                 .header("X-Refresh-Token", "apple")
+        ).andExpect(status().isForbidden()).andDo(print());
+    }
+
+    @Test
+    void refreshTokenTestWithIsNotRefreshTokenExcept() throws Exception {
+        mvc.perform(put("/auth")
+                .header("X-Refresh-Token", accessToken)
         ).andExpect(status().isForbidden()).andDo(print());
     }
 }
