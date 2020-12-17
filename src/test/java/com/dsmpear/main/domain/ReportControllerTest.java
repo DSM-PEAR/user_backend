@@ -250,19 +250,13 @@ class ReportControllerTest {
     @WithMockUser(value = "test1@dsm.hs.kr",password="1234")
     public void getReportTest1() throws Exception {
 
-        String expected = "expected";
+        String expected = "expected1";
 
         Integer reportId = createReport(expected);
 
-
-        MvcResult mvcResult = mvc.perform(get("/report/"+reportId)
+        mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isOk()).andDo(print()).andReturn();
-
-        ReportContentResponse response = objectMapperConfiguration.objectMapper()
-                .readValue(mvcResult.getResponse()
-                        .getContentAsString(), ReportContentResponse.class);
-        Assert.assertEquals(response.getTitle(), expected);
+                .andExpect(status().isForbidden()).andDo(print());
     }
 
     @Test
@@ -277,8 +271,8 @@ class ReportControllerTest {
                         .access(Access.ADMIN)
                         .field(Field.AI)
                         .type(Type.SOLE)
-                        .isAccepted(2)
-                        .isSubmitted(true)
+                        .accepted(1)
+                        .isSubmitted(false)
                         .fileName("파아아일")
                         .github("기이이잇허브")
                         .languages("어어너ㅓㅓㅓ너ㅓ")
@@ -601,7 +595,7 @@ class ReportControllerTest {
                         .access(Access.ADMIN)
                         .field(Field.AI)
                         .type(Type.SOLE)
-                        .isAccepted(2)
+                        .accepted(2)
                         .isSubmitted(false)
                         .fileName("파아아일")
                         .github("기이이잇허브")

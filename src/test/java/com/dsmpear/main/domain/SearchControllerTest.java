@@ -1,6 +1,8 @@
+
 package com.dsmpear.main.domain;
 
 import com.dsmpear.main.MainApplication;
+import com.dsmpear.main.config.ObjectMapperConfiguration;
 import com.dsmpear.main.entity.report.*;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
@@ -31,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles("test")
-public class SearchControllerTest {
+class SearchControllerTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -44,6 +46,9 @@ public class SearchControllerTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ObjectMapperConfiguration objectMapperConfiguration;
 
     private MockMvc mvc;
 
@@ -90,12 +95,12 @@ public class SearchControllerTest {
                         .build()
         );
 
-        createReport("제목1호 이건 보겠지",
+        createReport("제목1호 please....!!!",
                 "내용1호",
                 Access.EVERY,
                 2);
 
-        createReport("제목2호 이건 보겠지",
+        createReport("제목2호 please....!!!",
                 "내용2호",
                 Access.EVERY,
                 2);
@@ -123,7 +128,6 @@ public class SearchControllerTest {
         reportRepository.deleteAll();
     }
 
-    //왜 다 404야..
     @Test
     public void searchProfile () throws Exception {
         mvc.perform(get("/search/profile?keyword=길동&size=10&page=0")).andDo(print())
@@ -152,38 +156,40 @@ public class SearchControllerTest {
 
     @Test
     public void searchReportByTitle() throws Exception {
-        mvc.perform(get("/search/report?keyword=이건 보겠지&size=10&page=0")).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+        MvcResult result = mvc.perform(get("/search/report?keyword=please....!!!&size=10&page=0")).andReturn();
+        ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
+        Assert.assertEquals(2, response.getTotalElements());
     }
 
     @Test
     public void searchReportNoKeyword() throws Exception {
-        mvc.perform(get("/search/report?keyword=&size=10&page=0")).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+        MvcResult result = mvc.perform(get("/search/report?keyword=&size=10&page=0")).andReturn();
+        ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
+        Assert.assertEquals(response.getTotalElements(), 3);
     }
 
     @Test
     public void searchReportNoResult_NoTitle () throws Exception {
-        MvcResult result = mvc.perform(get("/search/report?keyword=꿻똷쯻뭵&size=10&page=0")).andReturn();
-        ReportListResponse response = new ObjectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
+        MvcResult result = mvc.perform(get("/search/report?keyword=please...!!!&size=10&page=0")).andReturn();
+        ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
         Assert.assertEquals(response.getTotalElements(), 0);
     }
 
     @Test
     public void searchReportNoResult_NoPermission () throws Exception {
         MvcResult result = mvc.perform(get("/search/report?keyword=제목4호&size=10&page=0")).andReturn();
-        ReportListResponse response = new ObjectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
+        ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
         Assert.assertEquals(response.getTotalElements(), 0);
     }
 
     @Test
     public void searchReportNoResult_NotAccepted () throws Exception {
         MvcResult result = mvc.perform(get("/search/report?keyword=제목5호&size=10&page=0")).andReturn();
-        ReportListResponse response = new ObjectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
+        ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
         Assert.assertEquals(response.getTotalElements(), 0);
     }
 
-    void createReport(String title, String description, Access access, Integer isAccepted) {
+    void createReport(String title, String description, Access access, Integer accepted) {
         reportRepository.save(
                 Report.builder()
                 .title(title)
@@ -194,7 +200,7 @@ public class SearchControllerTest {
                 .fileName("dasf")
                 .github("깃허브!@!")
                 .grade(Grade.GRADE2)
-                .isAccepted(isAccepted)
+                .accepted(accepted)
                 .isSubmitted(true)
                 .languages("언어다ㅏ")
                 .type(Type.TEAM)

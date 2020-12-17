@@ -44,5 +44,8 @@ public class VerifyNumberRepositoryTest {
                 .orElseThrow(UserNotFoundException::new);
 
         assertEquals(verifyNumber.getVerifyNumber(), number.getVerifyNumber());
+        assertEquals(verifyNumber.getEmail(), number.getEmail());
+        assertEquals(verifyNumber.getTtl(), number.getTtl());
+        assertEquals(verifyNumber.getId(), number.getId());
     }
 }
