@@ -138,6 +138,20 @@ class MemberControllerTest {
 
     @Test
     @Order(1)
+    @WithMockUser(username = "test@dsm.hs.kr",password = "1111")
+    public void addMember_already() throws Exception {
+        int reportId = addReport();
+
+        MemberRequest request = new MemberRequest(reportId,"tset@dsm.hs.kr");
+
+        mvc.perform(post("/member").
+                content(new ObjectMapper().writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isConflict()).andDo(print());
+    }
+
+    @Test
+    @Order(1)
     @WithMockUser(username = "dms@dsm.hs.kr",password = "1111")
     public void addMember_notmember() throws Exception {
         int reportId = addReport();
@@ -189,6 +203,16 @@ class MemberControllerTest {
                 .andExpect(status().isForbidden()).andDo(print());
     }
 
+    @Test
+    @Order(2)
+    @WithMockUser(value = "test@dsm.hs.kr",password = "1111")
+    public void deleteMember_me() throws Exception{
+        int reportId = addReport();
+
+        mvc.perform(delete("/member/"+1))
+                .andExpect(status().isBadRequest()).andDo(print());
+    }
+    
     @Test
     @Order(2)
     @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
