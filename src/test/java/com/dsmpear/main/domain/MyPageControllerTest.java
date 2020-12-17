@@ -83,16 +83,16 @@ class MyPageControllerTest {
 
     @AfterEach
     public void after() {
-           memberRepository.deleteAll();
-           reportRepository.deleteAll();
-           userRepository.deleteAll();
+        memberRepository.deleteAll();
+        reportRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     @WithMockUser(value = "test@dsm.hs.kr", password = "1111")
     public void getMyProfile_test() throws Exception {
-    mvc.perform(get("/user/profile"))
-             .andExpect(status().isOk()).andDo(print());
+        mvc.perform(get("/user/profile"))
+                .andExpect(status().isOk()).andDo(print());
     }
 
     @Test
@@ -151,7 +151,7 @@ class MyPageControllerTest {
                         .field(Field.AI)
                         .type(Type.TEAM)
                         .isSubmitted(false)
-                        .isAccepted(true)
+                        .isAccepted(0)
                         .createdAt(LocalDateTime.now())
                         .github("https://github.com")
                         .languages("자바, C")
@@ -187,7 +187,7 @@ class MyPageControllerTest {
                         .field(Field.WEB)
                         .type(Type.TEAM)
                         .isSubmitted(false)
-                        .isAccepted(true)
+                        .isAccepted(0)
                         .createdAt(LocalDateTime.now())
                         .github("https://github.com")
                         .languages("자바, C")
@@ -223,7 +223,7 @@ class MyPageControllerTest {
                         .field(Field.AI)
                         .type(Type.TEAM)
                         .isSubmitted(true)
-                        .isAccepted(true)
+                        .isAccepted(1)
                         .createdAt(LocalDateTime.now())
                         .github("https://github.com")
                         .languages("자바, C")
@@ -259,7 +259,7 @@ class MyPageControllerTest {
                         .field(Field.AI)
                         .type(Type.TEAM)
                         .isSubmitted(true)
-                        .isAccepted(true)
+                        .isAccepted(2)
                         .createdAt(LocalDateTime.now())
                         .github("https://github.com")
                         .languages("자바, C")

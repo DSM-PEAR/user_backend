@@ -1,6 +1,5 @@
 package com.dsmpear.main.service.profile.profileReport;
 
-import com.dsmpear.main.entity.report.Access;
 import com.dsmpear.main.entity.report.Report;
 import com.dsmpear.main.entity.report.ReportRepository;
 import com.dsmpear.main.entity.user.User;
@@ -9,11 +8,8 @@ import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.exceptions.ReportNotFoundException;
 import com.dsmpear.main.exceptions.UserNotFoundException;
-import com.dsmpear.main.payload.response.MyPageReportResponse;
 import com.dsmpear.main.payload.response.ProfileReportListResponse;
 import com.dsmpear.main.payload.response.ProfileReportResponse;
-import com.dsmpear.main.payload.response.ReportResponse;
-import com.dsmpear.main.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +25,6 @@ public class ProfileReportServiceImpl implements ProfileReportService{
     private final UserRepository userRepository;
     private final ReportRepository reportRepository;
     private final UserReportRepository userReportRepository;
-    private final AuthenticationFacade authenticationFacade;
 
     @Override
     public ProfileReportListResponse getReport(String userEmail, Pageable page) {
@@ -40,18 +35,20 @@ public class ProfileReportServiceImpl implements ProfileReportService{
 
         List<ProfileReportResponse> profileReportResponses = new ArrayList<>();
 
-        /*for(UserReport userReport : reportPage){
-            Report report = reportRepository.findAllByAccessAndIsAccepted(Access.EVERY, true)
+        for(UserReport userReport : reportPage){
+            Report report = reportRepository.findByReportId(userReport.getReportId())
                     .orElseThrow(ReportNotFoundException::new);
 
-            profileReportResponses.add(
-                    ProfileReportResponse.builder()
-                            .reportId(report.getReportId())
-                            .title(report.getTitle())
-                            .createdAt(report.getCreatedAt())
-                            .build()
-            );
-        }*/
+            if(report.getIsAccepted() == 2 && report.getIsSubmitted()){
+                profileReportResponses.add(
+                        ProfileReportResponse.builder()
+                                .reportId(report.getReportId())
+                                .title(report.getTitle())
+                                .createdAt(report.getCreatedAt())
+                                .build()
+                );
+            }
+        }
         return ProfileReportListResponse.builder()
                 .totalElements(reportPage.getNumberOfElements())
                 .totalPages(reportPage.getTotalPages())
