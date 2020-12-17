@@ -202,8 +202,7 @@ class MemberControllerTest {
         mvc.perform(delete("/member/"+1))
                 .andExpect(status().isForbidden()).andDo(print());
     }
-
-
+  
     @Test
     @Order(2)
     @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
