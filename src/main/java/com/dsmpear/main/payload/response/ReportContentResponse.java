@@ -37,7 +37,7 @@ public class ReportContentResponse {
 
     private Field field;
 
-    private boolean mine;
+    private Boolean isMine;
 
     private List<ReportCommentsResponse> comments;
 
