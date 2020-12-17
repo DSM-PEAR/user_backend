@@ -164,9 +164,8 @@ public class UserControllerTest {
     }
     
     @Test
-    @WithMockUser(value = "",password = "")
     public void getUser_noLogin() throws Exception{
-        mvc.perform(get("/account"))
-                .andExpect(status().isForbidden()).andDo(print());
+        mvc.perform(get("/account")).andDo(print())
+                .andExpect(status().isBadRequest()).andDo(print());
     }
 }

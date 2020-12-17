@@ -336,7 +336,7 @@ public class ReportControllerTest {
     @Test
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void deleteReportTest() throws Exception {
-        Integer reportId = createReport("휅");
+        Integer reportId = createReport("testetsetesstest");
         addMember(reportId);
 
         mvc.perform(delete("/report/"+reportId)).andDo(print())
