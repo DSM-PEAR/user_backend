@@ -50,7 +50,7 @@ public class ReportServiceImpl implements ReportService{
         if(authenticationFacade.isLogin() == false) {
             throw new UserNotFoundException();
         }
-        String teamName = reportRequest.getTeamName()==null?
+        String teamName = reportRequest.getTeamName().equals("")?
                 userRepository.findByEmail(authenticationFacade.getUserEmail()).get().getName()
                 :reportRequest.getTeamName();
 
@@ -63,7 +63,7 @@ public class ReportServiceImpl implements ReportService{
                         .access(reportRequest.getAccess())
                         .field(reportRequest.getField())
                         .type(reportRequest.getType())
-                        .isAccepted(false)
+                        .isAccepted(1)
                         .isSubmitted(reportRequest.getIsSubmitted())
                         .fileName(reportRequest.getFileName())
                         .github(reportRequest.getGithub())
@@ -104,19 +104,19 @@ public class ReportServiceImpl implements ReportService{
         List<Member> members = report.getMembers();
 
         if(isLogined) {
-            for(Member member : members) {
-                if(!memberRepository.findByReportIdAndUserEmail(reportId, member.getUserEmail()).isEmpty()) {
+            for (Member member : members) {
+                if (!memberRepository.findByReportIdAndUserEmail(reportId, member.getUserEmail()).isEmpty()) {
                     isMine = true;
                 }
             }
 
             // 보고서를 볼 때 보는 보고서의 access가 ADMIN인지, 만약 admin이라면  현재 유저가 글쓴이가 맞는지 검사
-            if(!isMine) {
+            if (!isMine) {
                 if (report.getAccess().equals(Access.ADMIN)) {
                     throw new PermissionDeniedException();
-                } else if (!report.getIsAccepted()) {
+                } else if (report.getIsAccepted() != 2) {
                     throw new PermissionDeniedException();
-                } else if(!report.getIsSubmitted()) {
+                } else if (!report.getIsSubmitted()) {
                     throw new PermissionDeniedException();
                 }
             }
@@ -133,12 +133,8 @@ public class ReportServiceImpl implements ReportService{
         // 댓글 하나하나 담기ㅣ
         for (Comment co : comment) {
             User commentWriter;
-            if(authenticationFacade.getUserEmail() != null) {
-                commentWriter = userRepository.findByEmail(co.getUserEmail())
-                        .orElseThrow(UserNotFoundException::new);
-            }else {
-                throw new PermissionDeniedException();
-            }
+            commentWriter = userRepository.findByEmail(co.getUserEmail())
+                    .orElseThrow(UserNotFoundException::new);
             commentsResponses.add(
                     ReportCommentsResponse.builder()
                             .content(co.getContent())

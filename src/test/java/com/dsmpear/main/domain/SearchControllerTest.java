@@ -93,27 +93,27 @@ public class SearchControllerTest {
         createReport("제목1호 이건 보겠지",
                 "내용1호",
                 Access.EVERY,
-                true);
+                2);
 
         createReport("제목2호 이건 보겠지",
                 "내용2호",
                 Access.EVERY,
-                true);
+                2);
 
         createReport("제목3호 이건 보겠지",
                 "내용3호",
                 Access.EVERY,
-                true);
+                2);
 
         createReport("제목4호 이건 못보겠지",
                 "내용4호",
                 Access.EVERY,
-                false);
+                0);
 
         createReport("제목5호 이건 못보겠지",
                 "내용5호",
                 Access.ADMIN,
-                true);
+                0);
 
     }
 
@@ -183,7 +183,7 @@ public class SearchControllerTest {
         Assert.assertEquals(response.getTotalElements(), 0);
     }
 
-    void createReport(String title, String description, Access access, boolean isAccepted) {
+    void createReport(String title, String description, Access access, Integer isAccepted) {
         reportRepository.save(
                 Report.builder()
                 .title(title)
