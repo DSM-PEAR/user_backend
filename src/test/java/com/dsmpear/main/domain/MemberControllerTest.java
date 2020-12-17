@@ -155,50 +155,40 @@ class MemberControllerTest {
     @WithMockUser(username = "dms@dsm.hs.kr",password = "1111")
     public void addMember_notmember() throws Exception {
         int reportId = addReport();
-
         MemberRequest request = new MemberRequest(reportId,"flower@dsm.hs.kr");
-
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isForbidden()).andDo(print());
     }
-
     //로그인하지 않았을 때
     @Test
     @Order(1)
     @WithMockUser()
     public void addMember_noLogin() throws Exception {
         int reportId = addReport();
-
         MemberRequest request = new MemberRequest(reportId,"dsm@dsm.hs.kr");
-
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isForbidden());
     }
-
     @Test
     @Order(1)
     @WithMockUser(username = "test@dsm.hs.kr",password = "1111")
     public void addMember_exist_member() throws Exception {
         int reportId = addReport();
-
         MemberRequest request = new MemberRequest(reportId,"tset@dsm.hs.kr");
-
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isConflict());
     }
-
     @Test
     @Order(2)
     @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
     public void deleteMember() throws Exception{
         int reportId = addReport();
-
         mvc.perform(delete("/member/"+reportId))
                 .andExpect(status().isForbidden()).andDo(print());
     }
@@ -210,9 +200,10 @@ class MemberControllerTest {
         int reportId = addReport();
 
         mvc.perform(delete("/member/"+1))
-                .andExpect(status().isBadRequest()).andDo(print());
+                .andExpect(status().isForbidden()).andDo(print());
     }
-    
+
+
     @Test
     @Order(2)
     @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
