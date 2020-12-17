@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles("test")
-class UserControllerTest {
+public class UserControllerTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -162,18 +162,10 @@ class UserControllerTest {
         mvc.perform(get("/account"))
                 .andExpect(status().isBadRequest()).andDo(print());
     }
-
+    
     @Test
-    @WithMockUser(value = "hihi@dsm.hs.kr",password = "1111")
     public void getUser_noLogin() throws Exception{
-        mvc.perform(get("/account?name="))
-                .andExpect(status().isForbidden()).andDo(print());
-    }
-
-    @Test
-    @WithMockUser(value = "apple@dsm.hs.kr",password = "1111")
-    public void getUser_notFound() throws Exception{
-        mvc.perform(get("/account?name=가랑가랑")).andDo(print())
-                .andExpect(status().isNotFound()).andDo(print());
+        mvc.perform(get("/account")).andDo(print())
+                .andExpect(status().isBadRequest()).andDo(print());
     }
 }

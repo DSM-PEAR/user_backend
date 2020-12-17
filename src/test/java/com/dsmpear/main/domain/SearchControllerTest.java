@@ -1,4 +1,3 @@
-
 package com.dsmpear.main.domain;
 
 import com.dsmpear.main.MainApplication;
@@ -32,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles("test")
-class SearchControllerTest {
+public class SearchControllerTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -124,6 +123,7 @@ class SearchControllerTest {
         reportRepository.deleteAll();
     }
 
+    //왜 다 404야..
     @Test
     public void searchProfile () throws Exception {
         mvc.perform(get("/search/profile?keyword=길동&size=10&page=0")).andDo(print())

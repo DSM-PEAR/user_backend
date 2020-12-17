@@ -2,11 +2,8 @@ package com.dsmpear.main.service.user;
 
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
-import com.dsmpear.main.exceptions.UserNotAccessibleException;
-import com.dsmpear.main.exceptions.UserNotFoundException;
 import com.dsmpear.main.payload.response.UserListResponse;
 import com.dsmpear.main.payload.response.UserResponse;
-import com.dsmpear.main.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,17 +17,10 @@ import java.util.List;
 public class UserListServiceImpl implements UserListService {
 
     private final UserRepository userRepository;
-    private final AuthenticationFacade authenticationFacade;
 
     @Override
     public UserListResponse getUserList(String name, Pageable page) {
-        userRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotAccessibleException::new);
-
         Page<User> userPage = userRepository.findAllByNameContains(name, page); // select * from user where name like ='%%'
-
-        if(userPage.getTotalElements()==0)
-            throw new UserNotFoundException();
 
         List<UserResponse> userResponse = new ArrayList<>();
 
