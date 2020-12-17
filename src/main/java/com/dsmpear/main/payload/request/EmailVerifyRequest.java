@@ -1,10 +1,12 @@
 package com.dsmpear.main.payload.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 
-@Getter
+@Getter @AllArgsConstructor @NoArgsConstructor
 public class EmailVerifyRequest {
     private String number;
 

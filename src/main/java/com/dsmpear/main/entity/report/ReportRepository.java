@@ -12,5 +12,19 @@ import java.util.Optional;
 public interface ReportRepository extends CrudRepository<Report,Integer> {
     // 보고서 갖고오기
     Optional<Report> findByReportId(Integer reportId);
-//    Optional<Report> findAllByFieldAndGradeAndIsAcceptedAndAccess_UserOrAccess_EveryOrderByCreatedAt(Field field, Grade grade, Integer isAccepted,Access access);
+
+    // 필터가 분야, 타입 모두 적용시 ORM
+    Page<Report> findAllByAccessAndFieldAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access access, Field field, Type type, Grade grade, Pageable page);
+
+    // 필터가 학년만 적용시 ORM
+    Page<Report> findAllByAccessAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access access, Grade grade, Pageable page);
+
+    // 필터가 타입만 적용시 ORM
+    Page<Report> findAllByAccessAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access access, Type type,Grade grade, Pageable page);
+
+    // 필터가 분야만 적용시 ORM
+    Page<Report> findAllByAccessAndFieldAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access access, Field field,Grade grade, Pageable page);
+
+    //제목 검색 ORM
+    Page<Report> findAllByAccessAndIsAcceptedTrueAndIsSubmittedTrueAndTitleContainingOrderByCreatedAtDesc(Access access, String title, Pageable page);
 }
