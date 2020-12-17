@@ -3,6 +3,7 @@ package com.dsmpear.main.payload.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
+
 import java.time.LocalDateTime;
 
 @Getter
@@ -17,6 +18,8 @@ public class ReportCommentsResponse {
     private LocalDateTime createdAt;
 
     private String userEmail;
+
+    private String userName;
 
     private Boolean isMine;
 

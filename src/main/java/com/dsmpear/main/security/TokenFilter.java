@@ -1,5 +1,6 @@
 package com.dsmpear.main.security;
 
+import com.dsmpear.main.exceptions.InvalidTokenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +24,8 @@ public class TokenFilter extends GenericFilterBean {
         if (token != null && jwtTokenProvider.validateToken(token) && jwtTokenProvider.isEmailAuthenticated(token)) {
             Authentication auth = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
+        } else {
+            throw new InvalidTokenException();
         }
         chain.doFilter(request, response);
     }

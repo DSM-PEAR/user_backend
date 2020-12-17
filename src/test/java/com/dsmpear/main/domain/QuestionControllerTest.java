@@ -1,9 +1,10 @@
 package com.dsmpear.main.domain;
 
+import com.dsmpear.main.MainApplication;
 import com.dsmpear.main.payload.request.QuestionRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,16 +20,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles("test")
-public class QuestionControllerTest {
+class QuestionControllerTest {
 
     @Autowired
     private WebApplicationContext context;
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setup() {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
@@ -36,7 +37,7 @@ public class QuestionControllerTest {
     }
 
     @Test
-    public void test() throws Exception {
+    public void question() throws Exception {
 
         String email="test@dsm.hs.kr";
         String description="description";
@@ -49,4 +50,34 @@ public class QuestionControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andDo(print());
     }
+
+    /*@Test
+    public void question_noEmail() throws Exception {
+
+        String description="description";
+
+        QuestionRequest request = new QuestionRequest("",description);
+
+        mvc.perform(post("/question")
+                .content(new ObjectMapper()
+                        .writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest()).andDo(print());
+    }*/
+
+    /*@Test
+    public void question_noDescription() throws Exception {
+
+        String email="test@dsm.hs.kr";
+
+        QuestionRequest request = new QuestionRequest(email,null);
+
+        mvc.perform(post("/question")
+                .content(new ObjectMapper()
+                        .writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest());
+    }*/
+
+
 }
