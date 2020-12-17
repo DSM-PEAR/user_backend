@@ -83,16 +83,16 @@ class MyPageControllerTest {
 
     @AfterEach
     public void after() {
-           memberRepository.deleteAll();
-           reportRepository.deleteAll();
-           userRepository.deleteAll();
+        memberRepository.deleteAll();
+        reportRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     @WithMockUser(value = "test@dsm.hs.kr", password = "1111")
     public void getMyProfile_test() throws Exception {
-    mvc.perform(get("/user/profile"))
-             .andExpect(status().isOk()).andDo(print());
+        mvc.perform(get("/user/profile"))
+                .andExpect(status().isOk()).andDo(print());
     }
 
     @Test
