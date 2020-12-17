@@ -40,7 +40,7 @@ public class ReportRequest {
     private Grade grade;
 
     @NotNull
-    private boolean isSubmitted;
+    private Boolean isSubmitted;
 
     @NotNull
     private String fileName;
