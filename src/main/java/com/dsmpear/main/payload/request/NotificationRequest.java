@@ -20,5 +20,5 @@ public class NotificationRequest {
     private String body;
 
     @NotNull(message = "잘못된 내용이 없는지 확인해주세요.")
-    private boolean isAccepted;
+    private Boolean isAccepted;
 }
