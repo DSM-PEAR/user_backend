@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -32,6 +33,7 @@ public class Report {
     private String description;
 
     @Column(name = "created_at", nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd kk:mm:ss")
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
@@ -47,10 +49,10 @@ public class Report {
     private Type type;
 
     @Column(name = "is_accepted", nullable = false)
-    private boolean isAccepted;
+    private Boolean isAccepted;
 
     @Column(name = "is_submitted", nullable = false)
-    private boolean isSubmitted;
+    private Boolean isSubmitted;
 
     @Column(name = "file_name",nullable = false)
     private String fileName;
@@ -75,7 +77,7 @@ public class Report {
         this.access = reportRequest.getAccess();
         this.field = reportRequest.getField();
         this.grade = reportRequest.getGrade();
-        this.isSubmitted = reportRequest.isSubmitted();
+        this.isSubmitted = reportRequest.getIsSubmitted();
         this.fileName = reportRequest.getFileName();
         this.github = reportRequest.getGithub();
         return this;

@@ -162,4 +162,10 @@ public class UserControllerTest {
         mvc.perform(get("/account"))
                 .andExpect(status().isBadRequest()).andDo(print());
     }
+    
+    @Test
+    public void getUser_noLogin() throws Exception{
+        mvc.perform(get("/account")).andDo(print())
+                .andExpect(status().isBadRequest()).andDo(print());
+    }
 }
