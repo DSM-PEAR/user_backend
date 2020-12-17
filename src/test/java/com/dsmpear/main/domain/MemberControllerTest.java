@@ -191,6 +191,19 @@ class MemberControllerTest {
 
     @Test
     @Order(2)
+<<<<<<< HEAD
+    @WithMockUser(value = "test@dsm.hs.kr",password = "1111")
+    public void deleteMember_me() throws Exception{
+        int reportId = addReport();
+
+        mvc.perform(delete("/member/"+1))
+                .andExpect(status().isBadRequest()).andDo(print());
+    }
+    
+    @Test
+    @Order(2)
+=======
+>>>>>>> parent of 34e4a65... modify member controller test
     @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
     public void deleteMember_noId() throws Exception{
         mvc.perform(delete("/member"))
