@@ -1,16 +1,18 @@
+
 package com.dsmpear.main.domain;
 
+import com.dsmpear.main.MainApplication;
 import com.dsmpear.main.entity.report.*;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.payload.response.ReportListResponse;
 import com.dsmpear.main.payload.response.SearchProfileResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,9 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles("test")
-public class SearchControllerTest {
+class SearchControllerTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -46,7 +48,7 @@ public class SearchControllerTest {
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
@@ -116,13 +118,12 @@ public class SearchControllerTest {
 
     }
 
-    @After
+    @AfterEach
     public void after () {
         userRepository.deleteAll();
         reportRepository.deleteAll();
     }
 
-    //왜 다 404야..
     @Test
     public void searchProfile () throws Exception {
         mvc.perform(get("/search/profile?keyword=길동&size=10&page=0")).andDo(print())
@@ -185,19 +186,20 @@ public class SearchControllerTest {
     void createReport(String title, String description, Access access, boolean isAccepted) {
         reportRepository.save(
                 Report.builder()
-                .title(title)
-                .description(description)
-                .access(access)
-                .createdAt(LocalDateTime.now())
-                .field(Field.AI)
-                .fileName("dasf")
-                .github("깃허브!@!")
-                .grade(Grade.GRADE2)
-                .isAccepted(isAccepted)
-                .isSubmitted(true)
-                .languages("언어다ㅏ")
-                .type(Type.TEAM)
-                .build()
+                        .title(title)
+                        .description(description)
+                        .access(access)
+                        .createdAt(LocalDateTime.now())
+                        .field(Field.AI)
+                        .fileName("dasf")
+                        .github("깃허브!@!")
+                        .grade(Grade.GRADE2)
+                        .isAccepted(isAccepted)
+                        .isSubmitted(true)
+                        .languages("언어다ㅏ")
+                        .type(Type.TEAM)
+                        .teamName("팀이름이다아ㅏ")
+                        .build()
         );
     }
 }
