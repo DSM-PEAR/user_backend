@@ -7,9 +7,9 @@ import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class ProfileControllerTest {
+class ProfileControllerTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -52,7 +52,7 @@ public class ProfileControllerTest {
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
@@ -96,7 +96,7 @@ public class ProfileControllerTest {
         );
     }
 
-    @After
+    @AfterEach
     public void after () {
         reportRepository.deleteAll();
         userRepository.deleteAll();
@@ -120,7 +120,7 @@ public class ProfileControllerTest {
         mvc.perform(get("/profile"))
                 .andExpect(status().isBadRequest()).andDo(print());
     }
-/*
+
     //보고서 목록
     @Test
     public void  getReportList() throws Exception{
@@ -143,14 +143,16 @@ public class ProfileControllerTest {
                         .title("hello")
                         .description("hihello")
                         .grade(Grade.GRADE2)
-                        .access(Access.EVERY)
-                        .field(Field.AI)
+                        .access(Access.ADMIN)
+                        .field(Field.WEB)
                         .type(Type.TEAM)
                         .isSubmitted(false)
+                        .isAccepted(true)
                         .createdAt(LocalDateTime.now())
                         .github("https://github.com")
                         .languages("자바, C")
                         .fileName("안녕한가파일")
+                        .teamName("룰루랄라")
                         .build()
         ).getReportId();
 
@@ -181,10 +183,12 @@ public class ProfileControllerTest {
                         .field(Field.WEB)
                         .type(Type.TEAM)
                         .isSubmitted(false)
+                        .isAccepted(true)
                         .createdAt(LocalDateTime.now())
                         .github("https://github.com")
                         .languages("자바, C")
                         .fileName("안녕한가파일")
+                        .teamName("룰루랄라")
                         .build()
         ).getReportId();
 
@@ -210,15 +214,17 @@ public class ProfileControllerTest {
                 Report.builder()
                         .title("hello")
                         .description("hihello")
-                        .grade(Grade.GRADE1)
-                        .access(Access.EVERY)
-                        .field(Field.AI)
+                        .grade(Grade.GRADE2)
+                        .access(Access.ADMIN)
+                        .field(Field.WEB)
                         .type(Type.TEAM)
-                        .isSubmitted(true)
+                        .isSubmitted(false)
+                        .isAccepted(true)
                         .createdAt(LocalDateTime.now())
                         .github("https://github.com")
                         .languages("자바, C")
                         .fileName("안녕한가파일")
+                        .teamName("룰루랄라")
                         .build()
         ).getReportId();
 
@@ -245,14 +251,16 @@ public class ProfileControllerTest {
                         .title("hello")
                         .description("hihello")
                         .grade(Grade.GRADE2)
-                        .access(Access.EVERY)
-                        .field(Field.AI)
+                        .access(Access.ADMIN)
+                        .field(Field.WEB)
                         .type(Type.TEAM)
-                        .isSubmitted(true)
+                        .isSubmitted(false)
+                        .isAccepted(true)
                         .createdAt(LocalDateTime.now())
                         .github("https://github.com")
                         .languages("자바, C")
                         .fileName("안녕한가파일")
+                        .teamName("룰루랄라")
                         .build()
         ).getReportId();
 
@@ -271,5 +279,5 @@ public class ProfileControllerTest {
         );
 
         return reportId;
-    }*/
+    }
 }
