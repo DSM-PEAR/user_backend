@@ -100,6 +100,7 @@ class ProfileControllerTest {
     public void after () {
         reportRepository.deleteAll();
         userRepository.deleteAll();
+        userReportRepository.deleteAll();
     }
 
     @Test
