@@ -200,8 +200,6 @@ public class ReportControllerTest {
         Integer reportId = createReport(expected);
         Integer reportId2 = createReport("이건 정상적이게 비슷");
 
-        Integer memberId1 = addMember(reportId);
-
         MvcResult mvcResult = mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
                 .andExpect(status().isOk()).andDo(print()).andReturn();
@@ -219,8 +217,6 @@ public class ReportControllerTest {
 
         Integer reportId = createReport(expected);
 
-        Integer memberId1 = addMember(reportId);
-
 
         MvcResult mvcResult = mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
@@ -235,8 +231,6 @@ public class ReportControllerTest {
 
         Integer reportId = createReport("이건 정상적이게");
 
-        Integer memberId1 = addMember(reportId);
-
         mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
                 .andExpect(status().isForbidden()).andDo(print());
@@ -249,7 +243,6 @@ public class ReportControllerTest {
 
         Integer reportId = createReport("이건 정상적이게");
 
-        addMember(reportId);
 
         ReportRequest request = ReportRequest.builder()
                 .title("2. 이승윤 돼지")
@@ -264,8 +257,6 @@ public class ReportControllerTest {
                 .github("깃허브ㅡ")
                 .teamName("dfas")
                 .build();
-
-
 
         mvc.perform(patch("/report/"+reportId)
                 .content(new ObjectMapper().writeValueAsString(request))
@@ -295,8 +286,6 @@ public class ReportControllerTest {
                 .teamName("dfas")
                 .build();
 
-        addMember(reportId);
-
         mvc.perform(patch("/report/"+reportId)
                 .content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
@@ -324,7 +313,6 @@ public class ReportControllerTest {
                 .teamName("dfas")
                 .build();
 
-        addMember(reportId);
 
         mvc.perform(patch("/report/"+reportId)
                 .content(new ObjectMapper().writeValueAsString(request))
@@ -336,10 +324,9 @@ public class ReportControllerTest {
     @Test
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void deleteReportTest() throws Exception {
-        Integer reportId = createReport("휅");
-        addMember(reportId);
+        Integer reportId = createReport("testetsetesstest");
 
-        mvc.perform(delete("/report/"+reportId)).andDo(print())
+        mvc.perform(delete("/report/{reportId}", Integer.toString(reportId))).andDo(print())
                 .andExpect(status().isOk()).andDo(print());
     }
 
@@ -348,7 +335,6 @@ public class ReportControllerTest {
     @WithMockUser(value = "test12@dsm.hs.kr",password="1234")
     public void deleteReportTest1() throws Exception {
         Integer reportId = createReport("헑");
-        addMember(reportId);
 
         mvc.perform(delete("/report/"+reportId)).andDo(print())
                 .andExpect(status().isNotFound()).andDo(print());
@@ -358,7 +344,6 @@ public class ReportControllerTest {
     @Test
     public void deleteReportTest2() throws Exception {
         Integer reportId = createReport("핡");
-        addMember(reportId);
 
         mvc.perform(delete("/report/"+reportId)).andDo(print())
                 .andExpect(status().isNotFound()).andDo(print());
@@ -369,7 +354,6 @@ public class ReportControllerTest {
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
     public void createComment() throws Exception {
         Integer reportId = createReport("흹");
-        addMember(reportId);
         Integer commentId1 = createComment(reportId);
 
         CommentRequest request = CommentRequest.builder()
@@ -389,7 +373,6 @@ public class ReportControllerTest {
     @Test
     public void createComment1() throws Exception {
         Integer reportId = createReport("쭯");
-        addMember(reportId);
         Integer commentId1 = createComment(reportId);
 
         CommentRequest request = CommentRequest.builder()
@@ -410,7 +393,6 @@ public class ReportControllerTest {
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
     public void updateComment() throws Exception {
         Integer reportId = createReport("똷");
-        addMember(reportId);
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
 
@@ -424,7 +406,6 @@ public class ReportControllerTest {
     @WithMockUser(value = "test22@dsm.hs.kr", password = "1234")
     public void updateComment2() throws Exception {
         Integer reportId = createReport("끫");
-        addMember(reportId);
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
 
@@ -439,7 +420,6 @@ public class ReportControllerTest {
     @Test
     public void updateComment1() throws Exception {
         Integer reportId = createReport("제엥ㅁ냐ㅐ럼니ㅏㅇ");
-        addMember(reportId);
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
 
@@ -454,11 +434,11 @@ public class ReportControllerTest {
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
     public void deleteComment() throws Exception {
         Integer reportId = createReport("제에에에에에ㅔ에에목");
-        addMember(reportId);
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
 
-        mvc.perform(delete("/comment/"+commentId1)).andDo(print())
+        mvc.perform(delete("/comment/{commentId}", Integer.toString(commentId1))
+        ).andDo(print())
                 .andExpect(status().isOk()).andDo(print());
 
     }
@@ -468,7 +448,6 @@ public class ReportControllerTest {
     @WithMockUser(value = "test1@dsm.hs.kr", password = "1234")
     public void deleteComment1() throws Exception {
         Integer reportId = createReport("제에에에목");
-        addMember(reportId);
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
 
@@ -481,7 +460,6 @@ public class ReportControllerTest {
     @Test
     public void deleteComment2() throws Exception {
         Integer reportId = createReport("제에목");
-        addMember(reportId);
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
 
@@ -500,10 +478,67 @@ public class ReportControllerTest {
         ).getId();
     }
 
+    // 보고서 목록 성공(필터 둘다)
+    @Test
+    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
+    public void getReportListTest1() throws Exception {
+
+        Integer reportId = createReport("제에목");
+        Integer reportId1 = createReport("제에에에목");
+        Integer reportId2 = createReport("제에에에에에ㅔ에목");
+
+        mvc.perform(get("/report/filter?field=AI&type=SOLE&grade=GRADE1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().is4xxClientError()).andDo(print());
+    }
+
+    // 보고서 목록(타입 없음)
+    @Test
+    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
+    public void getReportListTest2() throws Exception {
+
+        Integer reportId = createReport("제에목");
+        Integer reportId1 = createReport("제에에에목");
+        Integer reportId2 = createReport("제에에에에ㅔ에에에목");
+
+        mvc.perform(get("/report/filter?field=AI&grade=GRADE1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().is4xxClientError()).andDo(print());
+    }
+
+
+    // 보고서 목록(필드 없음)
+    @Test
+    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
+    public void getReportListTest3() throws Exception {
+
+        Integer reportId = createReport("제에목");
+        Integer reportId1 = createReport("제에엥목");
+        Integer reportId2 = createReport("제에에에ㅔ에에목");
+
+        mvc.perform(get("/report/filter?grade=GRADE1&type=TEAM")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().is4xxClientError()).andDo(print());
+    }
+
+    // 보고서 목록 실패(학년 없음)
+    @Test
+    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
+    public void getReportListTest4() throws Exception {
+
+        Integer reportId = createReport("제에목");
+        Integer reportId1 = createReport("제에에에ㅔ에목");
+        Integer reportId2 = createReport("제에에에에ㅔ에에목");
+
+        mvc.perform(get("/report/filter?type=TEAM&field=AI")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().is4xxClientError()).andDo(print());
+    }
+
     private Integer createReport(String title) throws Exception {
 
-        Integer reportId = reportRepository.save(
-                Report.builder()
+        Report report = reportRepository.save(
+                 Report.builder()
                         .title(title)
                         .description("이승윤 돼애애애지")
                         .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
@@ -518,16 +553,23 @@ public class ReportControllerTest {
                         .languages("어어너ㅓㅓㅓ너ㅓ")
                         .teamName("asdf")
                         .build()
-        ).getReportId();
+        );
 
         userReportRepository.save(
                 UserReport.builder()
                         .userEmail("test@dsm.hs.kr")
-                        .reportId(reportId)
+                        .reportId(report.getReportId())
                         .build()
         );
 
-        return reportId;
+        memberRepository.save(
+                Member.builder()
+                        .report(report)
+                        .reportId(report.getReportId())
+                        .userEmail("test@dsm.hs.kr")
+                        .build()
+        );
+        return report.getReportId();
     }
 
     private Integer createComment(Integer reportId) throws Exception {

@@ -160,7 +160,7 @@ public class ReportServiceImpl implements ReportService{
                 .fileName(report.getFileName())
                 .createdAt(report.getCreatedAt())
                 .description(report.getDescription())
-                .mine(isMine)
+                .isMine(isMine)
                 .comments(commentsResponses)
                 .build();
     }
@@ -196,23 +196,21 @@ public class ReportServiceImpl implements ReportService{
             throw new UserNotFoundException();
         }
 
-        Report report = reportRepository.findByReportId(reportId)
+        UserReport userReport = userReportRepository.findByReportIdAndUserEmail(reportId,user.getUserEmail())
                 .orElseThrow(ReportNotFoundException::new);
 
-        List<Member> members = report.getMembers();
+        Report report = reportRepository.findByReportId(reportId)
+                .orElseThrow(ReportNotFoundException::new);
 
         for(Comment comment : commentRepository.findAllByReportIdOrderByIdAsc(reportId)) {
             commentService.deleteComment(comment.getId());
         }
 
-        for(Member member : members) {
+        for(Member member : report.getMembers()) {
             memberRepository.deleteById(member.getId());
         }
 
-        UserReport userReport = userReportRepository.findByReportIdAndUserEmail(reportId,user.getUserEmail())
-                .orElseThrow(ReportNotFoundException::new);
-
-        userReportRepository.deleteById(userReport.getReportId());
+        userReportRepository.deleteAllByReportId(reportId);
 
         reportRepository.deleteById(reportId);
     }

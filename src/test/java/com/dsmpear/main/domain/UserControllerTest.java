@@ -67,6 +67,15 @@ public class UserControllerTest {
 
         userRepository.save(
                 User.builder()
+                .email("alreadyuser@dsm.hs.kr")
+                .password(passwordEncoder.encode("1111"))
+                .authStatus(true)
+                .name("alreadyuser")
+                .build()
+        );
+
+        userRepository.save(
+                User.builder()
                         .email("bear@dsm.hs.kr")
                         .name("고jam")
                         .password(passwordEncoder.encode("1234"))
@@ -118,6 +127,14 @@ public class UserControllerTest {
     }
 
     @Test
+    public void registerUserWithUserIsAlreadyRegisteredExcept() throws Exception {
+        mvc.perform(post("/account").content(new ObjectMapper()
+                .writeValueAsString(new RegisterRequest("alreadyuser", "1111", "alreadyuser@dsm.hs.kr")))
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isBadRequest()).andDo(print());
+    }
+
+    @Test
     public void registerUserWithUserNotFoundExcept() throws Exception {
         mvc.perform(post("/account").content(new ObjectMapper()
                 .writeValueAsString(new RegisterRequest("smoothbear", "1111", "smoo@dsm.hs.kr")))
@@ -143,6 +160,12 @@ public class UserControllerTest {
     @WithMockUser(value = "apple@dsm.hs.kr",password = "1111")
     public void getUser_bad() throws Exception{
         mvc.perform(get("/account"))
+                .andExpect(status().isBadRequest()).andDo(print());
+    }
+    
+    @Test
+    public void getUser_noLogin() throws Exception{
+        mvc.perform(get("/account")).andDo(print())
                 .andExpect(status().isBadRequest()).andDo(print());
     }
 }
