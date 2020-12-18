@@ -188,8 +188,8 @@ class MemberControllerTest {
     @Order(2)
     @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
     public void deleteMember() throws Exception{
-        addReport();
-        mvc.perform(delete("/member/"+12))
+        Integer memberId = check_member();
+        mvc.perform(delete("/member/"+memberId))
                 .andExpect(status().isOk()).andDo(print());
     }
 
@@ -197,9 +197,9 @@ class MemberControllerTest {
     @Order(2)
     @WithMockUser(value = "test@dsm.hs.kr",password = "1111")
     public void deleteMember_me() throws Exception{
-        addReport();
+        Integer memberId = check_member();
 
-        mvc.perform(delete("/member/"+16))
+        mvc.perform(delete("/member/"+memberId))
                 .andExpect(status().isBadRequest()).andDo(print());
     }
 
@@ -207,9 +207,9 @@ class MemberControllerTest {
     @Order(2)
     @WithMockUser(username = "",password = "")
     public void deleteMember_noLogin() throws Exception{
-        addReport();
+        Integer memberId = check_member();
 
-        mvc.perform(delete("/member/"+12))
+        mvc.perform(delete("/member/"+memberId))
                 .andExpect(status().isForbidden());
     }
 
@@ -266,5 +266,58 @@ class MemberControllerTest {
         System.out.println(member.getId());
         System.out.println(member1.getId());
         return reportId;
+    }
+
+    private Integer check_member() {
+        Integer reportId = reportRepository.save(
+                Report.builder()
+                        .title("hello")
+                        .description("hihello")
+                        .grade(Grade.GRADE2)
+                        .access(Access.EVERY)
+                        .field(Field.AI)
+                        .type(Type.TEAM)
+                        .isSubmitted(false)
+                        .accepted(0)
+                        .createdAt(LocalDateTime.now())
+                        .github("깃허브으")
+                        .languages("자바")
+                        .fileName("나는야 천재")
+                        .teamName("룰루랄라")
+                        .build()
+        ).getReportId();
+
+        Member member = memberRepository.save(
+                Member.builder()
+                        .reportId(reportId)
+                        .userEmail("test@dsm.hs.kr")
+                        .build()
+        );
+
+        Member member1 = memberRepository.save(
+                Member.builder()
+                        .reportId(reportId)
+                        .userEmail("tset@dsm.hs.kr")
+                        .build()
+        );
+
+        userReportRepository.save(
+                UserReport.builder()
+                        .userEmail("test@dsm.hs.kr")
+                        .reportId(reportId)
+                        .build()
+        );
+
+        userReportRepository.save(
+                UserReport.builder()
+                        .userEmail("tset@dsm.hs.kr")
+                        .reportId(reportId)
+                        .build()
+        );
+
+        System.out.println(member.getId());
+        System.out.println(member1.getId());
+
+        return member.getId();
     }
 }
