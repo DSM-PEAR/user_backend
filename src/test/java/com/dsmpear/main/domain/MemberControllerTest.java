@@ -234,7 +234,7 @@ class MemberControllerTest {
                         .field(Field.AI)
                         .type(Type.TEAM)
                         .isSubmitted(false)
-                        .isAccepted(true)
+                        .accepted(0)
                         .createdAt(LocalDateTime.now())
                         .github("깃허브으")
                         .languages("자바")

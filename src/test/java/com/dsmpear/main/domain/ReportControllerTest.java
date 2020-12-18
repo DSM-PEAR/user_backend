@@ -44,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles("test")
-public class ReportControllerTest {
+class ReportControllerTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -189,6 +189,32 @@ public class ReportControllerTest {
 
     }
 
+    // 보고서 작성 팀이름 없음
+    @Test
+    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
+    public void createReportTest4() throws Exception {
+
+        ReportRequest request = ReportRequest.builder()
+                .title("")
+                .description("내애용은 이승윤 돼지")
+                .grade(Grade.GRADE2)
+                .access(Access.EVERY)
+                .field(Field.AI)
+                .type(Type.TEAM)
+                .isSubmitted(false)
+                .github("깃허브으")
+                .languages("자바")
+                .fileName("이승윤 돼지")
+                .teamName("")
+                .build();
+
+        mvc.perform(post("/report")
+                .content(objectMapperConfiguration.objectMapper().writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().is4xxClientError()).andDo(print());
+
+    }
+
     // 보고서 보기 성공 테스트
     @Test
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
@@ -199,6 +225,17 @@ public class ReportControllerTest {
         Integer reportId1 = createReport("애는 좀 다르고");
         Integer reportId = createReport(expected);
         Integer reportId2 = createReport("이건 정상적이게 비슷");
+
+        createComment(reportId1);
+        createComment(reportId1);
+        createComment(reportId1);
+        createComment(reportId1);
+        createComment(reportId2);
+        createComment(reportId2);
+        createComment(reportId2);
+        createComment(reportId2);
+        createComment(reportId2);
+
 
         MvcResult mvcResult = mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
@@ -213,23 +250,35 @@ public class ReportControllerTest {
     @WithMockUser(value = "test1@dsm.hs.kr",password="1234")
     public void getReportTest1() throws Exception {
 
-        String expected = "expected";
+        String expected = "expected1";
 
         Integer reportId = createReport(expected);
 
-
-        MvcResult mvcResult = mvc.perform(get("/report/"+reportId)
+        mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isOk()).andDo(print()).andReturn();
-
-        ReportContentResponse response = objectMapperConfiguration.objectMapper().readValue(mvcResult.getResponse().getContentAsString(), ReportContentResponse.class);
-        Assert.assertEquals(response.getTitle(), expected);
+                .andExpect(status().isForbidden()).andDo(print());
     }
 
     @Test
     public void getReportTest2() throws Exception {
 
-        Integer reportId = createReport("이건 정상적이게");
+        Integer reportId = reportRepository.save(
+                Report.builder()
+                        .title("제목이지롱")
+                        .description("이승윤 돼애애애지")
+                        .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                        .grade(Grade.GRADE1)
+                        .access(Access.ADMIN)
+                        .field(Field.AI)
+                        .type(Type.SOLE)
+                        .accepted(1)
+                        .isSubmitted(false)
+                        .fileName("파아아일")
+                        .github("기이이잇허브")
+                        .languages("어어너ㅓㅓㅓ너ㅓ")
+                        .teamName("asdf")
+                        .build()
+        ).getReportId();
 
         mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
@@ -530,7 +579,7 @@ public class ReportControllerTest {
         Integer reportId1 = createReport("제에에에ㅔ에목");
         Integer reportId2 = createReport("제에에에에ㅔ에에목");
 
-        mvc.perform(get("/report/filter?type=TEAM&field=AI")
+        mvc.perform(get("/report/filter?type={type}&field={field}",Type.TEAM,Field.WEB)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
                 .andExpect(status().is4xxClientError()).andDo(print());
     }
@@ -546,7 +595,7 @@ public class ReportControllerTest {
                         .access(Access.ADMIN)
                         .field(Field.AI)
                         .type(Type.SOLE)
-                        .isAccepted(false)
+                        .accepted(2)
                         .isSubmitted(false)
                         .fileName("파아아일")
                         .github("기이이잇허브")

@@ -49,7 +49,7 @@ public class Report {
     private Type type;
 
     @Column(name = "is_accepted", nullable = false)
-    private Boolean isAccepted;
+    private Integer accepted;
 
     @Column(name = "is_submitted", nullable = false)
     private Boolean isSubmitted;
@@ -67,6 +67,7 @@ public class Report {
     private String teamName;
 
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "report")
+    @JsonBackReference
     private List<Member> members;
 
     public Report update(ReportRequest reportRequest) {
