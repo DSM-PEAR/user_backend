@@ -16,6 +16,7 @@ import com.dsmpear.main.payload.request.ReportRequest;
 import com.dsmpear.main.payload.response.ReportContentResponse;
 import com.dsmpear.main.payload.response.ReportListResponse;
 import com.dsmpear.main.payload.response.ReportResponse;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
@@ -169,7 +170,7 @@ class ReportControllerTest {
     public void createReportTest3() throws Exception {
 
         ReportRequest request = ReportRequest.builder()
-                .title("")
+                .title("제에목")
                 .description("내애용은 이승윤 돼지")
                 .grade(Grade.GRADE2)
                 .access(Access.EVERY)
@@ -179,13 +180,13 @@ class ReportControllerTest {
                 .github("깃허브으")
                 .languages("자바")
                 .fileName("이승윤 돼지")
-                .teamName("dfas")
+                .teamName("")
                 .build();
 
         mvc.perform(post("/report")
                 .content(objectMapperConfiguration.objectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().is4xxClientError()).andDo(print());
+                .andExpect(status().isCreated()).andDo(print());
 
     }
 
@@ -226,13 +227,13 @@ class ReportControllerTest {
         Integer reportId = createReport(expected);
         Integer reportId2 = createReport("이건 정상적이게 비슷");
 
+        createComment(reportId);
+        createComment(reportId);
+        createComment(reportId);
         createComment(reportId1);
-        createComment(reportId1);
-        createComment(reportId1);
-        createComment(reportId1);
-        createComment(reportId2);
-        createComment(reportId2);
-        createComment(reportId2);
+        createComment(reportId);
+        createComment(reportId);
+        createComment(reportId);
         createComment(reportId2);
         createComment(reportId2);
 
