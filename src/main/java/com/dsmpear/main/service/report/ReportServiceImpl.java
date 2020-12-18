@@ -63,7 +63,7 @@ public class ReportServiceImpl implements ReportService{
                         .access(reportRequest.getAccess())
                         .field(reportRequest.getField())
                         .type(reportRequest.getType())
-                        .isAccepted(1)
+                        .accepted(1)
                         .isSubmitted(reportRequest.getIsSubmitted())
                         .fileName(reportRequest.getFileName())
                         .github(reportRequest.getGithub())
@@ -115,7 +115,7 @@ public class ReportServiceImpl implements ReportService{
             if (!isMine) {
                 if (!(report.getAccess().equals(Access.EVERY))) {
                     throw new PermissionDeniedException();
-                }else if(report.getIsAccepted() != 2 || !report.getIsSubmitted()) {
+                }else if(report.getAccepted() != 2 || !report.getIsSubmitted()) {
                     throw new PermissionDeniedException();
                 }
             }else {
@@ -127,7 +127,7 @@ public class ReportServiceImpl implements ReportService{
             }
         }
 
-        List<Comment> comment = commentRepository.findAllByReportIdOrderByIdAsc(reportId);
+        List<Comment> comment = commentRepository.findAllByReportIdOrderByCreatedAtAsc(reportId);
         List<ReportCommentsResponse> commentsResponses = new ArrayList<>();
 
 
@@ -199,7 +199,7 @@ public class ReportServiceImpl implements ReportService{
         Report report = reportRepository.findByReportId(reportId)
                 .orElseThrow(ReportNotFoundException::new);
 
-        for(Comment comment : commentRepository.findAllByReportIdOrderByIdAsc(reportId)) {
+        for(Comment comment : commentRepository.findAllByReportIdOrderByCreatedAtAsc(reportId)) {
             commentService.deleteComment(comment.getId());
         }
 
@@ -227,13 +227,13 @@ public class ReportServiceImpl implements ReportService{
 
 
         if(type == null && field == null) {
-            reportPage = reportRepository.findAllByAccessAndGradeAndIsAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, grade, 2, page);
+            reportPage = reportRepository.findAllByAccessAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, grade, 2, page);
         }else if(type == null) {
-            reportPage = reportRepository.findAllByAccessAndFieldAndGradeAndIsAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, field, grade, 2, page);
+            reportPage = reportRepository.findAllByAccessAndFieldAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, field, grade, 2, page);
         }else if(field == null) {
-            reportPage = reportRepository.findAllByAccessAndTypeAndGradeAndIsAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, type, grade, 2, page);
+            reportPage = reportRepository.findAllByAccessAndTypeAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, type, grade, 2, page);
         }else {
-            reportPage = reportRepository.findAllByAccessAndFieldAndTypeAndGradeAndIsAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, field, type, grade, 2, page);
+            reportPage = reportRepository.findAllByAccessAndFieldAndTypeAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, field, type, grade, 2, page);
         }
 
         for(Report report : reportPage) {

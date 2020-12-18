@@ -43,7 +43,7 @@ public class MyPageReportServiceImpl implements MyPageReportService{
                             .title(report.getTitle())
                             .createdAt(report.getCreatedAt())
                             .isSubmitted(report.getIsSubmitted())
-                            .isAccepted(report.getIsAccepted())
+                            .isAccepted(report.getAccepted())
                             .build()
             );
         }

@@ -49,7 +49,7 @@ public class Report {
     private Type type;
 
     @Column(name = "is_accepted", nullable = false)
-    private Integer isAccepted;
+    private Integer accepted;
 
     @Column(name = "is_submitted", nullable = false)
     private Boolean isSubmitted;
