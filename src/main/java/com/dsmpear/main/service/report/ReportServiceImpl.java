@@ -118,8 +118,6 @@ public class ReportServiceImpl implements ReportService{
                 }else if(report.getAccepted() != 2 || !report.getIsSubmitted()) {
                     throw new PermissionDeniedException();
                 }
-            }else {
-                System.out.println("내꺼야!!");
             }
         }else {
             if(report.getAccess().equals(Access.ADMIN)) {
@@ -129,7 +127,6 @@ public class ReportServiceImpl implements ReportService{
 
         List<Comment> comment = commentRepository.findAllByReportIdOrderByCreatedAtAsc(reportId);
         List<ReportCommentsResponse> commentsResponses = new ArrayList<>();
-
 
         // 댓글 하나하나 담기ㅣ
         for (Comment co : comment) {
