@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/report/filter")
 public class ReportListController {
     private final ReportService reportService;
-    @GetMapping("?{field}&{type}&{grade}")
+    @GetMapping
     public ReportListResponse getReportList(@RequestParam(required = false) Field field,
                                             @RequestParam(required = false) Type type,
                                             @RequestParam Grade grade,
