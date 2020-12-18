@@ -127,7 +127,7 @@ public class ReportServiceImpl implements ReportService{
             }
         }
 
-        List<Comment> comment = commentRepository.findAllByReportIdOrderByIdAsc(reportId);
+        List<Comment> comment = commentRepository.findAllByReportIdOrderByCreatedAtAsc(reportId);
         List<ReportCommentsResponse> commentsResponses = new ArrayList<>();
 
 
@@ -199,7 +199,7 @@ public class ReportServiceImpl implements ReportService{
         Report report = reportRepository.findByReportId(reportId)
                 .orElseThrow(ReportNotFoundException::new);
 
-        for(Comment comment : commentRepository.findAllByReportIdOrderByIdAsc(reportId)) {
+        for(Comment comment : commentRepository.findAllByReportIdOrderByCreatedAtAsc(reportId)) {
             commentService.deleteComment(comment.getId());
         }
 

@@ -34,11 +34,6 @@ public class Comment {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "comment")
-    private Report report;
-
     public Comment updateContent(String content) {
         this.content = content;
         return this;

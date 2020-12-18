@@ -49,7 +49,6 @@ public class SearchServiceImpl implements SearchService{
 
     @Override
     public ReportListResponse searchReportByTitle(Pageable page, String title) {
-        System.out.println("제에목: "+title);
         Page<Report> reportPage = reportRepository.findAllByAccessAndAcceptedAndIsSubmittedTrueAndTitleContainingOrderByCreatedAtDesc(Access.EVERY, 2, title, page);
 
         List<ReportResponse> reportResponses = new ArrayList<>();
