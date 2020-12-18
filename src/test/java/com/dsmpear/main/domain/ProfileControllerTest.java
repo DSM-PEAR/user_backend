@@ -1,5 +1,6 @@
 package com.dsmpear.main.domain;
 
+import com.dsmpear.main.MainApplication;
 import com.dsmpear.main.entity.member.Member;
 import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.*;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = MainApplication.class)
 @ActiveProfiles("test")
 class ProfileControllerTest {
 
