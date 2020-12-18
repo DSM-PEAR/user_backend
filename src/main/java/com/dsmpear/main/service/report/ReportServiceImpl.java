@@ -222,7 +222,6 @@ public class ReportServiceImpl implements ReportService{
         List<ReportResponse> reportResponses = new ArrayList<>();
         Page<Report> reportPage;
 
-
         if(type == null && field == null) {
             reportPage = reportRepository.findAllByAccessAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, grade, 2, page);
         }else if(type == null) {
@@ -230,7 +229,7 @@ public class ReportServiceImpl implements ReportService{
         }else if(field == null) {
             reportPage = reportRepository.findAllByAccessAndTypeAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, type, grade, 2, page);
         }else {
-            reportPage = reportRepository.findAllByAccessAndFieldAndTypeAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, field, type, grade, 2, page);
+            reportPage = reportRepository.findAllByAccessAndFieldAndTypeAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAt(Access.EVERY, field, type, grade, 2, page);
         }
 
         for(Report report : reportPage) {

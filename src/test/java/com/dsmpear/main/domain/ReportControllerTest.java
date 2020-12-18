@@ -257,7 +257,7 @@ class ReportControllerTest {
 
         mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isForbidden()).andDo(print());
+                .andExpect(status().isOk()).andDo(print());
     }
 
     @Test
@@ -537,9 +537,9 @@ class ReportControllerTest {
         Integer reportId1 = createReport("제에에에목");
         Integer reportId2 = createReport("제에에에에에ㅔ에목");
 
-        mvc.perform(get("/report/filter?field=AI&type=SOLE&grade=GRADE1")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().is4xxClientError()).andDo(print());
+        MvcResult result = mvc.perform(get("/report/filter?field=AI&type=SOLE&grade=GRADE1&size=10&page=0")).andDo(print()).andReturn();
+        ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
+        Assert.assertEquals(3, response.getTotalElements());
     }
 
     // 보고서 목록(타입 없음)
@@ -551,9 +551,9 @@ class ReportControllerTest {
         Integer reportId1 = createReport("제에에에목");
         Integer reportId2 = createReport("제에에에에ㅔ에에에목");
 
-        mvc.perform(get("/report/filter?field=AI&grade=GRADE1")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().is4xxClientError()).andDo(print());
+        MvcResult result = mvc.perform(get("/report/filter?field=AI&grade=GRADE1&size=10&page=0")).andDo(print()).andReturn();
+        ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
+        Assert.assertEquals(3, response.getTotalElements());
     }
 
 
@@ -566,12 +566,12 @@ class ReportControllerTest {
         Integer reportId1 = createReport("제에엥목");
         Integer reportId2 = createReport("제에에에ㅔ에에목");
 
-        mvc.perform(get("/report/filter?grade=GRADE1&type=TEAM")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().is4xxClientError()).andDo(print());
+        MvcResult result = mvc.perform(get("/report/filter?type=SOLE&grade=GRADE1&size=10&page=0")).andDo(print()).andReturn();
+        ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
+        Assert.assertEquals(3, response.getTotalElements());
     }
 
-    // 보고서 목록 실패(학년 없음)
+    /*// 보고서 목록 실패(학년 없음)
     @Test
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void getReportListTest4() throws Exception {
@@ -580,10 +580,10 @@ class ReportControllerTest {
         Integer reportId1 = createReport("제에에에ㅔ에목");
         Integer reportId2 = createReport("제에에에에ㅔ에에목");
 
-        mvc.perform(get("/report/filter?type={type}&field={field}",Type.TEAM,Field.WEB)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().is4xxClientError()).andDo(print());
-    }
+        MvcResult result = mvc.perform(get("/report/filter?field=AI&type=SOLE&size=10&page=0")).andDo(print()).andReturn();
+        ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
+        Assert.assertEquals(2, response.getTotalElements());
+    }*/
 
     private Integer createReport(String title) throws Exception {
 
@@ -593,11 +593,11 @@ class ReportControllerTest {
                         .description("이승윤 돼애애애지")
                         .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                         .grade(Grade.GRADE1)
-                        .access(Access.ADMIN)
+                        .access(Access.EVERY)
                         .field(Field.AI)
                         .type(Type.SOLE)
                         .accepted(2)
-                        .isSubmitted(false)
+                        .isSubmitted(true)
                         .fileName("파아아일")
                         .github("기이이잇허브")
                         .languages("어어너ㅓㅓㅓ너ㅓ")
