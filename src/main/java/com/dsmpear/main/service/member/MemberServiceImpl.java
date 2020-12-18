@@ -43,11 +43,11 @@ public class MemberServiceImpl implements MemberService {
 
         for(Member member:memberPage){
             memberResponses.add(
-                    MemberResponse.builder()
-                            .memberId(member.getId())
-                            .memberEmail(member.getUserEmail())
-                            .memberName(member.getUserEmail())
-                            .build()
+              MemberResponse.builder()
+                      .memberId(member.getId())
+                      .memberEmail(member.getUserEmail())
+                      .memberName(member.getUserEmail())
+                      .build()
             );
         }
 
@@ -104,16 +104,12 @@ public class MemberServiceImpl implements MemberService {
         Report report = reportRepository.findByReportId(member.getReportId())
                 .orElseThrow(ReportNotFoundException::new);
 
-        //요청한 user가 팀 멤버인지 확인하기
-        memberRepository.findByReportIdAndUserEmail(report.getReportId(), email)
-                .orElseThrow(UserNotMemberException::new);
-
-        UserReport userReport = userReportRepository.findByReportIdAndUserEmail(report.getReportId(), member.getUserEmail())
-                .orElseThrow(UserNotMemberException::new);
-
         if(email.equals(member.getUserEmail())){
             throw new UserEqualsMemberException();
         }
+
+        UserReport userReport = userReportRepository.findByReportIdAndUserEmail(report.getReportId(), member.getUserEmail())
+                .orElseThrow(UserNotMemberException::new);
 
         memberRepository.delete(member);
 

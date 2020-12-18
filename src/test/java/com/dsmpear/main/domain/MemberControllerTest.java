@@ -188,28 +188,36 @@ class MemberControllerTest {
     @Order(2)
     @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
     public void deleteMember() throws Exception{
-        addReport();
-        mvc.perform(delete("/member/"+12))
-                .andExpect(status().isOk()).andDo(print());
+        int reportId = addReport();
+        mvc.perform(delete("/member/"+reportId))
+                .andExpect(status().isForbidden()).andDo(print());
     }
 
     @Test
     @Order(2)
     @WithMockUser(value = "test@dsm.hs.kr",password = "1111")
     public void deleteMember_me() throws Exception{
-        addReport();
+        int reportId = addReport();
 
-        mvc.perform(delete("/member/"+16))
-                .andExpect(status().isBadRequest()).andDo(print());
+        mvc.perform(delete("/member/"+1))
+                .andExpect(status().isForbidden()).andDo(print());
+    }
+  
+    @Test
+    @Order(2)
+    @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
+    public void deleteMember_noId() throws Exception{
+        mvc.perform(delete("/member"))
+                .andExpect(status().is4xxClientError()).andDo(print());
     }
 
     @Test
     @Order(2)
     @WithMockUser(username = "",password = "")
     public void deleteMember_noLogin() throws Exception{
-        addReport();
+        int reportId = addReport();
 
-        mvc.perform(delete("/member/"+12))
+        mvc.perform(delete("/member/"+reportId))
                 .andExpect(status().isForbidden());
     }
 
@@ -235,14 +243,14 @@ class MemberControllerTest {
                         .build()
         ).getReportId();
 
-        Member member = memberRepository.save(
+        memberRepository.save(
                 Member.builder()
                         .reportId(reportId)
                         .userEmail("test@dsm.hs.kr")
                         .build()
         );
 
-        Member member1 = memberRepository.save(
+        memberRepository.save(
                 Member.builder()
                         .reportId(reportId)
                         .userEmail("tset@dsm.hs.kr")
@@ -263,8 +271,6 @@ class MemberControllerTest {
                         .build()
         );
 
-        System.out.println(member.getId());
-        System.out.println(member1.getId());
         return reportId;
     }
 }
