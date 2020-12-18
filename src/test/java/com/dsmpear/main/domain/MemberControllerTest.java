@@ -188,27 +188,19 @@ class MemberControllerTest {
     @Order(2)
     @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
     public void deleteMember() throws Exception{
-        int reportId = addReport();
-        mvc.perform(delete("/member/"+reportId))
-                .andExpect(status().isForbidden()).andDo(print());
+        addReport();
+        mvc.perform(delete("/member/"+12))
+                .andExpect(status().isOk()).andDo(print());
     }
 
     @Test
     @Order(2)
     @WithMockUser(value = "test@dsm.hs.kr",password = "1111")
     public void deleteMember_me() throws Exception{
-        int reportId = addReport();
+        addReport();
 
-        mvc.perform(delete("/member/"+1))
+        mvc.perform(delete("/member/"+12))
                 .andExpect(status().isForbidden()).andDo(print());
-    }
-  
-    @Test
-    @Order(2)
-    @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
-    public void deleteMember_noId() throws Exception{
-        mvc.perform(delete("/member"))
-                .andExpect(status().is4xxClientError()).andDo(print());
     }
 
     @Test
@@ -243,14 +235,14 @@ class MemberControllerTest {
                         .build()
         ).getReportId();
 
-        memberRepository.save(
+        Member member = memberRepository.save(
                 Member.builder()
                         .reportId(reportId)
                         .userEmail("test@dsm.hs.kr")
                         .build()
         );
 
-        memberRepository.save(
+        Member member1 = memberRepository.save(
                 Member.builder()
                         .reportId(reportId)
                         .userEmail("tset@dsm.hs.kr")
