@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface CommentRepository extends CrudRepository<Comment, Integer> {
-    List<Comment> findAllByReportIdOrderByIdAsc(Integer boardId);
+    List<Comment> findAllByReportIdOrderByCreatedAtAsc(Integer boardId);
 }
