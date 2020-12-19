@@ -13,6 +13,7 @@ import com.dsmpear.main.payload.request.CommentRequest;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -53,6 +54,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Integer updateComment(Integer commentId, String content) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(CommentNotFoundException::new);
         User user = null;
         if(authenticationFacade.isLogin()) {
             user = userRepository.findByEmail(authenticationFacade.getUserEmail())
@@ -61,8 +64,6 @@ public class CommentServiceImpl implements CommentService {
             throw new PermissionDeniedException();
         }
 
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(CommentNotFoundException::new);
 
         if(!user.getEmail().equals(comment.getUserEmail())) {
             throw new PermissionDeniedException();

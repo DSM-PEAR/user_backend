@@ -25,7 +25,7 @@ dependencies {
     // spring boot starter web
     implementation 'org.springframework.boot:spring-boot-starter-web'
     // spring mail
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'net.sargue:mailgun:1.9.2'
     // spring security
     compile 'org.springframework.security:spring-security-web:4.2.2.RELEASE'
     compile 'org.springframework.security:spring-security-config:4.2.2.RELEASE'
@@ -41,8 +41,6 @@ dependencies {
     // lombok
     compile "org.projectlombok:lombok:1.18.8"
     annotationProcessor("org.projectlombok:lombok:1.18.8")
-    // jsoup
-    compile 'org.jsoup:jsoup:1.13.1'
     // validation (For using @Valid Annotation)
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     // jackson (JSON Object)

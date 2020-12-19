@@ -6,6 +6,7 @@ import com.dsmpear.main.service.user.UserListService;
 import com.dsmpear.main.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,6 +20,7 @@ public class UserController {
     private final UserListService userListService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public void register(@RequestBody @Valid RegisterRequest request) {
         userService.register(request);
     }

@@ -1,5 +1,7 @@
 package com.dsmpear.main.entity.comment;
 
+import com.dsmpear.main.entity.report.Report;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
