@@ -260,26 +260,36 @@ class ReportControllerTest {
                 .andExpect(status().isOk()).andDo(print());
     }
 
+
+    // 보고서 보기 실패 테스트(권한 없음)
     @Test
+    @WithMockUser(value = "test1@dsm.hs.kr",password="1234")
     public void getReportTest2() throws Exception {
 
-        Integer reportId = reportRepository.save(
-                Report.builder()
-                        .title("제목이지롱")
-                        .description("이승윤 돼애애애지")
-                        .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                        .grade(Grade.GRADE1)
-                        .access(Access.ADMIN)
-                        .field(Field.AI)
-                        .type(Type.SOLE)
-                        .accepted(1)
-                        .isSubmitted(false)
-                        .fileName("파아아일")
-                        .github("기이이잇허브")
-                        .languages("어어너ㅓㅓㅓ너ㅓ")
-                        .teamName("asdf")
-                        .build()
-        ).getReportId();
+
+        Integer reportId = createReportAdmin("제에목");
+
+        mvc.perform(get("/report/"+reportId)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().isForbidden()).andDo(print());
+    }
+
+
+    // 보고서 보기 실패 테스트(제출 안됨)
+    @Test
+    @WithMockUser(value = "test1@dsm.hs.kr",password="1234")
+    public void getReportTest3() throws Exception {
+
+        Integer reportId = createReportNotSubmitted("제에목");
+
+        mvc.perform(get("/report/"+reportId)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
+                .andExpect(status().isForbidden()).andDo(print());
+    }
+
+    @Test
+    public void getReportTest4() throws Exception {
+        Integer reportId = createReportAdmin("제에목");
 
         mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
@@ -375,6 +385,9 @@ class ReportControllerTest {
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void deleteReportTest() throws Exception {
         Integer reportId = createReport("testetsetesstest");
+        createComment(reportId);
+        createComment(reportId);
+        createComment(reportId);
 
         mvc.perform(delete("/report/{reportId}", Integer.toString(reportId))).andDo(print())
                 .andExpect(status().isOk()).andDo(print());
@@ -585,7 +598,7 @@ class ReportControllerTest {
         Assert.assertEquals(3, response.getTotalElements());
     }
 
-    /*// 보고서 목록 실패(학년 없음)
+    // 보고서 목록 성공(필터 없음)
     @Test
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void getReportListTest4() throws Exception {
@@ -594,10 +607,10 @@ class ReportControllerTest {
         Integer reportId1 = createReport("제에에에ㅔ에목");
         Integer reportId2 = createReport("제에에에에ㅔ에에목");
 
-        MvcResult result = mvc.perform(get("/report/filter?field=AI&type=SOLE&size=10&page=0")).andDo(print()).andReturn();
+        MvcResult result = mvc.perform(get("/report/filter?field=&type=&grade=GRADE1&size=10&page=0")).andDo(print()).andReturn();
         ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
-        Assert.assertEquals(2, response.getTotalElements());
-    }*/
+        Assert.assertEquals(3, response.getTotalElements());
+    }
 
     private Integer createReport(String title) throws Exception {
 
@@ -612,6 +625,81 @@ class ReportControllerTest {
                         .type(Type.SOLE)
                         .accepted(2)
                         .isSubmitted(true)
+                        .fileName("파아아일")
+                        .github("기이이잇허브")
+                        .languages("어어너ㅓㅓㅓ너ㅓ")
+                        .teamName("asdf")
+                        .build()
+        );
+
+        userReportRepository.save(
+                UserReport.builder()
+                        .userEmail("test@dsm.hs.kr")
+                        .reportId(report.getReportId())
+                        .build()
+        );
+
+        memberRepository.save(
+                Member.builder()
+                        .report(report)
+                        .reportId(report.getReportId())
+                        .userEmail("test@dsm.hs.kr")
+                        .build()
+        );
+        return report.getReportId();
+    }
+
+    private Integer createReportAdmin(String title) throws Exception {
+
+        Report report = reportRepository.save(
+                 Report.builder()
+                        .title(title)
+                        .description("이승윤 돼애애애지")
+                        .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                        .grade(Grade.GRADE1)
+                        .access(Access.ADMIN)
+                        .field(Field.AI)
+                        .type(Type.SOLE)
+                        .accepted(2)
+                        .isSubmitted(true)
+                        .fileName("파아아일")
+                        .github("기이이잇허브")
+                        .languages("어어너ㅓㅓㅓ너ㅓ")
+                        .teamName("asdf")
+                        .build()
+        );
+
+        userReportRepository.save(
+                UserReport.builder()
+                        .userEmail("test@dsm.hs.kr")
+                        .reportId(report.getReportId())
+                        .build()
+        );
+
+        memberRepository.save(
+                Member.builder()
+                        .report(report)
+                        .reportId(report.getReportId())
+                        .userEmail("test@dsm.hs.kr")
+                        .build()
+        );
+        return report.getReportId();
+    }
+
+
+    private Integer createReportNotSubmitted(String title) throws Exception {
+
+        Report report = reportRepository.save(
+                 Report.builder()
+                        .title(title)
+                        .description("이승윤 돼애애애지")
+                        .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                        .grade(Grade.GRADE1)
+                        .access(Access.EVERY)
+                        .field(Field.AI)
+                        .type(Type.SOLE)
+                        .accepted(2)
+                        .isSubmitted(false)
                         .fileName("파아아일")
                         .github("기이이잇허브")
                         .languages("어어너ㅓㅓㅓ너ㅓ")
