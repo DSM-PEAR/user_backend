@@ -479,6 +479,20 @@ class ReportControllerTest {
 
     }
 
+    // 댓글 수정 실패 테스트
+    @Test
+    @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
+    public void updateComment3() throws Exception {
+        Integer reportId = createReport("제엥ㅁ냐ㅐ럼니ㅏㅇ");
+        Integer commentId1 = createComment(reportId);
+        Integer commentId2 = createComment(reportId);
+
+        mvc.perform(patch("/comment/"+200)
+                .param("content", "content")).andDo(print())
+                .andExpect(status().is4xxClientError()).andDo(print());
+
+    }
+
     // 댓글 삭제 성공 테스트
     @Test
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
