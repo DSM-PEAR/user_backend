@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 
 @Builder
 @Getter
@@ -19,6 +20,7 @@ public class Question{
     private Integer id;
 
     @Column(nullable = false,length = 30)
+    @Email
     private String email;
 
     @Column(nullable = false, length = 150)

@@ -13,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 public class QuestionRequest {
 
     @Email
+    @NotBlank
     private String email;
 
     @NotBlank
