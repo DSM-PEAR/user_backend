@@ -181,16 +181,18 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public void deleteReport(Integer reportId) {
-        Member user = null;
         boolean isMine = false;
+        User user = null;
         if(authenticationFacade.isLogin()) {
-            user = memberRepository.findByReportIdAndUserEmail(reportId, authenticationFacade.getUserEmail())
+            user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                    .orElseThrow(UserNotFoundException::new);
+            memberRepository.findByReportIdAndUserEmail(reportId, authenticationFacade.getUserEmail())
                     .orElseThrow(UserNotFoundException::new);
         }else {
             throw new UserNotFoundException();
         }
 
-        UserReport userReport = userReportRepository.findByReportIdAndUserEmail(reportId,user.getUserEmail())
+        UserReport userReport = userReportRepository.findByReportIdAndUserEmail(reportId,user.getEmail())
                 .orElseThrow(ReportNotFoundException::new);
 
         Report report = reportRepository.findByReportId(reportId)
