@@ -87,6 +87,15 @@ class MemberControllerTest {
                         .authStatus(true)
                         .build()
         );
+
+        userRepository.save(
+                User.builder()
+                        .email("flower@dsm.hs.kr")
+                        .name("해바라기")
+                        .password(passwordEncoder.encode("1111"))
+                        .authStatus(true)
+                        .build()
+        );
     }
 
 
@@ -107,12 +116,19 @@ class MemberControllerTest {
     }
 
     @Test
+    public void getMember_no_report() throws Exception {
+
+        mvc.perform(get("/member/1?size=1&page=1"))
+                .andExpect(status().isNotFound()).andDo(print());
+    }
+
+    @Test
     @Order(1)
     @WithMockUser(username = "test@dsm.hs.kr",password = "1111")
     public void addMember() throws Exception {
         int reportId = addReport();
 
-        MemberRequest request = new MemberRequest(reportId,"dsm@dsm.hs.kr");
+        MemberRequest request = new MemberRequest(reportId,"flower@dsm.hs.kr");
 
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
@@ -122,58 +138,78 @@ class MemberControllerTest {
 
     @Test
     @Order(1)
-    @WithMockUser(username = "",password = "")
-    public void addMember_noExistUser() throws Exception {
+    @WithMockUser(username = "test@dsm.hs.kr",password = "1111")
+    public void addMember_already() throws Exception {
         int reportId = addReport();
 
-        MemberRequest request = new MemberRequest(reportId,"dsm@dsm.hs.kr");
+        MemberRequest request = new MemberRequest(reportId,"tset@dsm.hs.kr");
 
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isConflict()).andDo(print());
     }
 
+    @Test
+    @Order(1)
+    @WithMockUser(username = "dms@dsm.hs.kr",password = "1111")
+    public void addMember_notmember() throws Exception {
+        int reportId = addReport();
+        MemberRequest request = new MemberRequest(reportId,"flower@dsm.hs.kr");
+        mvc.perform(post("/member").
+                content(new ObjectMapper().writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isForbidden()).andDo(print());
+    }
     //로그인하지 않았을 때
     @Test
     @Order(1)
     @WithMockUser()
     public void addMember_noLogin() throws Exception {
         int reportId = addReport();
-
         MemberRequest request = new MemberRequest(reportId,"dsm@dsm.hs.kr");
-
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isForbidden());
     }
-
+    @Test
+    @Order(1)
+    @WithMockUser(username = "test@dsm.hs.kr",password = "1111")
+    public void addMember_exist_member() throws Exception {
+        int reportId = addReport();
+        MemberRequest request = new MemberRequest(reportId,"tset@dsm.hs.kr");
+        mvc.perform(post("/member").
+                content(new ObjectMapper().writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isConflict());
+    }
     @Test
     @Order(2)
     @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
     public void deleteMember() throws Exception{
-        int reportId = addReport();
-
-        mvc.perform(delete("/member/"+reportId))
-                .andExpect(status().isForbidden()).andDo(print());
+        Integer memberId = check_member();
+        mvc.perform(delete("/member/"+memberId))
+                .andExpect(status().isOk()).andDo(print());
     }
 
     @Test
     @Order(2)
-    @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
-    public void deleteMember_noId() throws Exception{
-        mvc.perform(delete("/member"))
-                .andExpect(status().is4xxClientError()).andDo(print());
+    @WithMockUser(value = "test@dsm.hs.kr",password = "1111")
+    public void deleteMember_me() throws Exception{
+        Integer memberId = check_member();
+
+        mvc.perform(delete("/member/"+memberId))
+                .andExpect(status().isBadRequest()).andDo(print());
     }
 
     @Test
     @Order(2)
     @WithMockUser(username = "",password = "")
     public void deleteMember_noLogin() throws Exception{
-        int reportId = addReport();
+        Integer memberId = check_member();
 
-        mvc.perform(delete("/member/"+reportId))
+        mvc.perform(delete("/member/"+memberId))
                 .andExpect(status().isForbidden());
     }
 
@@ -190,6 +226,7 @@ class MemberControllerTest {
                         .field(Field.AI)
                         .type(Type.TEAM)
                         .isSubmitted(false)
+                        .accepted(0)
                         .createdAt(LocalDateTime.now())
                         .github("깃허브으")
                         .languages("자바")
@@ -198,14 +235,14 @@ class MemberControllerTest {
                         .build()
         ).getReportId();
 
-        memberRepository.save(
+        Member member = memberRepository.save(
                 Member.builder()
                         .reportId(reportId)
                         .userEmail("test@dsm.hs.kr")
                         .build()
         );
 
-        memberRepository.save(
+        Member member1 = memberRepository.save(
                 Member.builder()
                         .reportId(reportId)
                         .userEmail("tset@dsm.hs.kr")
@@ -226,6 +263,61 @@ class MemberControllerTest {
                         .build()
         );
 
+        System.out.println(member.getId());
+        System.out.println(member1.getId());
         return reportId;
+    }
+
+    private Integer check_member() {
+        Integer reportId = reportRepository.save(
+                Report.builder()
+                        .title("hello")
+                        .description("hihello")
+                        .grade(Grade.GRADE2)
+                        .access(Access.EVERY)
+                        .field(Field.AI)
+                        .type(Type.TEAM)
+                        .isSubmitted(false)
+                        .accepted(0)
+                        .createdAt(LocalDateTime.now())
+                        .github("깃허브으")
+                        .languages("자바")
+                        .fileName("나는야 천재")
+                        .teamName("룰루랄라")
+                        .build()
+        ).getReportId();
+
+        Member member = memberRepository.save(
+                Member.builder()
+                        .reportId(reportId)
+                        .userEmail("test@dsm.hs.kr")
+                        .build()
+        );
+
+        Member member1 = memberRepository.save(
+                Member.builder()
+                        .reportId(reportId)
+                        .userEmail("tset@dsm.hs.kr")
+                        .build()
+        );
+
+        userReportRepository.save(
+                UserReport.builder()
+                        .userEmail("test@dsm.hs.kr")
+                        .reportId(reportId)
+                        .build()
+        );
+
+        userReportRepository.save(
+                UserReport.builder()
+                        .userEmail("tset@dsm.hs.kr")
+                        .reportId(reportId)
+                        .build()
+        );
+
+        System.out.println(member.getId());
+        System.out.println(member1.getId());
+
+        return member.getId();
     }
 }

@@ -135,7 +135,7 @@ public class EmailServiceImpl implements EmailService {
 
         String body = stringBuilder.toString();
 
-        if (request.isAccepted())
+        if (request.getIsAccepted())
             body = body.replace("{{accepted}}", "승인");
         else {
             body = body.replace("{{accepted}}", "거부");

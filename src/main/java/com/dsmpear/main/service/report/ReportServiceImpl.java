@@ -50,7 +50,7 @@ public class ReportServiceImpl implements ReportService{
         if(authenticationFacade.isLogin() == false) {
             throw new UserNotFoundException();
         }
-        String teamName = reportRequest.getTeamName()==null?
+        String teamName = reportRequest.getTeamName().equals("")?
                 userRepository.findByEmail(authenticationFacade.getUserEmail()).get().getName()
                 :reportRequest.getTeamName();
 
@@ -63,8 +63,8 @@ public class ReportServiceImpl implements ReportService{
                         .access(reportRequest.getAccess())
                         .field(reportRequest.getField())
                         .type(reportRequest.getType())
-                        .isAccepted(false)
-                        .isSubmitted(reportRequest.isSubmitted())
+                        .accepted(1)
+                        .isSubmitted(reportRequest.getIsSubmitted())
                         .fileName(reportRequest.getFileName())
                         .github(reportRequest.getGithub())
                         .languages(reportRequest.getLanguages())
@@ -104,19 +104,18 @@ public class ReportServiceImpl implements ReportService{
         List<Member> members = report.getMembers();
 
         if(isLogined) {
-            for(Member member : members) {
-                if(!memberRepository.findByReportIdAndUserEmail(reportId, member.getUserEmail()).isEmpty()) {
+            for (Member member : members) {
+                if (member.getUserEmail().equals(authenticationFacade.getUserEmail())) {
                     isMine = true;
+                    break;
                 }
             }
 
             // 보고서를 볼 때 보는 보고서의 access가 ADMIN인지, 만약 admin이라면  현재 유저가 글쓴이가 맞는지 검사
-            if(!isMine) {
-                if (report.getAccess().equals(Access.ADMIN)) {
+            if (!isMine) {
+                if (!(report.getAccess().equals(Access.EVERY))) {
                     throw new PermissionDeniedException();
-                } else if (!report.isAccepted()) {
-                    throw new PermissionDeniedException();
-                } else if(!report.isSubmitted()) {
+                }else if(report.getAccepted() != 2 || !report.getIsSubmitted()) {
                     throw new PermissionDeniedException();
                 }
             }
@@ -126,19 +125,14 @@ public class ReportServiceImpl implements ReportService{
             }
         }
 
-        List<Comment> comment = commentRepository.findAllByReportIdOrderByIdAsc(reportId);
+        List<Comment> comment = commentRepository.findAllByReportIdOrderByCreatedAtAsc(reportId);
         List<ReportCommentsResponse> commentsResponses = new ArrayList<>();
-
 
         // 댓글 하나하나 담기ㅣ
         for (Comment co : comment) {
             User commentWriter;
-            if(authenticationFacade.getUserEmail() != null) {
-                commentWriter = userRepository.findByEmail(co.getUserEmail())
-                        .orElseThrow(UserNotFoundException::new);
-            }else {
-                throw new PermissionDeniedException();
-            }
+            commentWriter = userRepository.findByEmail(co.getUserEmail())
+                    .orElseThrow(UserNotFoundException::new);
             commentsResponses.add(
                     ReportCommentsResponse.builder()
                             .content(co.getContent())
@@ -196,23 +190,21 @@ public class ReportServiceImpl implements ReportService{
             throw new UserNotFoundException();
         }
 
-        Report report = reportRepository.findByReportId(reportId)
-                .orElseThrow(ReportNotFoundException::new);
-
-        List<Member> members = report.getMembers();
-
-        for(Comment comment : commentRepository.findAllByReportIdOrderByIdAsc(reportId)) {
-            commentService.deleteComment(comment.getId());
-        }
-
-        for(Member member : members) {
-            memberRepository.deleteById(member.getId());
-        }
-
         UserReport userReport = userReportRepository.findByReportIdAndUserEmail(reportId,user.getUserEmail())
                 .orElseThrow(ReportNotFoundException::new);
 
-        userReportRepository.deleteById(userReport.getReportId());
+        Report report = reportRepository.findByReportId(reportId)
+                .orElseThrow(ReportNotFoundException::new);
+
+        for(Comment comment : commentRepository.findAllByReportIdOrderByCreatedAtAsc(reportId)) {
+            commentService.deleteComment(comment.getId());
+        }
+
+        for(Member member : report.getMembers()) {
+            memberRepository.deleteById(member.getId());
+        }
+
+        userReportRepository.deleteAllByReportId(reportId);
 
         reportRepository.deleteById(reportId);
     }
@@ -230,15 +222,14 @@ public class ReportServiceImpl implements ReportService{
         List<ReportResponse> reportResponses = new ArrayList<>();
         Page<Report> reportPage;
 
-
         if(type == null && field == null) {
-            reportPage = reportRepository.findAllByAccessAndGradeAndIsAcceptedTrueAndIsSubmittedTrue(Access.EVERY, grade, page);
+            reportPage = reportRepository.findAllByAccessAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, grade, 2, page);
         }else if(type == null) {
-            reportPage = reportRepository.findAllByAccessAndFieldAndGradeAndIsAcceptedTrueAndIsSubmittedTrue(Access.EVERY, field, grade, page);
+            reportPage = reportRepository.findAllByAccessAndFieldAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, field, grade, 2, page);
         }else if(field == null) {
-            reportPage = reportRepository.findAllByAccessAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrue(Access.EVERY, type, grade, page);
+            reportPage = reportRepository.findAllByAccessAndTypeAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, type, grade, 2, page);
         }else {
-            reportPage = reportRepository.findAllByAccessAndFieldAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrue(Access.EVERY, field, type, grade, page);
+            reportPage = reportRepository.findAllByAccessAndFieldAndTypeAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAt(Access.EVERY, field, type, grade, 2, page);
         }
 
         for(Report report : reportPage) {

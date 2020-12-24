@@ -104,12 +104,16 @@ public class MemberServiceImpl implements MemberService {
         Report report = reportRepository.findByReportId(member.getReportId())
                 .orElseThrow(ReportNotFoundException::new);
 
-        if(email.equals(member.getUserEmail())){
-            throw new UserEqualsMemberException();
-        }
+        //요청한 user가 팀 멤버인지 확인하기
+        memberRepository.findByReportIdAndUserEmail(report.getReportId(), email)
+                .orElseThrow(UserNotMemberException::new);
 
         UserReport userReport = userReportRepository.findByReportIdAndUserEmail(report.getReportId(), member.getUserEmail())
                 .orElseThrow(UserNotMemberException::new);
+
+        if(email.equals(member.getUserEmail())){
+            throw new UserEqualsMemberException();
+        }
 
         memberRepository.delete(member);
 
