@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,23 +37,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .sessionManagement().disable()
                 .formLogin().disable()
                 .authorizeRequests()
-                    .antMatchers("/auth").permitAll()
-                    .antMatchers("/email/**").permitAll()
-                    .antMatchers("/user").permitAll()
-                    .antMatchers(HttpMethod.GET, "/report").permitAll()
-                    .antMatchers(HttpMethod.POST, "/report").authenticated()
-                    .antMatchers(HttpMethod.POST, "/question").permitAll()
-                    .antMatchers(HttpMethod.GET, "/notice").permitAll()
-                    .antMatchers(HttpMethod.GET, "/notice/{noticeId}").permitAll()
-                    .antMatchers(HttpMethod.GET, "/user/profile/report").permitAll()
-                    .antMatchers(HttpMethod.GET, "/profile/report").permitAll()
-                    .antMatchers(HttpMethod.GET, "/profile/report/{userEmail}").permitAll()
-                    .antMatchers(HttpMethod.GET, "/member/{reportId}").permitAll()
-                    .antMatchers(HttpMethod.GET, "/profile/{userEmail}").permitAll()
                     .antMatchers("/**").authenticated()
 
                 .and()
                     .apply(new JwtConfigurer(jwtTokenProvider));
+    }
+
+    @Override
+    public void configure(WebSecurity webSecurity) {
+        webSecurity.ignoring()
+                .antMatchers("/auth")
+                .antMatchers("/email/**")
+                .antMatchers("/user")
+                .antMatchers(HttpMethod.GET, "/report")
+                .antMatchers(HttpMethod.POST, "/question")
+                .antMatchers(HttpMethod.GET, "/notice")
+                .antMatchers(HttpMethod.GET, "/notice/{noticeId}")
+                .antMatchers(HttpMethod.GET, "/user/profile/report")
+                .antMatchers(HttpMethod.GET, "/profile/report")
+                .antMatchers(HttpMethod.GET, "/profile/report/{userEmail}")
+                .antMatchers(HttpMethod.GET, "/member/{reportId}")
+                .antMatchers(HttpMethod.GET, "/profile/{userEmail}");
     }
 
     @Override
