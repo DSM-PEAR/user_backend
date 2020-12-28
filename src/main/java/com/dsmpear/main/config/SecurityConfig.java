@@ -40,7 +40,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                     .antMatchers("/**").authenticated()
 
                 .and()
-                    .apply(new JwtConfigurer(jwtTokenProvider));
+                    .apply(new JwtConfigurer(jwtTokenProvider))
+                .and()
+                    .csrf().disable();
     }
 
     @Override
