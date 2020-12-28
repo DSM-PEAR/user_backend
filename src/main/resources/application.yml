@@ -11,6 +11,12 @@ spring:
     hibernate:
       ddl-auto: update
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+
   redis:
     host: localhost
     port: ${REDIS_PORT:6379}
@@ -26,8 +32,6 @@ auth:
     prefix: ${JWT_PREFIX}
 
 email:
-  domain: ${EMAIL_DOMAIN}
-  apiKey: ${EMAIL_APIKEY}
   secret: ${EMAIL_SECRET}
 
 server:
