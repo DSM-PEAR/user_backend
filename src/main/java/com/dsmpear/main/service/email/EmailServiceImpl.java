@@ -9,10 +9,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import javax.mail.internet.MimeMessage;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -22,6 +27,7 @@ import java.util.Random;
 @Component
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
+    private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
     private final VerifyNumberRepository numberRepository;
 
@@ -51,7 +57,28 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     public void sendAuthNumEmail(String sendTo) {
+        String authNum = generateVerifyNumber();
 
+        try {
+            final MimeMessagePreparator preparator = mimeMessage -> {
+                final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+                helper.setFrom("pearavocat@gmail.com");
+                helper.setTo(sendTo);
+                helper.setSubject("PEAR 회원가입 인증번호 안내 메일입니다.");
+                helper.setText(convertNumberHtmlWithString(authNum), true);
+            };
+
+            javaMailSender.send(preparator);
+
+            numberRepository.save(
+                    VerifyNumber.builder()
+                    .email(sendTo)
+                    .verifyNumber(authNum)
+                    .build()
+            );
+        } catch (Exception e) {
+            throw new EmailSendFailedException();
+        }
     }
 
     private String generateVerifyNumber() {
