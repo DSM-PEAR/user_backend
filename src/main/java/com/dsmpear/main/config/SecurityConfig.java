@@ -50,6 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         webSecurity.ignoring()
                 .antMatchers("/auth")
                 .antMatchers("/email/**")
+                .antMatchers("/email/**/**")
                 .antMatchers("/user")
                 .antMatchers(HttpMethod.GET, "/report")
                 .antMatchers(HttpMethod.POST, "/question")
