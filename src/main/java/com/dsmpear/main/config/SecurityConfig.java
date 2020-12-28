@@ -48,7 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     @Override
     public void configure(WebSecurity webSecurity) {
         webSecurity.ignoring()
-                .antMatchers("/auth")
+                .antMatchers(HttpMethod.POST, "/auth")
+                .antMatchers(HttpMethod.PUT, "/auth")
                 .antMatchers(HttpMethod.GET, "/email/auth")
                 .antMatchers(HttpMethod.PUT, "/email/auth")
                 .antMatchers(HttpMethod.POST, "/email/notification")

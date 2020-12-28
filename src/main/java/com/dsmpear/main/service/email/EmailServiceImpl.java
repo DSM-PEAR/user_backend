@@ -35,21 +35,12 @@ public class EmailServiceImpl implements EmailService {
     @Value("${secret.key}")
     private String secretKey;
 
+    @Async
     @Override
-    public void notificationEmail(NotificationRequest request, String secretKey) {
+    public void sendNotificationEmail(NotificationRequest request, String secretKey) {
         if (!passwordEncoder.matches(secretKey, this.secretKey))
             throw new SecretKeyNotMatchedException();
 
-        sendNotificationEmail(request);
-    }
-
-    @Override
-    public void authNumEmail(String sendTo) {
-        sendAuthNumEmail(sendTo);
-    }
-
-    @Async
-    public void sendNotificationEmail(NotificationRequest request) {
         try {
             final MimeMessagePreparator preparator = mimeMessage -> {
                 final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -62,12 +53,12 @@ public class EmailServiceImpl implements EmailService {
             javaMailSender.send(preparator);
 
         } catch (Exception e) {
-            e.printStackTrace();
             throw new EmailSendFailedException();
         }
     }
 
     @Async
+    @Override
     public void sendAuthNumEmail(String sendTo) {
         String authNum = generateVerifyNumber();
 

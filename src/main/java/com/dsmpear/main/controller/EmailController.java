@@ -24,7 +24,7 @@ public class EmailController {
 
     @GetMapping("/auth")
     public void authNumEmail(@RequestParam("email") @Email String email) {
-        emailService.authNumEmail(email);
+        emailService.sendAuthNumEmail(email);
     }
 
     @PutMapping("/auth")
@@ -34,7 +34,7 @@ public class EmailController {
 
     @PostMapping("/notification")
     public void notification(@RequestBody @Valid NotificationRequest request, @RequestHeader("Authorization") String secretKey) {
-        emailService.notificationEmail(request, secretKey);
+        emailService.sendNotificationEmail(request, secretKey);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
