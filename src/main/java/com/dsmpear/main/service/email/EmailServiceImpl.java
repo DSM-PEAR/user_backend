@@ -52,7 +52,20 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     public void sendNotificationEmail(NotificationRequest request) {
+        try {
+            final MimeMessagePreparator preparator = mimeMessage -> {
+                final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+                helper.setFrom("pearavocat@gmail.com");
+                helper.setTo(request.getEmail());
+                helper.setSubject("PEAR 알림");
+                helper.setText(convertNotificationHtmlWithString(request), true);
+            };
 
+            javaMailSender.send(preparator);
+
+        } catch (Exception e) {
+            throw new EmailSendFailedException();
+        }
     }
 
     @Async
