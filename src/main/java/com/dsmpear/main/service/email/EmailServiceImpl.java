@@ -7,16 +7,17 @@ import com.dsmpear.main.exceptions.SecretKeyNotMatchedException;
 import com.dsmpear.main.payload.request.NotificationRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import net.sargue.mailgun.Configuration;
-import net.sargue.mailgun.Mail;
-import net.sargue.mailgun.Response;
-import net.sargue.mailgun.content.Body;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import javax.mail.internet.MimeMessage;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,14 +27,9 @@ import java.util.Random;
 @Component
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
+    private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
     private final VerifyNumberRepository numberRepository;
-
-    @Value("${email.domain}")
-    private String domain;
-
-    @Value("${email.apiKey}")
-    private String apiKey;
 
     @Value("${server.url}")
     private String url;
@@ -54,52 +50,48 @@ public class EmailServiceImpl implements EmailService {
         sendAuthNumEmail(sendTo);
     }
 
+    @Async
     public void sendNotificationEmail(NotificationRequest request) {
-        Configuration configuration = new Configuration()
-                .domain(domain)
-                .apiKey(apiKey)
-                .from("PEAR", "pear@dsm.hs.kr");
+        try {
+            final MimeMessagePreparator preparator = mimeMessage -> {
+                final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+                helper.setFrom("pearavocat@gmail.com");
+                helper.setTo(request.getEmail());
+                helper.setSubject("PEAR 알림");
+                helper.setText(convertNotificationHtmlWithString(request), true);
+            };
 
-        Body builder = new Body(convertNotificationHtmlWithString(request), "");
+            javaMailSender.send(preparator);
 
-        Response response = Mail.using(configuration)
-                .to(request.getEmail())
-                .subject("[PEAR] 승인 알림")
-                .content(builder)
-                .build()
-                .send();
-
-        if (!response.isOk())
+        } catch (Exception e) {
             throw new EmailSendFailedException();
+        }
     }
 
     @Async
     public void sendAuthNumEmail(String sendTo) {
-        String number = generateVerifyNumber();
+        String authNum = generateVerifyNumber();
 
-        Configuration configuration = new Configuration()
-                .domain(domain)
-                .apiKey(apiKey)
-                .from("PEAR", "pear@dsm.hs.kr");
+        try {
+            final MimeMessagePreparator preparator = mimeMessage -> {
+                final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+                helper.setFrom("pearavocat@gmail.com");
+                helper.setTo(sendTo);
+                helper.setSubject("PEAR 회원가입 인증번호 안내 메일입니다.");
+                helper.setText(convertNumberHtmlWithString(authNum), true);
+            };
 
-        Body builder = new Body(convertNumberHtmlWithString(number), "");
+            javaMailSender.send(preparator);
 
-        numberRepository.save(
-                VerifyNumber.builder()
-                        .email(sendTo)
-                        .verifyNumber(number)
-                        .build()
-        );
-
-        Response response = Mail.using(configuration)
-                .to(sendTo)
-                .subject("[PEAR] 인증번호 알림")
-                .content(builder)
-                .build()
-                .send();
-
-        if (!response.isOk())
+            numberRepository.save(
+                    VerifyNumber.builder()
+                    .email(sendTo)
+                    .verifyNumber(authNum)
+                    .build()
+            );
+        } catch (Exception e) {
             throw new EmailSendFailedException();
+        }
     }
 
     private String generateVerifyNumber() {
