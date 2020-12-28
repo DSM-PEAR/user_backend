@@ -62,6 +62,7 @@ public class EmailServiceImpl implements EmailService {
             javaMailSender.send(preparator);
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new EmailSendFailedException();
         }
     }
