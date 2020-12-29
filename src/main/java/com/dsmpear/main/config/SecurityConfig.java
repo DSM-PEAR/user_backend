@@ -45,11 +45,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                     .antMatchers(HttpMethod.GET, "/user/profile").authenticated()
                     .antMatchers(HttpMethod.PUT, "/user/profile").authenticated()
                     .antMatchers(HttpMethod.PUT, "/user/profile/report").authenticated()
-                    .antMatchers("/**").permitAll()
                 .and()
                     .apply(new JwtConfigurer(jwtTokenProvider))
                 .and()
                     .csrf().disable();
+    }
+
+    @Override
+    protected void configure(WebSecurity webSecurity) {
+        webSecurity.ignoring()
+                .antMatchers("/**");
     }
 
     @Override
