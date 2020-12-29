@@ -80,6 +80,7 @@ public class EmailServiceImpl implements EmailService {
                     .build()
             );
         } catch (Exception e) {
+            e.printStackTrace();
             throw new EmailSendFailedException();
         }
     }
