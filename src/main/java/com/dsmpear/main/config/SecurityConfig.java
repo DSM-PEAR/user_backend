@@ -37,33 +37,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .sessionManagement().disable()
                 .formLogin().disable()
                 .authorizeRequests()
-                    .antMatchers("/**").authenticated()
-
+                    .antMatchers(HttpMethod.GET, "/report").authenticated()
+                    .antMatchers(HttpMethod.POST, "/comment").authenticated()
+                    .antMatchers(HttpMethod.POST, "/member").authenticated()
+                    .antMatchers(HttpMethod.GET, "/member/{reportId}").authenticated()
+                    .antMatchers(HttpMethod.DELETE, "/member/{memberId}").authenticated()
+                    .antMatchers(HttpMethod.GET, "/user/profile").authenticated()
+                    .antMatchers(HttpMethod.PUT, "/user/profile").authenticated()
+                    .antMatchers(HttpMethod.PUT, "/user/profile/report").authenticated()
+                    .antMatchers("/**").permitAll()
                 .and()
                     .apply(new JwtConfigurer(jwtTokenProvider))
                 .and()
                     .csrf().disable();
-    }
-
-    @Override
-    public void configure(WebSecurity webSecurity) {
-        webSecurity.ignoring()
-                .antMatchers(HttpMethod.POST, "/auth")
-                .antMatchers(HttpMethod.PUT, "/auth")
-                .antMatchers(HttpMethod.GET, "/email/auth")
-                .antMatchers(HttpMethod.PUT, "/email/auth")
-                .antMatchers(HttpMethod.POST, "/email/notification")
-                .antMatchers(HttpMethod.GET, "/account")
-                .antMatchers(HttpMethod.POST, "/account")
-                .antMatchers(HttpMethod.GET, "/report")
-                .antMatchers(HttpMethod.POST, "/question")
-                .antMatchers(HttpMethod.GET, "/notice")
-                .antMatchers(HttpMethod.GET, "/notice/{noticeId}")
-                .antMatchers(HttpMethod.GET, "/user/profile/report")
-                .antMatchers(HttpMethod.GET, "/profile/report")
-                .antMatchers(HttpMethod.GET, "/profile/report/{userEmail}")
-                .antMatchers(HttpMethod.GET, "/member/{reportId}")
-                .antMatchers(HttpMethod.GET, "/profile/{userEmail}");
     }
 
     @Override
