@@ -506,6 +506,20 @@ class ReportControllerTest {
 
     }
 
+    // 댓글 수정 실패 테스트
+    @Test
+    @WithMockUser(value = "test2@dsm.hs.kr", password = "1234")
+    public void updateComment4() throws Exception {
+        Integer reportId = createReport("제엥ㅁ냐ㅐ럼니ㅏㅇ");
+        Integer commentId1 = createComment(reportId);
+        Integer commentId2 = createComment(reportId);
+
+        mvc.perform(patch("/comment/"+reportId)
+                .param("content", "content")).andDo(print())
+                .andExpect(status().is4xxClientError()).andDo(print());
+
+    }
+
     // 댓글 삭제 성공 테스트
     @Test
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
@@ -564,7 +578,7 @@ class ReportControllerTest {
         Integer reportId1 = createReport("제에에에목");
         Integer reportId2 = createReport("제에에에에에ㅔ에목");
 
-        MvcResult result = mvc.perform(get("/report/filter?field=AI&type=SOLE&grade=GRADE1&size=10&page=0")).andDo(print()).andReturn();
+        MvcResult result = mvc.perform(get("/report/filter?field=WEB&type=TEAM&grade=GRADE1&size=10&page=0")).andDo(print()).andReturn();
         ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
         Assert.assertEquals(3, response.getTotalElements());
     }
@@ -578,7 +592,7 @@ class ReportControllerTest {
         Integer reportId1 = createReport("제에에에목");
         Integer reportId2 = createReport("제에에에에ㅔ에에에목");
 
-        MvcResult result = mvc.perform(get("/report/filter?field=AI&grade=GRADE1&size=10&page=0")).andDo(print()).andReturn();
+        MvcResult result = mvc.perform(get("/report/filter?field=WEB&type=TEAM&grade=GRADE1&size=10&page=0")).andDo(print()).andReturn();
         ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
         Assert.assertEquals(3, response.getTotalElements());
     }
@@ -593,14 +607,13 @@ class ReportControllerTest {
         Integer reportId1 = createReport("제에엥목");
         Integer reportId2 = createReport("제에에에ㅔ에에목");
 
-        MvcResult result = mvc.perform(get("/report/filter?type=SOLE&grade=GRADE1&size=10&page=0")).andDo(print()).andReturn();
+        MvcResult result = mvc.perform(get("/report/filter?field=WEB&type=TEAM&grade=GRADE1&size=10&page=0")).andDo(print()).andReturn();
         ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
         Assert.assertEquals(3, response.getTotalElements());
     }
 
     // 보고서 목록 성공(필터 없음)
     @Test
-    @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void getReportListTest4() throws Exception {
 
         Integer reportId = createReport("제에목");
@@ -621,8 +634,8 @@ class ReportControllerTest {
                         .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                         .grade(Grade.GRADE1)
                         .access(Access.EVERY)
-                        .field(Field.AI)
-                        .type(Type.SOLE)
+                        .field(Field.WEB)
+                        .type(Type.TEAM)
                         .accepted(2)
                         .isSubmitted(true)
                         .fileName("파아아일")
@@ -696,8 +709,8 @@ class ReportControllerTest {
                         .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                         .grade(Grade.GRADE1)
                         .access(Access.EVERY)
-                        .field(Field.AI)
-                        .type(Type.SOLE)
+                        .field(Field.WEB)
+                        .type(Type.TEAM)
                         .accepted(2)
                         .isSubmitted(false)
                         .fileName("파아아일")

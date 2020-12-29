@@ -48,7 +48,7 @@ public class MyPageReportServiceImpl implements MyPageReportService{
             );
         }
         return ProfileReportListResponse.builder()
-                .totalElements(reportPage.getNumberOfElements())
+                .totalElements((int)reportPage.getTotalElements())
                 .totalPages(reportPage.getTotalPages())
                 .myProfileReportResponses(myPageReportResponses)
                 .build();

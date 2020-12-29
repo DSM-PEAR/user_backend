@@ -27,5 +27,5 @@ public interface ReportRepository extends CrudRepository<Report,Integer> {
     Page<Report> findAllByAccessAndFieldAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access access, Field field,Grade grade, Integer isAccepted, Pageable page);
 
     //제목 검색 ORM
-    Page<Report> findAllByAccessAndAcceptedAndIsSubmittedTrueAndTitleContainingOrderByCreatedAtDesc(Access access,  Integer accepted,String title, Pageable page);
+    Page<Report> findAllByAccessAndAcceptedAndIsSubmittedTrueAndTitleContainsOrderByCreatedAtDesc(Access access,  Integer accepted,String title, Pageable page);
 }

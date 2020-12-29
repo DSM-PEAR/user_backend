@@ -52,7 +52,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return MemberListResponse.builder()
-                .totalElements(memberPage.getNumberOfElements())
+                .totalElements((int)memberPage.getTotalElements())
                 .totalPages(memberPage.getTotalPages())
                 .memberResponses(memberResponses)
                 .build();
