@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-@RestController
 @RequiredArgsConstructor
 @RequestMapping("/question")
+@RestController
 public class QuestionController {
 
     private final QuestionService questionService;

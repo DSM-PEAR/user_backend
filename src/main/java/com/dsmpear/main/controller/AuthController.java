@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
+@RestController
 public class AuthController {
 
     private final AuthService authService;

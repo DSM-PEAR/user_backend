@@ -54,7 +54,7 @@ dependencies {
 
     // jackson (JSON Object)
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
-    
+
     // junit (Test Code)
     implementation 'junit:junit:4.12'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {

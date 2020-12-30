@@ -9,9 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
 @RequiredArgsConstructor
 @RequestMapping("/user/profile")
+@RestController
 public class MyPageController {
 
     private final MyPageService myPageService;

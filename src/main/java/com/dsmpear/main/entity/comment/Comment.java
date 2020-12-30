@@ -1,7 +1,5 @@
 package com.dsmpear.main.entity.comment;
 
-import com.dsmpear.main.entity.report.Report;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,12 +8,13 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
+
 @Builder
 @Getter
-@Table(name = "comment_tbl")
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "comment_tbl")
+@Entity
 public class Comment {
 
     @Id

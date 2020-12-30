@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "user_report_tbl")
+@Entity
 public class UserReport {
   
     @Id

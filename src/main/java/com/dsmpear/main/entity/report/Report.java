@@ -1,7 +1,6 @@
 package com.dsmpear.main.entity.report;
 
 import com.dsmpear.main.entity.member.Member;
-import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.payload.request.ReportRequest;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
@@ -14,12 +13,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
-@Table(name = "report_tbl")
 @Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "report_tbl")
+@Entity
 public class Report {
 
     @Id
