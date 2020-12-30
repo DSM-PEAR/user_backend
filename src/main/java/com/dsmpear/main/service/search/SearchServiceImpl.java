@@ -59,6 +59,7 @@ public class SearchServiceImpl implements SearchService{
                             .reportId(report.getId())
                             .title(report.getTitle())
                             .createdAt(report.getCreatedAt())
+                            .type(report.getType())
                             .build()
             );
         }

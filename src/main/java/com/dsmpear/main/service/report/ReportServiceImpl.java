@@ -240,6 +240,7 @@ public class ReportServiceImpl implements ReportService{
                             .reportId(report.getId())
                             .title(report.getTitle())
                             .createdAt(report.getCreatedAt())
+                            .type(report.getType())
                             .build()
             );
         }
