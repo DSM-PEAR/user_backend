@@ -564,7 +564,7 @@ class ReportControllerTest {
                 Member.builder()
                         .reportId(reportId)
                         .userEmail("test@dsm.hs.kr")
-                        .report(reportRepository.findByReportId(reportId).get())
+                        .report(reportRepository.findById(reportId).get())
                         .build()
         ).getId();
     }
@@ -648,18 +648,18 @@ class ReportControllerTest {
         userReportRepository.save(
                 UserReport.builder()
                         .userEmail("test@dsm.hs.kr")
-                        .reportId(report.getReportId())
+                        .reportId(report.getId())
                         .build()
         );
 
         memberRepository.save(
                 Member.builder()
                         .report(report)
-                        .reportId(report.getReportId())
+                        .reportId(report.getId())
                         .userEmail("test@dsm.hs.kr")
                         .build()
         );
-        return report.getReportId();
+        return report.getId();
     }
 
     private Integer createReportAdmin(String title) throws Exception {
@@ -685,18 +685,18 @@ class ReportControllerTest {
         userReportRepository.save(
                 UserReport.builder()
                         .userEmail("test@dsm.hs.kr")
-                        .reportId(report.getReportId())
+                        .reportId(report.getId())
                         .build()
         );
 
         memberRepository.save(
                 Member.builder()
                         .report(report)
-                        .reportId(report.getReportId())
+                        .reportId(report.getId())
                         .userEmail("test@dsm.hs.kr")
                         .build()
         );
-        return report.getReportId();
+        return report.getId();
     }
 
 
@@ -723,18 +723,18 @@ class ReportControllerTest {
         userReportRepository.save(
                 UserReport.builder()
                         .userEmail("test@dsm.hs.kr")
-                        .reportId(report.getReportId())
+                        .reportId(report.getId())
                         .build()
         );
 
         memberRepository.save(
                 Member.builder()
                         .report(report)
-                        .reportId(report.getReportId())
+                        .reportId(report.getId())
                         .userEmail("test@dsm.hs.kr")
                         .build()
         );
-        return report.getReportId();
+        return report.getId();
     }
 
     private Integer createComment(Integer reportId) throws Exception {

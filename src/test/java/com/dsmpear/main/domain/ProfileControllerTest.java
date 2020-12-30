@@ -196,7 +196,7 @@ class ProfileControllerTest {
                         .fileName("안녕한가파일")
                         .teamName("룰루랄라")
                         .build()
-        ).getReportId();
+        ).getId();
 
         memberRepository.save(
                 Member.builder()
@@ -231,7 +231,7 @@ class ProfileControllerTest {
                         .fileName("안녕한가파일")
                         .teamName("룰루랄라")
                         .build()
-        ).getReportId();
+        ).getId();
 
         memberRepository.save(
                 Member.builder()
@@ -265,7 +265,7 @@ class ProfileControllerTest {
                         .fileName("안녕한가파일")
                         .teamName("룰루랄라")
                         .build()
-        ).getReportId();
+        ).getId();
 
         memberRepository.save(
                 Member.builder()
