@@ -233,7 +233,7 @@ class MemberControllerTest {
                         .fileName("나는야 천재")
                         .teamName("룰루랄라")
                         .build()
-        ).getReportId();
+        ).getId();
 
         Member member = memberRepository.save(
                 Member.builder()
@@ -285,7 +285,7 @@ class MemberControllerTest {
                         .fileName("나는야 천재")
                         .teamName("룰루랄라")
                         .build()
-        ).getReportId();
+        ).getId();
 
         Member member = memberRepository.save(
                 Member.builder()

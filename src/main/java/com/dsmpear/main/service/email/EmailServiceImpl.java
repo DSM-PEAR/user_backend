@@ -10,14 +10,12 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import javax.mail.internet.MimeMessage;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -37,21 +35,12 @@ public class EmailServiceImpl implements EmailService {
     @Value("${secret.key}")
     private String secretKey;
 
+    @Async
     @Override
-    public void notificationEmail(NotificationRequest request, String secretKey) {
+    public void sendNotificationEmail(NotificationRequest request, String secretKey) {
         if (!passwordEncoder.matches(secretKey, this.secretKey))
             throw new SecretKeyNotMatchedException();
 
-        sendNotificationEmail(request);
-    }
-
-    @Override
-    public void authNumEmail(String sendTo) {
-        sendAuthNumEmail(sendTo);
-    }
-
-    @Async
-    public void sendNotificationEmail(NotificationRequest request) {
         try {
             final MimeMessagePreparator preparator = mimeMessage -> {
                 final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -69,6 +58,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Async
+    @Override
     public void sendAuthNumEmail(String sendTo) {
         String authNum = generateVerifyNumber();
 
@@ -90,6 +80,7 @@ public class EmailServiceImpl implements EmailService {
                     .build()
             );
         } catch (Exception e) {
+            e.printStackTrace();
             throw new EmailSendFailedException();
         }
     }

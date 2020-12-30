@@ -44,7 +44,7 @@ public class UserListServiceImpl implements UserListService {
         }
 
         return UserListResponse.builder()
-                .totalElements(userPage.getNumberOfElements())
+                .totalElements((int)userPage.getTotalElements())
                 .totalPages(userPage.getTotalPages())
                 .userResponses(userResponse)
                 .build();

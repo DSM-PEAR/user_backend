@@ -34,12 +34,12 @@ public class MyPageReportServiceImpl implements MyPageReportService{
         List<MyPageReportResponse> myPageReportResponses = new ArrayList<>();
 
         for(UserReport userReport : reportPage){
-            Report report = reportRepository.findByReportId(userReport.getReportId())
+            Report report = reportRepository.findById(userReport.getReportId())
                     .orElseThrow(ReportNotFoundException::new);
 
             myPageReportResponses.add(
                     MyPageReportResponse.builder()
-                            .reportId(report.getReportId())
+                            .reportId(report.getId())
                             .title(report.getTitle())
                             .createdAt(report.getCreatedAt())
                             .isSubmitted(report.getIsSubmitted())
@@ -48,7 +48,7 @@ public class MyPageReportServiceImpl implements MyPageReportService{
             );
         }
         return ProfileReportListResponse.builder()
-                .totalElements(reportPage.getNumberOfElements())
+                .totalElements((int)reportPage.getTotalElements())
                 .totalPages(reportPage.getTotalPages())
                 .myProfileReportResponses(myPageReportResponses)
                 .build();
