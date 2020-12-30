@@ -158,7 +158,7 @@ class MyPageControllerTest {
                         .fileName("안녕한가파일")
                         .teamName("룰루랄라")
                         .build()
-        ).getReportId();
+        ).getId();
 
         memberRepository.save(
                 Member.builder()
@@ -194,7 +194,7 @@ class MyPageControllerTest {
                         .fileName("안녕한가파일")
                         .teamName("룰루랄라")
                         .build()
-        ).getReportId();
+        ).getId();
 
         memberRepository.save(
                 Member.builder()
@@ -230,7 +230,7 @@ class MyPageControllerTest {
                         .fileName("안녕한가파일")
                         .teamName("룰루랄라")
                         .build()
-        ).getReportId();
+        ).getId();
 
         memberRepository.save(
                 Member.builder()
@@ -266,7 +266,7 @@ class MyPageControllerTest {
                         .fileName("안녕한가파일")
                         .teamName("룰루랄라")
                         .build()
-        ).getReportId();
+        ).getId();
 
         memberRepository.save(
                 Member.builder()
