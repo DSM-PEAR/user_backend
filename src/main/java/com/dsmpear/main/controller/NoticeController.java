@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @RequiredArgsConstructor
 @RequestMapping("/notice")
+@RestController
 public class NoticeController {
 
     private final NoticeService noticeService;
@@ -23,7 +23,7 @@ public class NoticeController {
     }
 
     @GetMapping("/{noticeId}")
-    public NoticeContentResponse getNoticeContent(@PathVariable Integer noticeId){
+    public NoticeContentResponse getNoticeContent(@PathVariable Integer noticeId) {
         return noticeService.getNoticeContent(noticeId);
     }
 

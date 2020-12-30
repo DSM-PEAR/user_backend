@@ -21,7 +21,6 @@ import com.dsmpear.main.security.auth.AuthenticationFacade;
 import com.dsmpear.main.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -86,7 +85,6 @@ public class ReportServiceImpl implements ReportService{
                     .reportId(report.getId())
                     .build()
         );
-
     }
 
     // 보고서 보기
@@ -161,9 +159,6 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public Integer updateReport(Integer reportId, ReportRequest reportRequest) {
-
-        boolean isMine = false;
-
         if(authenticationFacade.isLogin()) {
             memberRepository.findByReportIdAndUserEmail(reportId, authenticationFacade.getUserEmail())
                     .orElseThrow(UserNotFoundException::new);
@@ -181,7 +176,6 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public void deleteReport(Integer reportId) {
-        boolean isMine = false;
         User user = null;
         if(authenticationFacade.isLogin()) {
             user = userRepository.findByEmail(authenticationFacade.getUserEmail())
@@ -192,7 +186,7 @@ public class ReportServiceImpl implements ReportService{
             throw new UserNotFoundException();
         }
 
-        UserReport userReport = userReportRepository.findByReportIdAndUserEmail(reportId,user.getEmail())
+        userReportRepository.findByReportIdAndUserEmail(reportId,user.getEmail())
                 .orElseThrow(ReportNotFoundException::new);
 
         Report report = reportRepository.findById(reportId)

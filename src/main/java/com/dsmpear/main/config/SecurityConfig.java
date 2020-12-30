@@ -16,9 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Configuration
-@EnableWebSecurity
 @RequiredArgsConstructor
+@EnableWebSecurity
+@Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -40,15 +40,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                     .antMatchers(HttpMethod.GET, "/report").authenticated()
                     .antMatchers(HttpMethod.POST, "/comment").authenticated()
                     .antMatchers(HttpMethod.POST, "/member").authenticated()
-                    .antMatchers(HttpMethod.GET, "/member/{reportId}").authenticated()
-                    .antMatchers(HttpMethod.DELETE, "/member/{memberId}").authenticated()
+                    .antMatchers(HttpMethod.GET, "/member/**").authenticated()
+                    .antMatchers(HttpMethod.DELETE, "/member/**").authenticated()
                     .antMatchers(HttpMethod.GET, "/user/profile").authenticated()
                     .antMatchers(HttpMethod.PUT, "/user/profile").authenticated()
                     .antMatchers(HttpMethod.PUT, "/user/profile/report").authenticated()
                 .and()
-                    .apply(new JwtConfigurer(jwtTokenProvider))
-                .and()
-                    .csrf().disable();
+                    .apply(new JwtConfigurer(jwtTokenProvider));
     }
 
     @Override
@@ -60,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("GET", "POST", "PUT", "DELETE", "PATCH")
+                .allowedOrigins("*")
                 .allowedHeaders("*");
     }
 

@@ -6,6 +6,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface SearchService {
     SearchProfileResponse searchProfile(String keyword, Pageable page);
-
     ReportListResponse searchReportByTitle(Pageable page, String title);
 }

@@ -9,9 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
 @RequiredArgsConstructor
 @RequestMapping("/user/profile")
+@RestController
 public class MyPageController {
 
     private final MyPageService myPageService;
@@ -24,7 +24,7 @@ public class MyPageController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void setSelfIntro(@RequestParam String intro, @RequestParam String gitHub){
+    public void setSelfIntro(@RequestParam String intro, @RequestParam String gitHub) {
         myPageService.setSelfIntro(intro, gitHub);
     }
 

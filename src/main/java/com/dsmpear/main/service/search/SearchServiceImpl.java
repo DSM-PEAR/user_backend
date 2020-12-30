@@ -26,7 +26,6 @@ public class SearchServiceImpl implements SearchService{
 
     @Override
     public SearchProfileResponse searchProfile(String keyword, Pageable page) {
-
         List<UserResponse> userResponses = new ArrayList<>();
 
         Page<User> userPage = userRepository.findAllByNameContains(keyword, page);

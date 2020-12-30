@@ -9,11 +9,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
 @RequiredArgsConstructor
 @RequestMapping("/report/filter")
+@RestController
 public class ReportListController {
+
     private final ReportService reportService;
+
     @GetMapping
     public ReportListResponse getReportList(@RequestParam(required = false) Field field,
                                             @RequestParam(required = false) Type type,

@@ -9,12 +9,14 @@ import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 import org.springframework.data.redis.core.index.Indexed;
 
-@RedisHash(value = "verify_number", timeToLive = 60 * 3)
+
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@RedisHash(value = "verify_number", timeToLive = 60 * 3)
 public class VerifyNumber {
+
     @Id
     private Integer id;
 
@@ -29,4 +31,5 @@ public class VerifyNumber {
     public boolean verifyNumber(String number) {
         return this.verifyNumber.equals(number);
     }
+
 }

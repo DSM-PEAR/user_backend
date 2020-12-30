@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-@Getter @AllArgsConstructor @NoArgsConstructor
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class SignInRequest {
 
     @Email
