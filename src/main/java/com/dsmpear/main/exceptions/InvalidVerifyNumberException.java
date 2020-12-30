@@ -5,7 +5,4 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.FORBIDDEN, reason = "Invalid Number Exception")
 public class InvalidVerifyNumberException extends RuntimeException {
-     public InvalidVerifyNumberException() {
-         super("Invalid number exception!!");
-     }
 }

@@ -15,6 +15,7 @@ import org.springframework.data.redis.core.index.Indexed;
 @NoArgsConstructor
 @Builder
 public class VerifyNumber {
+
     @Id
     private Integer id;
 
@@ -29,4 +30,5 @@ public class VerifyNumber {
     public boolean verifyNumber(String number) {
         return this.verifyNumber.equals(number);
     }
+
 }

@@ -12,6 +12,7 @@ import java.io.IOException;
 @Configuration
 @Profile("test")
 public class EmbeddedRedisConfig {
+
     @Value("${spring.redis.port}")
     private int redisPort;
 
@@ -29,4 +30,5 @@ public class EmbeddedRedisConfig {
             redisServer.stop();
         }
     }
+
 }

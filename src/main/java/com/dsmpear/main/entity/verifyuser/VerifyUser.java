@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 @RedisHash(timeToLive = 60 * 3)
 @Getter @AllArgsConstructor @NoArgsConstructor @Builder
 public class VerifyUser {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer UUID;
 
@@ -27,4 +28,5 @@ public class VerifyUser {
     public VerifyUser(String email) {
         this.email = email;
     }
+
 }

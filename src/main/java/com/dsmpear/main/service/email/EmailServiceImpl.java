@@ -25,6 +25,7 @@ import java.util.Random;
 @Component
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
+
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
     private final VerifyNumberRepository numberRepository;

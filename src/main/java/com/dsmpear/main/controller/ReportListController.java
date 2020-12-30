@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/report/filter")
 public class ReportListController {
+
     private final ReportService reportService;
+
     @GetMapping
     public ReportListResponse getReportList(@RequestParam(required = false) Field field,
                                             @RequestParam(required = false) Type type,

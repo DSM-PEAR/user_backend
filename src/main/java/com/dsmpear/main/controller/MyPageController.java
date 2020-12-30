@@ -24,7 +24,7 @@ public class MyPageController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void setSelfIntro(@RequestParam String intro, @RequestParam String gitHub){
+    public void setSelfIntro(@RequestParam String intro, @RequestParam String gitHub) {
         myPageService.setSelfIntro(intro, gitHub);
     }
 

@@ -16,7 +16,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/{reportId}")
-    public MemberListResponse getMember(@PathVariable Integer reportId, Pageable page){
+    public MemberListResponse getMember(@PathVariable Integer reportId, Pageable page) {
         return memberService.getMember(reportId, page);
     }
 

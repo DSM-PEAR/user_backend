@@ -18,7 +18,7 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @PostMapping
-    public void inquiry(@RequestBody @Valid QuestionRequest questionRequest){
+    public void inquiry(@RequestBody @Valid QuestionRequest questionRequest) {
         questionService.inquiry(questionRequest);
     }
 

@@ -19,7 +19,7 @@ public class SearchController {
 
     @GetMapping("/profile")
     public SearchProfileResponse searchProfile(@RequestParam("keyword") String keyword,
-                                               Pageable page){
+                                               Pageable page) {
         return searchService.searchProfile(keyword,page);
     }
 

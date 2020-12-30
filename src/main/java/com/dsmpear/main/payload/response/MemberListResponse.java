@@ -15,4 +15,5 @@ public class MemberListResponse extends PageResponse{
         super(totalElements, totalPages);
         this.memberResponses = memberResponses;
     }
+
 }
