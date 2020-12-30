@@ -22,7 +22,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public NoticeListResponse getNoticeList(Pageable page) {
-        Page<Notice> noticePage = noticeRepository.findAllBy(page);
+        Page<Notice> noticePage = noticeRepository.findAllByOrderByCreatedAtDesc(page);
 
         List<NoticeResponse> noticeResponses = new ArrayList<>();
 
