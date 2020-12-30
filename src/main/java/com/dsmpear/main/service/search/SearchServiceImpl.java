@@ -56,7 +56,7 @@ public class SearchServiceImpl implements SearchService{
         for(Report report : reportPage) {
             reportResponses.add(
                     ReportResponse.builder()
-                            .reportId(report.getReportId())
+                            .reportId(report.getId())
                             .title(report.getTitle())
                             .createdAt(report.getCreatedAt())
                             .build()
