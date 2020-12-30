@@ -37,10 +37,10 @@ public class SearchServiceImpl implements SearchService{
                             .email(user.getEmail())
                             .build()
             );
-        }
+    }
 
         return SearchProfileResponse.builder()
-                .totalElements(userPage.getNumberOfElements())
+                .totalElements((int) userPage.getTotalElements())
                 .totalPages(userPage.getTotalPages())
                 .userResponses(userResponses)
                 .build();
@@ -48,14 +48,14 @@ public class SearchServiceImpl implements SearchService{
 
     @Override
     public ReportListResponse searchReportByTitle(Pageable page, String title) {
-        Page<Report> reportPage = reportRepository.findAllByAccessAndAcceptedAndIsSubmittedTrueAndTitleContainingOrderByCreatedAtDesc(Access.EVERY, 2, title, page);
+        Page<Report> reportPage = reportRepository.findAllByAccessAndAcceptedAndIsSubmittedTrueAndTitleContainsOrderByCreatedAtDesc(Access.EVERY, 2, title, page);
 
         List<ReportResponse> reportResponses = new ArrayList<>();
 
         for(Report report : reportPage) {
             reportResponses.add(
                     ReportResponse.builder()
-                            .reportId(report.getReportId())
+                            .reportId(report.getId())
                             .title(report.getTitle())
                             .createdAt(report.getCreatedAt())
                             .build()
