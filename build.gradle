@@ -25,7 +25,7 @@ dependencies {
     // spring boot starter web
     implementation 'org.springframework.boot:spring-boot-starter-web'
     // spring mail
-    implementation 'net.sargue:mailgun:1.9.2'
+    compile("org.springframework.boot:spring-boot-starter-mail")
     // spring security
     compile 'org.springframework.security:spring-security-web:4.2.2.RELEASE'
     compile 'org.springframework.security:spring-security-config:4.2.2.RELEASE'
@@ -46,7 +46,6 @@ dependencies {
     // jackson (JSON Object)
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
     // junit (Test Code)
-    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test
     implementation 'junit:junit:4.12'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

@@ -87,7 +87,7 @@ public class EmailControllerTest {
                 .content(new ObjectMapper().writeValueAsString(new NotificationRequest("1000", "smoothbear@dsm.hs.kr", "",true))
                 ).contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "abcabc")
-        ).andExpect(status().isUnauthorized()).andDo(print());
+        ).andExpect(status().isOk()).andDo(print());
     }
 
     @Test

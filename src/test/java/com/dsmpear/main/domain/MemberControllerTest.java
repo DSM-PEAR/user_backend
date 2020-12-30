@@ -188,36 +188,28 @@ class MemberControllerTest {
     @Order(2)
     @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
     public void deleteMember() throws Exception{
-        int reportId = addReport();
-        mvc.perform(delete("/member/"+reportId))
-                .andExpect(status().isForbidden()).andDo(print());
+        Integer memberId = check_member();
+        mvc.perform(delete("/member/"+memberId))
+                .andExpect(status().isOk()).andDo(print());
     }
 
     @Test
     @Order(2)
     @WithMockUser(value = "test@dsm.hs.kr",password = "1111")
     public void deleteMember_me() throws Exception{
-        int reportId = addReport();
+        Integer memberId = check_member();
 
-        mvc.perform(delete("/member/"+1))
-                .andExpect(status().isForbidden()).andDo(print());
-    }
-  
-    @Test
-    @Order(2)
-    @WithMockUser(value = "tset@dsm.hs.kr",password = "1111")
-    public void deleteMember_noId() throws Exception{
-        mvc.perform(delete("/member"))
-                .andExpect(status().is4xxClientError()).andDo(print());
+        mvc.perform(delete("/member/"+memberId))
+                .andExpect(status().isBadRequest()).andDo(print());
     }
 
     @Test
     @Order(2)
     @WithMockUser(username = "",password = "")
     public void deleteMember_noLogin() throws Exception{
-        int reportId = addReport();
+        Integer memberId = check_member();
 
-        mvc.perform(delete("/member/"+reportId))
+        mvc.perform(delete("/member/"+memberId))
                 .andExpect(status().isForbidden());
     }
 
@@ -241,16 +233,16 @@ class MemberControllerTest {
                         .fileName("나는야 천재")
                         .teamName("룰루랄라")
                         .build()
-        ).getReportId();
+        ).getId();
 
-        memberRepository.save(
+        Member member = memberRepository.save(
                 Member.builder()
                         .reportId(reportId)
                         .userEmail("test@dsm.hs.kr")
                         .build()
         );
 
-        memberRepository.save(
+        Member member1 = memberRepository.save(
                 Member.builder()
                         .reportId(reportId)
                         .userEmail("tset@dsm.hs.kr")
@@ -271,6 +263,61 @@ class MemberControllerTest {
                         .build()
         );
 
+        System.out.println(member.getId());
+        System.out.println(member1.getId());
         return reportId;
+    }
+
+    private Integer check_member() {
+        Integer reportId = reportRepository.save(
+                Report.builder()
+                        .title("hello")
+                        .description("hihello")
+                        .grade(Grade.GRADE2)
+                        .access(Access.EVERY)
+                        .field(Field.AI)
+                        .type(Type.TEAM)
+                        .isSubmitted(false)
+                        .accepted(0)
+                        .createdAt(LocalDateTime.now())
+                        .github("깃허브으")
+                        .languages("자바")
+                        .fileName("나는야 천재")
+                        .teamName("룰루랄라")
+                        .build()
+        ).getId();
+
+        Member member = memberRepository.save(
+                Member.builder()
+                        .reportId(reportId)
+                        .userEmail("test@dsm.hs.kr")
+                        .build()
+        );
+
+        Member member1 = memberRepository.save(
+                Member.builder()
+                        .reportId(reportId)
+                        .userEmail("tset@dsm.hs.kr")
+                        .build()
+        );
+
+        userReportRepository.save(
+                UserReport.builder()
+                        .userEmail("test@dsm.hs.kr")
+                        .reportId(reportId)
+                        .build()
+        );
+
+        userReportRepository.save(
+                UserReport.builder()
+                        .userEmail("tset@dsm.hs.kr")
+                        .reportId(reportId)
+                        .build()
+        );
+
+        System.out.println(member.getId());
+        System.out.println(member1.getId());
+
+        return member.getId();
     }
 }

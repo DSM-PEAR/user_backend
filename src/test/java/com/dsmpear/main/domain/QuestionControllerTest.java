@@ -51,8 +51,8 @@ class QuestionControllerTest {
                 .andExpect(status().isOk()).andDo(print());
     }
 
-    /*@Test
-    public void question_noEmail() throws Exception {
+    @Test
+    public void question_notEmail() throws Exception {
 
         String description="description";
 
@@ -63,21 +63,20 @@ class QuestionControllerTest {
                         .writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest()).andDo(print());
-    }*/
+    }
 
-    /*@Test
+    @Test
     public void question_noDescription() throws Exception {
-
         String email="test@dsm.hs.kr";
 
-        QuestionRequest request = new QuestionRequest(email,null);
+        QuestionRequest request = new QuestionRequest(email,"");
 
         mvc.perform(post("/question")
                 .content(new ObjectMapper()
                         .writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest());
-    }*/
+    }
 
 
 }

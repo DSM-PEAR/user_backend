@@ -24,7 +24,7 @@ public class Report {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer reportId;
+    private Integer id;
 
     @Column(nullable = false)
     private String title;
@@ -36,15 +36,19 @@ public class Report {
     @DateTimeFormat(pattern = "yyyy-MM-dd kk:mm:ss")
     private LocalDateTime createdAt;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Grade grade;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Access access;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Field field;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Type type;
 

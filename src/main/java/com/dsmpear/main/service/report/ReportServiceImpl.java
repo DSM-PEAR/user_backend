@@ -75,7 +75,7 @@ public class ReportServiceImpl implements ReportService{
 
         memberRepository.save(
             Member.builder()
-                    .reportId(report.getReportId())
+                    .reportId(report.getId())
                     .userEmail(authenticationFacade.getUserEmail())
                     .build()
         );
@@ -83,7 +83,7 @@ public class ReportServiceImpl implements ReportService{
         userReportRepository.save(
                 UserReport.builder()
                     .userEmail(authenticationFacade.getUserEmail())
-                    .reportId(report.getReportId())
+                    .reportId(report.getId())
                     .build()
         );
 
@@ -98,7 +98,7 @@ public class ReportServiceImpl implements ReportService{
         boolean isLogined = authenticationFacade.isLogin();
 
         // 보고서를 아이디로 찾기
-        Report report = reportRepository.findByReportId(reportId)
+        Report report = reportRepository.findById(reportId)
                 .orElseThrow(ReportNotFoundException::new);
 
         List<Member> members = report.getMembers();
@@ -171,7 +171,7 @@ public class ReportServiceImpl implements ReportService{
             throw new UserNotFoundException();
         }
 
-        Report report = reportRepository.findByReportId(reportId).
+        Report report = reportRepository.findById(reportId).
                 orElseThrow(ReportNotFoundException::new);
 
         reportRepository.save(report.update(reportRequest));
@@ -195,7 +195,7 @@ public class ReportServiceImpl implements ReportService{
         UserReport userReport = userReportRepository.findByReportIdAndUserEmail(reportId,user.getEmail())
                 .orElseThrow(ReportNotFoundException::new);
 
-        Report report = reportRepository.findByReportId(reportId)
+        Report report = reportRepository.findById(reportId)
                 .orElseThrow(ReportNotFoundException::new);
 
         for(Comment comment : commentRepository.findAllByReportIdOrderByCreatedAtAsc(reportId)) {
@@ -237,7 +237,7 @@ public class ReportServiceImpl implements ReportService{
         for(Report report : reportPage) {
             reportResponses.add(
                     ReportResponse.builder()
-                            .reportId(report.getReportId())
+                            .reportId(report.getId())
                             .title(report.getTitle())
                             .createdAt(report.getCreatedAt())
                             .build()

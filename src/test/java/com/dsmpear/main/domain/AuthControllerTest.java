@@ -108,13 +108,13 @@ public class AuthControllerTest {
     void refreshTokenTestWithExpect() throws Exception {
         mvc.perform(put("/auth")
                 .header("X-Refresh-Token", "apple")
-        ).andExpect(status().isForbidden()).andDo(print());
+        ).andExpect(status().isUnauthorized()).andDo(print());
     }
 
     @Test
     void refreshTokenTestWithIsNotRefreshTokenExcept() throws Exception {
         mvc.perform(put("/auth")
                 .header("X-Refresh-Token", accessToken)
-        ).andExpect(status().isForbidden()).andDo(print());
+        ).andExpect(status().isUnauthorized()).andDo(print());
     }
 }
