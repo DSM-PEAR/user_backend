@@ -26,7 +26,6 @@ import java.util.List;
 public class MemberServiceImpl implements MemberService {
 
     private final AuthenticationFacade authenticationFacade;
-
     private final UserRepository userRepository;
     private final MemberRepository memberRepository;
     private final ReportRepository reportRepository;

@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class NoticeListResponse extends PageResponse{
+public class NoticeListResponse extends PageResponse {
 
     private List<NoticeResponse> noticeResponses;
 

@@ -70,7 +70,7 @@ class NoticeControllerTest {
     @Test
     public void  getNoticeContent_noId() throws Exception{
 
-        createNotice("notice");
+        createNotice("notice1");
 
         mvc.perform(get("/notice/"+10000))
                 .andExpect(status().isNotFound()).andDo(print());

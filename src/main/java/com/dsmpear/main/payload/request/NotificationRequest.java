@@ -7,7 +7,10 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
-@Getter @AllArgsConstructor @NoArgsConstructor @Builder
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class NotificationRequest {
 
     @NotNull(message = "잘못된 내용이 없는지 확인해주세요.")
@@ -21,4 +24,5 @@ public class NotificationRequest {
 
     @NotNull(message = "잘못된 내용이 없는지 확인해주세요.")
     private Boolean isAccepted;
+
 }

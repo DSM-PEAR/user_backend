@@ -26,10 +26,9 @@ public class SearchServiceImpl implements SearchService{
 
     @Override
     public SearchProfileResponse searchProfile(String keyword, Pageable page) {
-
         List<UserResponse> userResponses = new ArrayList<>();
 
-        Page<User> userPage = userRepository.findAllByNameContains(keyword, page);
+        Page<User> userPage = userRepository.findAllByNameContainsOrderByName(keyword, page);
 
         for (User user : userPage) {
             userResponses.add(

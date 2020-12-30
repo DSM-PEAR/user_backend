@@ -27,7 +27,7 @@ public class UserListServiceImpl implements UserListService {
         userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotAccessibleException::new);
 
-        Page<User> userPage = userRepository.findAllByNameContains(name, page); // select * from user where name like ='%%'
+        Page<User> userPage = userRepository.findAllByNameContainsOrderByName(name, page); // select * from user where name like ='%%'
 
         if(userPage.getTotalElements()==0)
             throw new UserNotFoundException();

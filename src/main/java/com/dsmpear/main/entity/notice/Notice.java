@@ -8,12 +8,13 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
+
 @Builder
 @Getter
-@Table(name = "notice_tbl")
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "notice_tbl")
+@Entity
 public class Notice {
 
     @Id @GeneratedValue

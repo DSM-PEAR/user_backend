@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@RestController
 @RequiredArgsConstructor
 @RequestMapping("/comment")
+@RestController
 public class CommentController {
 
     private final CommentService commentService;
