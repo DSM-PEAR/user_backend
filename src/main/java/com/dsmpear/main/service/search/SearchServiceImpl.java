@@ -37,7 +37,7 @@ public class SearchServiceImpl implements SearchService{
                             .email(user.getEmail())
                             .build()
             );
-    }
+        }
 
         return SearchProfileResponse.builder()
                 .totalElements((int) userPage.getTotalElements())
@@ -48,7 +48,7 @@ public class SearchServiceImpl implements SearchService{
 
     @Override
     public ReportListResponse searchReportByTitle(Pageable page, String title) {
-        Page<Report> reportPage = reportRepository.findAllByAccessAndAcceptedAndIsSubmittedTrueAndTitleContainsOrderByCreatedAtDesc(Access.EVERY, 2, title, page);
+        Page<Report> reportPage = reportRepository.findAllByAccessAndIsAcceptedTrueAndIsSubmittedTrueAndTitleContainsOrderByCreatedAtDesc(Access.EVERY, title, page);
 
         List<ReportResponse> reportResponses = new ArrayList<>();
 
@@ -58,6 +58,7 @@ public class SearchServiceImpl implements SearchService{
                             .reportId(report.getId())
                             .title(report.getTitle())
                             .createdAt(report.getCreatedAt())
+                            .type(report.getType())
                             .build()
             );
         }

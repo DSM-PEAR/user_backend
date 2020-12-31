@@ -15,17 +15,17 @@ public interface ReportRepository extends CrudRepository<Report,Integer> {
     Optional<Report> findById(Integer reportId);
 
     // 필터가 분야, 타입 모두 적용시 ORM
-    Page<Report> findAllByAccessAndFieldAndTypeAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAt(Access access, Field field, Type type, Grade grade, Integer isAccepted, Pageable page);
+    Page<Report> findAllByAccessAndFieldAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access access, Field field, Type type, Grade grade, Pageable page);
 
     // 필터가 학년만 적용시 ORM
-    Page<Report> findAllByAccessAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access access, Grade grade, Integer isAccepted, Pageable page);
+    Page<Report> findAllByAccessAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access access, Grade grade, Pageable page);
 
     // 필터가 타입만 적용시 ORM
-    Page<Report> findAllByAccessAndTypeAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access access, Type type,Grade grade, Integer isAccepted, Pageable page);
+    Page<Report> findAllByAccessAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access access, Type type, Grade grade, Pageable page);
 
     // 필터가 분야만 적용시 ORM
-    Page<Report> findAllByAccessAndFieldAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access access, Field field,Grade grade, Integer isAccepted, Pageable page);
+    Page<Report> findAllByAccessAndFieldAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access access, Field field,Grade grade, Pageable page);
 
     //제목 검색 ORM
-    Page<Report> findAllByAccessAndAcceptedAndIsSubmittedTrueAndTitleContainsOrderByCreatedAtDesc(Access access,  Integer accepted,String title, Pageable page);
+    Page<Report> findAllByAccessAndIsAcceptedTrueAndIsSubmittedTrueAndTitleContainsOrderByCreatedAtDesc(Access access, String title, Pageable page);
 }
