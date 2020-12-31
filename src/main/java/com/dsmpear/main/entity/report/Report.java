@@ -1,7 +1,6 @@
 package com.dsmpear.main.entity.report;
 
 import com.dsmpear.main.entity.member.Member;
-import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.payload.request.ReportRequest;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
@@ -14,12 +13,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
-@Table(name = "report_tbl")
-@Builder
 @Getter
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "report_tbl")
+@Entity
 public class Report {
 
     @Id
@@ -32,8 +31,8 @@ public class Report {
     @Column(nullable = false)
     private String description;
 
-    @Column(name = "created_at", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd kk:mm:ss")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
@@ -53,7 +52,7 @@ public class Report {
     private Type type;
 
     @Column(name = "is_accepted", nullable = false)
-    private Integer accepted;
+    private Boolean isAccepted;
 
     @Column(name = "is_submitted", nullable = false)
     private Boolean isSubmitted;

@@ -43,5 +43,4 @@ public class ReportContentResponse {
 
     private String teamName;
 
-
 }

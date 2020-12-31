@@ -1,5 +1,6 @@
 package com.dsmpear.main.payload.response;
 
+import com.dsmpear.main.entity.report.Type;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,8 @@ public class ReportResponse {
     private LocalDateTime createdAt;
 
     private String title;
+
+    private Type type;
 
 }
 
