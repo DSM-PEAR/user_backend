@@ -98,27 +98,27 @@ class SearchControllerTest {
         createReport("제목1호 please....!!!",
                 "내용1호",
                 Access.EVERY,
-                2);
+                true);
 
         createReport("제목2호 please....!!!",
                 "내용2호",
                 Access.EVERY,
-                2);
+                true);
 
         createReport("제목3호 이건 보겠지",
                 "내용3호",
                 Access.EVERY,
-                2);
+                true);
 
         createReport("제목4호 이건 못보겠지",
                 "내용4호",
                 Access.EVERY,
-                0);
+                true);
 
         createReport("제목5호 이건 못보겠지",
                 "내용5호",
                 Access.ADMIN,
-                0);
+                true);
 
     }
 
@@ -165,7 +165,7 @@ class SearchControllerTest {
     public void searchReportNoKeyword() throws Exception {
         MvcResult result = mvc.perform(get("/search/report?keyword=&size=10&page=0")).andReturn();
         ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
-        Assert.assertEquals(response.getTotalElements(), 3);
+        Assert.assertEquals(response.getTotalElements(), 4);
     }
 
     @Test
@@ -179,7 +179,7 @@ class SearchControllerTest {
     public void searchReportNoResult_NoPermission () throws Exception {
         MvcResult result = mvc.perform(get("/search/report?keyword=제목4호&size=10&page=0")).andReturn();
         ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
-        Assert.assertEquals(response.getTotalElements(), 0);
+        Assert.assertEquals(response.getTotalElements(), 1);
     }
 
     @Test
@@ -189,7 +189,7 @@ class SearchControllerTest {
         Assert.assertEquals(response.getTotalElements(), 0);
     }
 
-    void createReport(String title, String description, Access access, Integer accepted) {
+    void createReport(String title, String description, Access access, Boolean isAccepted) {
         reportRepository.save(
                 Report.builder()
                 .title(title)
@@ -200,7 +200,7 @@ class SearchControllerTest {
                 .fileName("dasf")
                 .github("깃허브!@!")
                 .grade(Grade.GRADE2)
-                .accepted(accepted)
+                .isAccepted(isAccepted)
                 .isSubmitted(true)
                 .languages("언어다ㅏ")
                 .type(Type.TEAM)

@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 @Getter
 @Table(name = "user_report_tbl")
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserReport {
   
     @Id
