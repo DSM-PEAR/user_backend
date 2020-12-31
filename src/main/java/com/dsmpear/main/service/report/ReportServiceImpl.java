@@ -21,7 +21,6 @@ import com.dsmpear.main.security.auth.AuthenticationFacade;
 import com.dsmpear.main.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +46,7 @@ public class ReportServiceImpl implements ReportService{
     @Override
     @Transactional
     public void writeReport(ReportRequest reportRequest) {
-        if(authenticationFacade.isLogin() == false) {
+        if(authenticationFacade.isLogin()) {
             throw new UserNotFoundException();
         }
         String teamName = reportRequest.getTeamName().equals("")?
@@ -162,8 +161,6 @@ public class ReportServiceImpl implements ReportService{
     @Override
     public Integer updateReport(Integer reportId, ReportRequest reportRequest) {
 
-        boolean isMine = false;
-
         if(authenticationFacade.isLogin()) {
             memberRepository.findByReportIdAndUserEmail(reportId, authenticationFacade.getUserEmail())
                     .orElseThrow(UserNotFoundException::new);
@@ -181,8 +178,8 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public void deleteReport(Integer reportId) {
-        boolean isMine = false;
         User user = null;
+
         if(authenticationFacade.isLogin()) {
             user = userRepository.findByEmail(authenticationFacade.getUserEmail())
                     .orElseThrow(UserNotFoundException::new);
@@ -213,13 +210,6 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public ReportListResponse getReportList(Pageable page, Type type, Field field, Grade grade) {
-        boolean isLogined = authenticationFacade.isLogin();
-        User user = null;
-
-        if (isLogined) {
-            user = userRepository.findByEmail(authenticationFacade.getUserEmail())
-                    .orElseThrow(UserNotFoundException::new);
-        }
 
         List<ReportResponse> reportResponses = new ArrayList<>();
         Page<Report> reportPage;
@@ -231,7 +221,7 @@ public class ReportServiceImpl implements ReportService{
         }else if(field == null) {
             reportPage = reportRepository.findAllByAccessAndTypeAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, type, grade, 2, page);
         }else {
-            reportPage = reportRepository.findAllByAccessAndFieldAndTypeAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAt(Access.EVERY, field, type, grade, 2, page);
+            reportPage = reportRepository.findAllByAccessAndFieldAndTypeAndGradeAndAcceptedAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, field, type, grade, 2, page);
         }
 
         for(Report report : reportPage) {
