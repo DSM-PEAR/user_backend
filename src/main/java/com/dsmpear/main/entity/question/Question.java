@@ -10,10 +10,10 @@ import javax.validation.constraints.Email;
 
 @Builder
 @Getter
-@Entity
-@Table(name = "question_tbl")
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "question_tbl")
+@Entity
 public class Question{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

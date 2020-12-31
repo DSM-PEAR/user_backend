@@ -1,19 +1,21 @@
 package com.dsmpear.main.entity.user;
 
-import com.dsmpear.main.entity.report.Report;
-import com.dsmpear.main.entity.userreport.UserReport;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Entity
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "user_tbl")
-@Getter @Builder @NoArgsConstructor @AllArgsConstructor
+@Entity
 public class User {
 
     @Id

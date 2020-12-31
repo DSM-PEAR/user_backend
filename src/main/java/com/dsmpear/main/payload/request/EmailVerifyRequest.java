@@ -6,8 +6,11 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 
-@Getter @AllArgsConstructor @NoArgsConstructor
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class EmailVerifyRequest {
+
     private String number;
 
     @Email

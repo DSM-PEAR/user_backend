@@ -16,13 +16,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class NoticeServiceImpl implements NoticeService{
+public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeRepository noticeRepository;
 
     @Override
     public NoticeListResponse getNoticeList(Pageable page) {
-        Page<Notice> noticePage = noticeRepository.findAllBy(page);
+        Page<Notice> noticePage = noticeRepository.findAllByOrderByCreatedAtDesc(page);
 
         List<NoticeResponse> noticeResponses = new ArrayList<>();
 

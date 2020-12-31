@@ -85,7 +85,6 @@ public class ReportServiceImpl implements ReportService{
                     .reportId(report.getId())
                     .build()
         );
-
     }
 
     // 보고서 보기
@@ -189,7 +188,7 @@ public class ReportServiceImpl implements ReportService{
             throw new UserNotFoundException();
         }
 
-        UserReport userReport = userReportRepository.findByReportIdAndUserEmail(reportId,user.getEmail())
+        userReportRepository.findByReportIdAndUserEmail(reportId,user.getEmail())
                 .orElseThrow(ReportNotFoundException::new);
 
         Report report = reportRepository.findById(reportId)

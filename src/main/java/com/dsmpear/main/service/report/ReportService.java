@@ -10,13 +10,9 @@ import org.springframework.data.domain.Pageable;
 
 public interface ReportService {
     void writeReport(ReportRequest reportRequest);
-
     ReportContentResponse viewReport(Integer reportId);
-
-    public Integer updateReport(Integer reportId, ReportRequest reportRequest);
-
-    public void deleteReport(Integer reportId);
-
+    Integer updateReport(Integer reportId, ReportRequest reportRequest);
+    void deleteReport(Integer reportId);
     ReportListResponse getReportList(Pageable page, Type type, Field field, Grade grade);
 
 }
