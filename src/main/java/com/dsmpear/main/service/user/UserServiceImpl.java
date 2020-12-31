@@ -2,13 +2,13 @@ package com.dsmpear.main.service.user;
 
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
-import com.dsmpear.main.entity.verifynumber.VerifyNumber;
 import com.dsmpear.main.entity.verifynumber.VerifyNumberRepository;
 import com.dsmpear.main.entity.verifyuser.VerifyUser;
 import com.dsmpear.main.entity.verifyuser.VerifyUserRepository;
-import com.dsmpear.main.exceptions.*;
 import com.dsmpear.main.exceptions.InvalidEmailAddressException;
+import com.dsmpear.main.exceptions.NumberNotFoundException;
 import com.dsmpear.main.exceptions.UserIsAlreadyRegisteredException;
+import com.dsmpear.main.exceptions.UserNotFoundException;
 import com.dsmpear.main.payload.request.EmailVerifyRequest;
 import com.dsmpear.main.payload.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
@@ -36,16 +36,14 @@ public class UserServiceImpl implements UserService {
             throw new UserIsAlreadyRegisteredException();
 
         verifyUserRepository.findByEmail(request.getEmail())
-                .map(verifyUser -> {
-                    return userRepository.save(
-                            User.builder()
-                                    .email(request.getEmail())
-                                    .password(passwordEncoder.encode(request.getPassword()))
-                                    .name(request.getName())
-                                    .authStatus(true)
-                                    .build()
-                    );
-                })
+                .map(verifyUser -> userRepository.save(
+                        User.builder()
+                                .email(request.getEmail())
+                                .password(passwordEncoder.encode(request.getPassword()))
+                                .name(request.getName())
+                                .authStatus(true)
+                                .build()
+                ))
                 .orElseThrow(UserNotFoundException::new);
     }
 

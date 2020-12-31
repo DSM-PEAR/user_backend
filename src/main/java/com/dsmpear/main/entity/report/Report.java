@@ -13,10 +13,10 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
 @Builder
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructo
 @Table(name = "report_tbl")
 @Entity
 public class Report {

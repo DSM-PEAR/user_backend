@@ -12,9 +12,13 @@ import org.springframework.data.redis.core.index.Indexed;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @RedisHash(timeToLive = 60 * 3)
-@Getter @AllArgsConstructor @NoArgsConstructor @Builder
 public class VerifyUser {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer UUID;
 
@@ -27,4 +31,5 @@ public class VerifyUser {
     public VerifyUser(String email) {
         this.email = email;
     }
+
 }

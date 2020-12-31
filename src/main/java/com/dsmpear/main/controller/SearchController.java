@@ -10,16 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @RequestMapping("/search")
 @RequiredArgsConstructor
+@RestController
 public class SearchController {
 
     private final SearchService searchService;
 
     @GetMapping("/profile")
     public SearchProfileResponse searchProfile(@RequestParam("keyword") String keyword,
-                                               Pageable page){
+                                               Pageable page) {
         return searchService.searchProfile(keyword,page);
     }
 

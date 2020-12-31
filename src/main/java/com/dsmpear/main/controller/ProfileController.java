@@ -11,21 +11,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @RequiredArgsConstructor
 @RequestMapping("/profile")
+@RestController
 public class ProfileController {
 
     private final ProfileService profileService;
     private final ProfileReportService profileReportService;
 
     @GetMapping
-    public ProfilePageResponse getProfile(@RequestParam("user-email") String userEmail){
+    public ProfilePageResponse getProfile(@RequestParam("user-email") String userEmail) {
         return profileService.getProfile(userEmail);
     }
 
     @GetMapping("/report")
-    public ProfileReportListResponse getReport(@RequestParam("user-email") String userEmail, Pageable page){
+    public ProfileReportListResponse getReport(@RequestParam("user-email") String userEmail, Pageable page) {
         return profileReportService.getReport(userEmail, page);
     }
 

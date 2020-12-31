@@ -4,7 +4,6 @@ import com.dsmpear.main.entity.report.Access;
 import com.dsmpear.main.entity.report.Field;
 import com.dsmpear.main.entity.report.Grade;
 import com.dsmpear.main.entity.report.Type;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

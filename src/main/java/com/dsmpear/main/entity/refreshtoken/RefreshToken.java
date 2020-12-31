@@ -11,9 +11,11 @@ import org.springframework.data.redis.core.index.Indexed;
 
 import java.io.Serializable;
 
-@RedisHash(value = "refresh_token")
-@NoArgsConstructor @AllArgsConstructor @Getter
+@Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@RedisHash(value = "refresh_token")
 public class RefreshToken implements Serializable {
 
     @Id

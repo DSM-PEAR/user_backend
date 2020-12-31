@@ -3,6 +3,6 @@ package com.dsmpear.main.service.email;
 import com.dsmpear.main.payload.request.NotificationRequest;
 
 public interface EmailService {
-    public void sendNotificationEmail(NotificationRequest request, String secretKey);
-    public void sendAuthNumEmail(String sendTo);
+    void sendNotificationEmail(NotificationRequest request, String secretKey);
+    void sendAuthNumEmail(String sendTo);
 }

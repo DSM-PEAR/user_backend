@@ -13,10 +13,10 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 
-@RestController
 @RequestMapping("/email")
 @Validated
 @RequiredArgsConstructor
+@RestController
 public class EmailController {
 
     private final UserService userService;

@@ -17,4 +17,5 @@ public class SearchProfileResponse extends PageResponse {
         super(totalElements, totalPages);
         this.userResponses = userResponses;
     }
+
 }

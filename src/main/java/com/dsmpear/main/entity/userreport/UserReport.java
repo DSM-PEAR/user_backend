@@ -1,9 +1,6 @@
 package com.dsmpear.main.entity.userreport;
 
 
-import com.dsmpear.main.entity.report.Report;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,4 +25,5 @@ public class UserReport {
 
     @Column(name = "report_id", nullable = false)
     private Integer reportId;
+
 }

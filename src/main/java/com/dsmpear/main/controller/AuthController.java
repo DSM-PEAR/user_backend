@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
+@RestController
 public class AuthController {
 
     private final AuthService authService;
@@ -25,4 +25,5 @@ public class AuthController {
     public AccessTokenResponse tokenRefresh(@RequestHeader("X-Refresh-Token") String refreshToken) {
         return authService.tokenRefresh(refreshToken);
     }
+
 }
