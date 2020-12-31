@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 @Getter
 @NoArgsConstructor
-@AllArgsConstructo
+@AllArgsConstructor
 @Table(name = "report_tbl")
 @Entity
 public class Report {
