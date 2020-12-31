@@ -17,6 +17,6 @@ public class MyPageReportResponse {
 
     private Boolean isSubmitted;
 
-    private int isAccepted;
+    private Boolean isAccepted; // 승인 or 미승인
 
 }

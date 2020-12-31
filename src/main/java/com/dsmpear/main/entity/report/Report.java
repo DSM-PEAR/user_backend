@@ -15,8 +15,8 @@ import java.util.List;
 
 @Builder
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "report_tbl")
 @Entity
 public class Report {
@@ -31,8 +31,8 @@ public class Report {
     @Column(nullable = false)
     private String description;
 
-    @Column(name = "created_at", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd kk:mm:ss")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
@@ -52,7 +52,7 @@ public class Report {
     private Type type;
 
     @Column(name = "is_accepted", nullable = false)
-    private Integer accepted;
+    private Boolean isAccepted;
 
     @Column(name = "is_submitted", nullable = false)
     private Boolean isSubmitted;
