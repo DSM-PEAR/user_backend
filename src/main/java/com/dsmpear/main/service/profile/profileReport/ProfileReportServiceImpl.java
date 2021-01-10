@@ -31,6 +31,7 @@ public class ProfileReportServiceImpl implements ProfileReportService {
                 .orElseThrow(UserNotFoundException::new);
 
         Page<UserReport> userReportPage = userReportRepository.findAllByUserEmailOrderByReportIdDesc(userEmail,page);
+
         List<ProfileReportResponse> profileReportResponses = new ArrayList<>();
 
         for(UserReport userReport : userReportPage){
@@ -47,6 +48,7 @@ public class ProfileReportServiceImpl implements ProfileReportService {
                 );
             }
         }
+
         return ProfileReportListResponse.builder()
                 .totalElements((int)userReportPage.getTotalElements())
                 .totalPages(userReportPage.getTotalPages())

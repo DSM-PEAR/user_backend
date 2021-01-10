@@ -107,35 +107,36 @@ class ProfileControllerTest {
     @Test
     public void getProfile () throws Exception {
         mvc.perform(get("/profile?user-email=test@dsm.hs.kr"))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(username = "test@dsm.hs.kr",password = "1234")
     public void getProfile_login () throws Exception {
         mvc.perform(get("/profile?user-email=test@dsm.hs.kr"))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(username = "test@dsm.hs.kr",password = "1234")
     public void getProfile_noUser () throws Exception {
         mvc.perform(get("/profile"))
-                .andExpect(status().isBadRequest()).andDo(print());
+                .andExpect(status().isBadRequest());
     }
 
     //보고서 목록
     @Test
-    public void  getReportList() throws Exception{
+    public void getReportList() throws Exception{
 
         addReport_sub_false("test@dsm.hs.kr");
         addReport_sub_true("test@dsm.hs.kr");
         addReport_accepted_true("test@dsm.hs.kr");
         addReport_rejected_true("test@dsm.hs.kr");
         addReport_accepted_true("tset@dsm.hs.kr");
+        addReport_accepted_true("test@dsm.hs.kr");
 
 
-        mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=2&page=1")).andDo(print())
+        mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=2&page=0"))
                 .andExpect(status().isOk()).andDo(print());
     }
 
@@ -149,8 +150,8 @@ class ProfileControllerTest {
         addReport_rejected_true("test@dsm.hs.kr");
         addReport_accepted_true("tset@dsm.hs.kr");
 
-        mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=2&page=1"))
-                .andExpect(status().isOk()).andDo(print());
+        mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=2&page=0"))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -163,7 +164,7 @@ class ProfileControllerTest {
         addReport_accepted_true("tset@dsm.hs.kr");
 
         mvc.perform(get("/profile/report?user-email=lalalalala@dsm.hs.kr&size=2&page=1"))
-                .andExpect(status().isNotFound()).andDo(print());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -176,7 +177,7 @@ class ProfileControllerTest {
         addReport_accepted_true("tset@dsm.hs.kr");
 
         mvc.perform(get("/profile/report?user-email=lalalalal@dsm.hs.kr&size=2&page=1"))
-                .andExpect(status().isNotFound()).andDo(print());
+                .andExpect(status().isNotFound());
     }
 
     private Integer addReport_sub_false(String email) {
