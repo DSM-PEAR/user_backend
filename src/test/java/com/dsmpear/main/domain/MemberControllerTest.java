@@ -112,14 +112,14 @@ class MemberControllerTest {
         Integer reportId = addReport();
 
         mvc.perform(get("/member/"+reportId+"?size=1&page=1"))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk());
     }
 
     @Test
     public void getMember_no_report() throws Exception {
 
         mvc.perform(get("/member/1?size=1&page=1"))
-                .andExpect(status().isNotFound()).andDo(print());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -133,7 +133,7 @@ class MemberControllerTest {
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isCreated()).andDo(print());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -147,7 +147,7 @@ class MemberControllerTest {
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isConflict()).andDo(print());
+                .andExpect(status().isConflict());
     }
 
     @Test
@@ -159,7 +159,7 @@ class MemberControllerTest {
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isUnauthorized()).andDo(print());
+                .andExpect(status().isUnauthorized());
     }
     //로그인하지 않았을 때
     @Test
@@ -190,7 +190,7 @@ class MemberControllerTest {
     public void deleteMember() throws Exception{
         Integer memberId = check_member();
         mvc.perform(delete("/member/"+memberId))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -200,7 +200,7 @@ class MemberControllerTest {
         Integer memberId = check_member();
 
         mvc.perform(delete("/member/"+memberId))
-                .andExpect(status().isBadRequest()).andDo(print());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
