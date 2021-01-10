@@ -27,7 +27,6 @@ import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -86,20 +85,21 @@ class MyPageControllerTest {
         memberRepository.deleteAll();
         reportRepository.deleteAll();
         userRepository.deleteAll();
+        userReportRepository.deleteAll();
     }
 
     @Test
     @WithMockUser(value = "test@dsm.hs.kr", password = "1111")
     public void getMyProfile_test() throws Exception {
         mvc.perform(get("/user/profile"))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(value = "tset@dsm.hs.kr", password = "1111")
     public void getMyProfile_tset () throws Exception {
         mvc.perform(get("/user/profile"))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -110,7 +110,7 @@ class MyPageControllerTest {
                 .param("intro", "hihihihi")
                 .param("gitHub","https://github.com/syxxn")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNoContent()).andDo(print());
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -121,25 +121,40 @@ class MyPageControllerTest {
                 .param("intro", "hihihihi")
                 .param("gitHub","https://github.com/syxxn")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNoContent()).andDo(print());
+                .andExpect(status().isNoContent());
     }
 
     //보고서 목록
     @Test
     @WithMockUser(value = "test@dsm.hs.kr", password = "1111")
-    public void  getReportList() throws Exception{
+    public void  getReportList_test() throws Exception{
 
         addReport_sub_false("test@dsm.hs.kr");
-        addReport_sub_false("tset@dsm.hs.kr");
-        addReport_sub_false_("test@dsm.hs.kr");
-        addReport_sub_ture("test@dsm.hs.kr");
-        addReport_sub_ture("tset@dsm.hs.kr");
+        addReport_sub_true("test@dsm.hs.kr");
+        addReport_accepted_true("test@dsm.hs.kr");
+        addReport_rejected_true("test@dsm.hs.kr");
+        addReport_accepted_true("tset@dsm.hs.kr");
+
 
         mvc.perform(get("/user/profile/report"))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk());
     }
 
+    //보고서 목록
+    @Test
+    @WithMockUser(value = "tset@dsm.hs.kr", password = "1111")
+    public void  getReportList_tset() throws Exception{
 
+        addReport_sub_false("test@dsm.hs.kr");
+        addReport_sub_true("test@dsm.hs.kr");
+        addReport_accepted_true("test@dsm.hs.kr");
+        addReport_rejected_true("test@dsm.hs.kr");
+        addReport_accepted_true("tset@dsm.hs.kr");
+
+
+        mvc.perform(get("/user/profile/report"))
+                .andExpect(status().isOk());
+    }
 
     private Integer addReport_sub_false(String email) {
         Integer reportId = reportRepository.save(
@@ -150,6 +165,7 @@ class MyPageControllerTest {
                         .access(Access.EVERY)
                         .field(Field.AI)
                         .type(Type.TEAM)
+                        .comment(null)
                         .isSubmitted(false)
                         .isAccepted(false)
                         .createdAt(LocalDateTime.now())
@@ -177,43 +193,7 @@ class MyPageControllerTest {
         return reportId;
     }
 
-    private Integer addReport_sub_false_(String email) {
-        Integer reportId = reportRepository.save(
-                Report.builder()
-                        .title("hello")
-                        .description("hihello")
-                        .grade(Grade.GRADE2)
-                        .access(Access.ADMIN)
-                        .field(Field.WEB)
-                        .type(Type.TEAM)
-                        .isSubmitted(false)
-                        .isAccepted(false)
-                        .createdAt(LocalDateTime.now())
-                        .github("https://github.com")
-                        .languages("자바, C")
-                        .fileName("안녕한가파일")
-                        .teamName("룰루랄라")
-                        .build()
-        ).getId();
-
-        memberRepository.save(
-                Member.builder()
-                        .reportId(reportId)
-                        .userEmail(email)
-                        .build()
-        );
-
-        userReportRepository.save(
-                UserReport.builder()
-                        .userEmail(email)
-                        .reportId(reportId)
-                        .build()
-        );
-
-        return reportId;
-    }
-
-    private Integer addReport_sub_ture(String email) {
+    private Integer addReport_sub_true(String email) {
         Integer reportId = reportRepository.save(
                 Report.builder()
                         .title("hello")
@@ -224,6 +204,7 @@ class MyPageControllerTest {
                         .type(Type.TEAM)
                         .isSubmitted(true)
                         .isAccepted(false)
+                        .comment(null)
                         .createdAt(LocalDateTime.now())
                         .github("https://github.com")
                         .languages("자바, C")
@@ -249,7 +230,7 @@ class MyPageControllerTest {
         return reportId;
     }
 
-    private Integer addReport_sub_ture_(String email) {
+    private Integer addReport_accepted_true(String email) {
         Integer reportId = reportRepository.save(
                 Report.builder()
                         .title("hello")
@@ -260,6 +241,44 @@ class MyPageControllerTest {
                         .type(Type.TEAM)
                         .isSubmitted(true)
                         .isAccepted(true)
+                        .comment(null)
+                        .createdAt(LocalDateTime.now())
+                        .github("https://github.com")
+                        .languages("자바, C")
+                        .fileName("안녕한가파일")
+                        .teamName("룰루랄라")
+                        .build()
+        ).getId();
+
+        memberRepository.save(
+                Member.builder()
+                        .reportId(reportId)
+                        .userEmail(email)
+                        .build()
+        );
+
+        userReportRepository.save(
+                UserReport.builder()
+                        .userEmail(email)
+                        .reportId(reportId)
+                        .build()
+        );
+
+        return reportId;
+    }
+
+    private Integer addReport_rejected_true(String email) {
+        Integer reportId = reportRepository.save(
+                Report.builder()
+                        .title("hello")
+                        .description("hihello")
+                        .grade(Grade.GRADE2)
+                        .access(Access.EVERY)
+                        .field(Field.AI)
+                        .type(Type.TEAM)
+                        .isSubmitted(false)
+                        .isAccepted(false)
+                        .comment("반환합니다")
                         .createdAt(LocalDateTime.now())
                         .github("https://github.com")
                         .languages("자바, C")

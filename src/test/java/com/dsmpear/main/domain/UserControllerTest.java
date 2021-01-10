@@ -146,34 +146,34 @@ class UserControllerTest {
     @WithMockUser(value = "apple@dsm.hs.kr",password = "1111")
     public void getUser() throws Exception{
         mvc.perform(get("/account?name="))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(value = "apple@dsm.hs.kr",password = "1111")
     public void getUser_existUser() throws Exception{
         mvc.perform(get("/account?name=홍길동"))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(value = "apple@dsm.hs.kr",password = "1111")
     public void getUser_bad() throws Exception{
         mvc.perform(get("/account"))
-                .andExpect(status().isBadRequest()).andDo(print());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     @WithMockUser(value = "hihi@dsm.hs.kr",password = "1111")
     public void getUser_noLogin() throws Exception{
         mvc.perform(get("/account?name="))
-                .andExpect(status().isForbidden()).andDo(print());
+                .andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(value = "apple@dsm.hs.kr",password = "1111")
     public void getUser_notFound() throws Exception{
-        mvc.perform(get("/account?name=가랑가랑")).andDo(print())
-                .andExpect(status().isNotFound()).andDo(print());
+        mvc.perform(get("/account?name=가랑가랑"))
+                .andExpect(status().isNotFound());
     }
 }
