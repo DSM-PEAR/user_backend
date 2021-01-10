@@ -159,7 +159,7 @@ class MemberControllerTest {
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isForbidden()).andDo(print());
+                .andExpect(status().isUnauthorized()).andDo(print());
     }
     //로그인하지 않았을 때
     @Test
@@ -171,7 +171,7 @@ class MemberControllerTest {
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
     @Test
     @Order(1)
@@ -210,7 +210,7 @@ class MemberControllerTest {
         Integer memberId = check_member();
 
         mvc.perform(delete("/member/"+memberId))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     //로그인하지 않았을 때
