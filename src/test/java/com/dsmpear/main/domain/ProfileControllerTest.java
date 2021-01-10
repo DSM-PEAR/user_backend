@@ -129,10 +129,10 @@ class ProfileControllerTest {
     public void  getReportList() throws Exception{
 
         addReport_sub_false("test@dsm.hs.kr");
-        addReport_sub_false("tset@dsm.hs.kr");
-        addReport_sub_false_("test@dsm.hs.kr");
-        addReport_sub_ture("test@dsm.hs.kr");
-        addReport_sub_ture("tset@dsm.hs.kr");
+        addReport_sub_true("test@dsm.hs.kr");
+        addReport_accepted_true("test@dsm.hs.kr");
+        addReport_rejected_true("test@dsm.hs.kr");
+        addReport_accepted_true("tset@dsm.hs.kr");
 
 
         mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=2&page=1")).andDo(print())
@@ -144,10 +144,10 @@ class ProfileControllerTest {
     public void  getReportList_isLogin() throws Exception{
 
         addReport_sub_false("test@dsm.hs.kr");
-        addReport_sub_false("tset@dsm.hs.kr");
-        addReport_sub_false_("test@dsm.hs.kr");
-        addReport_sub_ture("test@dsm.hs.kr");
-        addReport_sub_ture("tset@dsm.hs.kr");
+        addReport_sub_true("test@dsm.hs.kr");
+        addReport_accepted_true("test@dsm.hs.kr");
+        addReport_rejected_true("test@dsm.hs.kr");
+        addReport_accepted_true("tset@dsm.hs.kr");
 
         mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=2&page=1"))
                 .andExpect(status().isOk()).andDo(print());
@@ -157,10 +157,10 @@ class ProfileControllerTest {
     public void  getReportList_notFound() throws Exception{
 
         addReport_sub_false("test@dsm.hs.kr");
-        addReport_sub_false("tset@dsm.hs.kr");
-        addReport_sub_false_("test@dsm.hs.kr");
-        addReport_sub_ture("test@dsm.hs.kr");
-        addReport_sub_ture("tset@dsm.hs.kr");
+        addReport_sub_true("test@dsm.hs.kr");
+        addReport_accepted_true("test@dsm.hs.kr");
+        addReport_rejected_true("test@dsm.hs.kr");
+        addReport_accepted_true("tset@dsm.hs.kr");
 
         mvc.perform(get("/profile/report?user-email=lalalalala@dsm.hs.kr&size=2&page=1"))
                 .andExpect(status().isNotFound()).andDo(print());
@@ -169,11 +169,11 @@ class ProfileControllerTest {
     @Test
     public void getReportList_notFound_isLogin() throws Exception{
 
-        addReport_sub_false("tset@dsm.hs.kr");
-        addReport_sub_false("tset@dsm.hs.kr");
-        addReport_sub_false_("tset@dsm.hs.kr");
-        addReport_sub_ture("test@dsm.hs.kr");
-        addReport_sub_ture("tset@dsm.hs.kr");
+        addReport_sub_false("test@dsm.hs.kr");
+        addReport_sub_true("test@dsm.hs.kr");
+        addReport_accepted_true("test@dsm.hs.kr");
+        addReport_rejected_true("test@dsm.hs.kr");
+        addReport_accepted_true("tset@dsm.hs.kr");
 
         mvc.perform(get("/profile/report?user-email=lalalalal@dsm.hs.kr&size=2&page=1"))
                 .andExpect(status().isNotFound()).andDo(print());
@@ -188,6 +188,7 @@ class ProfileControllerTest {
                         .access(Access.EVERY)
                         .field(Field.AI)
                         .type(Type.TEAM)
+                        .comment(null)
                         .isSubmitted(false)
                         .isAccepted(false)
                         .createdAt(LocalDateTime.now())
@@ -215,43 +216,7 @@ class ProfileControllerTest {
         return reportId;
     }
 
-    private Integer addReport_sub_false_(String email) {
-        Integer reportId = reportRepository.save(
-                Report.builder()
-                        .title("hello")
-                        .description("hihello")
-                        .grade(Grade.GRADE2)
-                        .access(Access.ADMIN)
-                        .field(Field.WEB)
-                        .type(Type.TEAM)
-                        .isSubmitted(false)
-                        .isAccepted(false)
-                        .createdAt(LocalDateTime.now())
-                        .github("https://github.com")
-                        .languages("자바, C")
-                        .fileName("안녕한가파일")
-                        .teamName("룰루랄라")
-                        .build()
-        ).getId();
-
-        memberRepository.save(
-                Member.builder()
-                        .reportId(reportId)
-                        .userEmail(email)
-                        .build()
-        );
-
-        userReportRepository.save(
-                UserReport.builder()
-                        .userEmail(email)
-                        .reportId(reportId)
-                        .build()
-        );
-
-        return reportId;
-    }
-
-    private Integer addReport_sub_ture(String email) {
+    private Integer addReport_sub_true(String email) {
         Integer reportId = reportRepository.save(
                 Report.builder()
                         .title("hello")
@@ -262,6 +227,7 @@ class ProfileControllerTest {
                         .type(Type.TEAM)
                         .isSubmitted(true)
                         .isAccepted(false)
+                        .comment(null)
                         .createdAt(LocalDateTime.now())
                         .github("https://github.com")
                         .languages("자바, C")
@@ -287,7 +253,7 @@ class ProfileControllerTest {
         return reportId;
     }
 
-    private Integer addReport_sub_ture_(String email) {
+    private Integer addReport_accepted_true(String email) {
         Integer reportId = reportRepository.save(
                 Report.builder()
                         .title("hello")
@@ -298,6 +264,7 @@ class ProfileControllerTest {
                         .type(Type.TEAM)
                         .isSubmitted(true)
                         .isAccepted(true)
+                        .comment(null)
                         .createdAt(LocalDateTime.now())
                         .github("https://github.com")
                         .languages("자바, C")
@@ -322,4 +289,42 @@ class ProfileControllerTest {
 
         return reportId;
     }
+
+    private Integer addReport_rejected_true(String email) {
+        Integer reportId = reportRepository.save(
+                Report.builder()
+                        .title("hello")
+                        .description("hihello")
+                        .grade(Grade.GRADE2)
+                        .access(Access.EVERY)
+                        .field(Field.AI)
+                        .type(Type.TEAM)
+                        .isSubmitted(false)
+                        .isAccepted(false)
+                        .comment("반환합니다")
+                        .createdAt(LocalDateTime.now())
+                        .github("https://github.com")
+                        .languages("자바, C")
+                        .fileName("안녕한가파일")
+                        .teamName("룰루랄라")
+                        .build()
+        ).getId();
+
+        memberRepository.save(
+                Member.builder()
+                        .reportId(reportId)
+                        .userEmail(email)
+                        .build()
+        );
+
+        userReportRepository.save(
+                UserReport.builder()
+                        .userEmail(email)
+                        .reportId(reportId)
+                        .build()
+        );
+
+        return reportId;
+    }
+
 }
