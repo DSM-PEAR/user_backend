@@ -30,11 +30,11 @@ public class MyPageReportServiceImpl implements MyPageReportService{
 
         boolean isRejected = false;
 
-        Page<UserReport> reportPage = userReportRepository.findAllByUserEmail(email, page);
+        Page<UserReport> reportPage = userReportRepository.findAllByUserEmailOrderByReportIdDesc(email, page);
 
         List<MyPageReportResponse> myPageReportResponses = new ArrayList<>();
 
-        for(UserReport userReport : reportPage){
+        for(UserReport userReport : reportPage) {
             Report report = reportRepository.findById(userReport.getReportId())
                     .orElseThrow(ReportNotFoundException::new);
 
@@ -52,6 +52,7 @@ public class MyPageReportServiceImpl implements MyPageReportService{
                             .build()
             );
         }
+
         return ProfileReportListResponse.builder()
                 .totalElements((int)reportPage.getTotalElements())
                 .totalPages(reportPage.getTotalPages())
