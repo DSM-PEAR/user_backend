@@ -28,6 +28,9 @@ public class AuthServiceImpl implements AuthService {
     @Value("${auth.jwt.exp.refresh}")
     private Long refreshExp;
 
+    @Value("${auth.jwt.exp.access}")
+    private Long accessExp;
+
     @Override
     public TokenResponse signIn(SignInRequest request) {
         return userRepository.findByEmail(request.getEmail())
@@ -40,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
                     .map(refreshTokenRepository::save)
                     .map(refreshToken -> {
                         String accessToken = jwtTokenProvider.generateAccessToken(refreshToken.getEmail());
-                        return new TokenResponse(accessToken, refreshToken.getRefreshToken(), refreshToken.getRefreshExp());
+                        return new TokenResponse(accessToken, refreshToken.getRefreshToken(), accessExp);
                     })
                 .orElseThrow(UserNotFoundException::new);
     }
