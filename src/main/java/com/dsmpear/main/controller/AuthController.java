@@ -21,7 +21,7 @@ public class AuthController {
         return authService.signIn(request);
     }
 
-    @PutMapping("/")
+    @PutMapping
     public AccessTokenResponse tokenRefresh(@RequestHeader("X-Refresh-Token") String refreshToken) {
         return authService.tokenRefresh(refreshToken);
     }
