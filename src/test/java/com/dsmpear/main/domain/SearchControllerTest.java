@@ -130,20 +130,20 @@ class SearchControllerTest {
 
     @Test
     public void searchProfile () throws Exception {
-        mvc.perform(get("/search/profile?keyword=길동&size=10&page=0")).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+        mvc.perform(get("/search/profile?keyword=길동&size=10&page=0"))
+                .andExpect(status().isOk());
     }
 
     @Test
     public void searchProfile_noKeyword () throws Exception {
-        mvc.perform(get("/search/profile?keyword=&size=10&page=0")).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+        mvc.perform(get("/search/profile?keyword=&size=10&page=0"))
+                .andExpect(status().isOk());
     }
 
     @Test
     public void searchProfile_full () throws Exception {
-        mvc.perform(get("/search/profile?keyword=이길동&size=10&page=0")).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+        mvc.perform(get("/search/profile?keyword=이길동&size=10&page=0"))
+                .andExpect(status().isOk());
     }
 
     @Test
