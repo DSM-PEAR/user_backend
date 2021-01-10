@@ -271,7 +271,7 @@ class ReportControllerTest {
 
         mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isForbidden()).andDo(print());
+                .andExpect(status().isUnauthorized()).andDo(print());
     }
 
 
@@ -284,7 +284,7 @@ class ReportControllerTest {
 
         mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isForbidden()).andDo(print());
+                .andExpect(status().isUnauthorized()).andDo(print());
     }
 
     @Test
@@ -293,7 +293,7 @@ class ReportControllerTest {
 
         mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isForbidden()).andDo(print());
+                .andExpect(status().isUnauthorized()).andDo(print());
     }
 
     // 보고서 업데이트 성공 테스트
@@ -447,7 +447,7 @@ class ReportControllerTest {
         mvc.perform(post("/comment")
                 .content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isForbidden()).andDo(print());
+                .andExpect(status().isUnauthorized()).andDo(print());
 
     }
 
@@ -488,7 +488,7 @@ class ReportControllerTest {
 
         mvc.perform(patch("/comment/"+commentId1)
                 .param("content", "content")).andDo(print())
-                .andExpect(status().isForbidden()).andDo(print());
+                .andExpect(status().isUnauthorized()).andDo(print());
 
     }
 
@@ -543,7 +543,7 @@ class ReportControllerTest {
         Integer commentId2 = createComment(reportId);
 
         mvc.perform(delete("/comment/"+commentId1)).andDo(print())
-                .andExpect(status().isForbidden()).andDo(print());
+                .andExpect(status().isUnauthorized()).andDo(print());
 
     }
 
@@ -555,7 +555,7 @@ class ReportControllerTest {
         Integer commentId2 = createComment(reportId);
 
         mvc.perform(delete("/comment/"+commentId1)).andDo(print())
-                .andExpect(status().isForbidden()).andDo(print());
+                .andExpect(status().isUnauthorized()).andDo(print());
 
     }
 
