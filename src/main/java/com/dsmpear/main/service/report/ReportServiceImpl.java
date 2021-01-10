@@ -64,6 +64,7 @@ public class ReportServiceImpl implements ReportService{
                         .type(reportRequest.getType())
                         .isAccepted(false)
                         .isSubmitted(reportRequest.getIsSubmitted())
+                        .comment(null)
                         .fileName(reportRequest.getFileName())
                         .github(reportRequest.getGithub())
                         .languages(reportRequest.getLanguages())
@@ -123,7 +124,7 @@ public class ReportServiceImpl implements ReportService{
             }
         }
 
-        List<Comment> comment = commentRepository.findAllByReportIdOrderByCreatedAtAsc(reportId);
+        List<Comment> comment = commentRepository.findAllByReportIdOrderByCreatedAtDesc(reportId);
         List<ReportCommentsResponse> commentsResponses = new ArrayList<>();
 
         // 댓글 하나하나 담기ㅣ
@@ -193,7 +194,7 @@ public class ReportServiceImpl implements ReportService{
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(ReportNotFoundException::new);
 
-        for(Comment comment : commentRepository.findAllByReportIdOrderByCreatedAtAsc(reportId)) {
+        for(Comment comment : commentRepository.findAllByReportIdOrderByCreatedAtDesc(reportId)) {
             commentService.deleteComment(comment.getId());
         }
 

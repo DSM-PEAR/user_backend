@@ -69,6 +69,9 @@ public class Report {
     @Column(nullable = false, name = "team_name")
     private String teamName;
 
+    @Column(nullable = true)
+    private String comment;
+
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "report")
     @JsonBackReference
     private List<Member> members;
