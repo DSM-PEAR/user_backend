@@ -63,5 +63,4 @@ public class AuthServiceImpl implements AuthService {
                 .map(refreshToken -> new AccessTokenResponse(jwtTokenProvider.generateAccessToken(refreshToken.getEmail())))
                 .orElseThrow(UserNotFoundException::new);
     }
-
 }
