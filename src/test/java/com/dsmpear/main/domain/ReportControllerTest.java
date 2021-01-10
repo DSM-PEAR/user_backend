@@ -134,8 +134,8 @@ class ReportControllerTest {
 
         mvc.perform(post("/report")
                 .content(requests)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().is2xxSuccessful()).andDo(print());
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is2xxSuccessful());
 
     }
 
@@ -159,9 +159,8 @@ class ReportControllerTest {
 
         mvc.perform(post("/report")
                 .content(objectMapperConfiguration.objectMapper().writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isNotFound()).andDo(print());
-
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound());
     }
 
     // 보고서 작성 실패 테스트(InvalidData인데 에러메세지는 없음)
@@ -185,8 +184,8 @@ class ReportControllerTest {
 
         mvc.perform(post("/report")
                 .content(objectMapperConfiguration.objectMapper().writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isCreated()).andDo(print());
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isCreated());
 
     }
 
@@ -211,8 +210,8 @@ class ReportControllerTest {
 
         mvc.perform(post("/report")
                 .content(objectMapperConfiguration.objectMapper().writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().is4xxClientError()).andDo(print());
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is4xxClientError());
 
     }
 
@@ -239,8 +238,8 @@ class ReportControllerTest {
 
 
         MvcResult mvcResult = mvc.perform(get("/report/"+reportId)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isOk()).andDo(print()).andReturn();
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andReturn();
 
         ReportContentResponse response = objectMapperConfiguration.objectMapper().readValue(mvcResult.getResponse().getContentAsString(), ReportContentResponse.class);
         Assert.assertEquals(response.getTitle(), expected);
@@ -256,8 +255,8 @@ class ReportControllerTest {
         Integer reportId = createReport(expected);
 
         mvc.perform(get("/report/"+reportId)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
     }
 
 
@@ -270,8 +269,8 @@ class ReportControllerTest {
         Integer reportId = createReportAdmin("제에목");
 
         mvc.perform(get("/report/"+reportId)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isUnauthorized()).andDo(print());
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isUnauthorized());
     }
 
 
@@ -283,8 +282,8 @@ class ReportControllerTest {
         Integer reportId = createReportNotSubmitted("제에목");
 
         mvc.perform(get("/report/"+reportId)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isUnauthorized()).andDo(print());
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -292,8 +291,8 @@ class ReportControllerTest {
         Integer reportId = createReportAdmin("제에목");
 
         mvc.perform(get("/report/"+reportId)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isUnauthorized()).andDo(print());
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isUnauthorized());
     }
 
     // 보고서 업데이트 성공 테스트
@@ -320,8 +319,8 @@ class ReportControllerTest {
 
         mvc.perform(patch("/report/"+reportId)
                 .content(new ObjectMapper().writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().is2xxSuccessful()).andDo(print());
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is2xxSuccessful());
     }
 
     // 보고서 업데이트 실패 테스트(userNotMemer)
@@ -348,8 +347,8 @@ class ReportControllerTest {
 
         mvc.perform(patch("/report/"+reportId)
                 .content(new ObjectMapper().writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().is4xxClientError()).andDo(print());
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is4xxClientError());
     }
 
     // 보고서 업데이트 실패 테스트(UserNotFound)
@@ -376,8 +375,8 @@ class ReportControllerTest {
 
         mvc.perform(patch("/report/"+reportId)
                 .content(new ObjectMapper().writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().is4xxClientError()).andDo(print());
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is4xxClientError());
     }
 
     // 보고서 삭제 성공 테스트
@@ -389,8 +388,8 @@ class ReportControllerTest {
         createComment(reportId);
         createComment(reportId);
 
-        mvc.perform(delete("/report/{reportId}", Integer.toString(reportId))).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+        mvc.perform(delete("/report/{reportId}", Integer.toString(reportId)))
+                .andExpect(status().isOk());
     }
 
     // 보고서 삭제 실패 테스트
@@ -399,8 +398,8 @@ class ReportControllerTest {
     public void deleteReportTest1() throws Exception {
         Integer reportId = createReport("헑");
 
-        mvc.perform(delete("/report/"+reportId)).andDo(print())
-                .andExpect(status().isNotFound()).andDo(print());
+        mvc.perform(delete("/report/"+reportId))
+                .andExpect(status().isNotFound());
     }
 
     // 보고서 삭제 실패 테스트
@@ -408,8 +407,8 @@ class ReportControllerTest {
     public void deleteReportTest2() throws Exception {
         Integer reportId = createReport("핡");
 
-        mvc.perform(delete("/report/"+reportId)).andDo(print())
-                .andExpect(status().isNotFound()).andDo(print());
+        mvc.perform(delete("/report/"+reportId))
+                .andExpect(status().isNotFound());
     }
 
     // 댓글 작성 성공 테스트
@@ -427,8 +426,8 @@ class ReportControllerTest {
 
         mvc.perform(post("/comment")
                 .content(new ObjectMapper().writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
 
     }
 
@@ -446,8 +445,8 @@ class ReportControllerTest {
 
         mvc.perform(post("/comment")
                 .content(new ObjectMapper().writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(status().isUnauthorized()).andDo(print());
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isUnauthorized());
 
     }
 
@@ -460,8 +459,8 @@ class ReportControllerTest {
         Integer commentId2 = createComment(reportId);
 
         mvc.perform(patch("/comment/"+commentId1)
-                .param("content", "content")).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+                .param("content", "content"))
+                .andExpect(status().isOk());
 
     }
 
@@ -473,8 +472,8 @@ class ReportControllerTest {
         Integer commentId2 = createComment(reportId);
 
         mvc.perform(patch("/comment/"+commentId1)
-                .param("content", "content")).andDo(print())
-                .andExpect(status().isNotFound()).andDo(print());
+                .param("content", "content"))
+                .andExpect(status().isNotFound());
 
     }
 
@@ -487,8 +486,8 @@ class ReportControllerTest {
         Integer commentId2 = createComment(reportId);
 
         mvc.perform(patch("/comment/"+commentId1)
-                .param("content", "content")).andDo(print())
-                .andExpect(status().isUnauthorized()).andDo(print());
+                .param("content", "content"))
+                .andExpect(status().isUnauthorized());
 
     }
 
@@ -501,8 +500,8 @@ class ReportControllerTest {
         Integer commentId2 = createComment(reportId);
 
         mvc.perform(patch("/comment/"+200)
-                .param("content", "content")).andDo(print())
-                .andExpect(status().is4xxClientError()).andDo(print());
+                .param("content", "content"))
+                .andExpect(status().is4xxClientError());
 
     }
 
@@ -515,8 +514,8 @@ class ReportControllerTest {
         Integer commentId2 = createComment(reportId);
 
         mvc.perform(patch("/comment/"+reportId)
-                .param("content", "content")).andDo(print())
-                .andExpect(status().is4xxClientError()).andDo(print());
+                .param("content", "content"))
+                .andExpect(status().is4xxClientError());
 
     }
 
@@ -528,9 +527,8 @@ class ReportControllerTest {
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
 
-        mvc.perform(delete("/comment/{commentId}", Integer.toString(commentId1))
-        ).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+        mvc.perform(delete("/comment/{commentId}", Integer.toString(commentId1)))
+                .andExpect(status().isOk());
 
     }
 
@@ -542,8 +540,8 @@ class ReportControllerTest {
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
 
-        mvc.perform(delete("/comment/"+commentId1)).andDo(print())
-                .andExpect(status().isUnauthorized()).andDo(print());
+        mvc.perform(delete("/comment/"+commentId1))
+                .andExpect(status().isUnauthorized());
 
     }
 
@@ -554,8 +552,8 @@ class ReportControllerTest {
         Integer commentId1 = createComment(reportId);
         Integer commentId2 = createComment(reportId);
 
-        mvc.perform(delete("/comment/"+commentId1)).andDo(print())
-                .andExpect(status().isUnauthorized()).andDo(print());
+        mvc.perform(delete("/comment/"+commentId1))
+                .andExpect(status().isUnauthorized());
 
     }
 
@@ -578,7 +576,7 @@ class ReportControllerTest {
         Integer reportId1 = createReport("제에에에목");
         Integer reportId2 = createReport("제에에에에에ㅔ에목");
 
-        MvcResult result = mvc.perform(get("/report/filter?field=WEB&type=TEAM&grade=GRADE1&size=10&page=0")).andDo(print()).andReturn();
+        MvcResult result = mvc.perform(get("/report/filter?field=WEB&type=TEAM&grade=GRADE1&size=10&page=0")).andReturn();
         ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
         Assert.assertEquals(3, response.getTotalElements());
     }
@@ -592,7 +590,7 @@ class ReportControllerTest {
         Integer reportId1 = createReport("제에에에목");
         Integer reportId2 = createReport("제에에에에ㅔ에에에목");
 
-        MvcResult result = mvc.perform(get("/report/filter?field=WEB&type=TEAM&grade=GRADE1&size=10&page=0")).andDo(print()).andReturn();
+        MvcResult result = mvc.perform(get("/report/filter?field=WEB&type=TEAM&grade=GRADE1&size=10&page=0")).andReturn();
         ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
         Assert.assertEquals(3, response.getTotalElements());
     }
@@ -607,7 +605,7 @@ class ReportControllerTest {
         Integer reportId1 = createReport("제에엥목");
         Integer reportId2 = createReport("제에에에ㅔ에에목");
 
-        MvcResult result = mvc.perform(get("/report/filter?field=WEB&type=TEAM&grade=GRADE1&size=10&page=0")).andDo(print()).andReturn();
+        MvcResult result = mvc.perform(get("/report/filter?field=WEB&type=TEAM&grade=GRADE1&size=10&page=0")).andReturn();
         ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
         Assert.assertEquals(3, response.getTotalElements());
     }
@@ -620,7 +618,7 @@ class ReportControllerTest {
         Integer reportId1 = createReport("제에에에ㅔ에목");
         Integer reportId2 = createReport("제에에에에ㅔ에에목");
 
-        MvcResult result = mvc.perform(get("/report/filter?field=&type=&grade=GRADE1&size=10&page=0")).andDo(print()).andReturn();
+        MvcResult result = mvc.perform(get("/report/filter?field=&type=&grade=GRADE1&size=10&page=0")).andReturn();
         ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
         Assert.assertEquals(3, response.getTotalElements());
     }
