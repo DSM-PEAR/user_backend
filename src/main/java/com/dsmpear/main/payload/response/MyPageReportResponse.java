@@ -15,8 +15,10 @@ public class MyPageReportResponse {
 
     private LocalDateTime createdAt;
 
-    private Boolean isSubmitted;
+    private Boolean isSubmitted; // 제출됨
 
     private Boolean isAccepted; // 승인 or 미승인
+
+    private Boolean isRejected; // 거부됐는지 여부
 
 }

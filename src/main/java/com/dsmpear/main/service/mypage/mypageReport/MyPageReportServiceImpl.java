@@ -2,7 +2,6 @@ package com.dsmpear.main.service.mypage.mypageReport;
 
 import com.dsmpear.main.entity.report.Report;
 import com.dsmpear.main.entity.report.ReportRepository;
-import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.exceptions.ReportNotFoundException;
@@ -27,15 +26,20 @@ public class MyPageReportServiceImpl implements MyPageReportService{
 
     @Override
     public ProfileReportListResponse getReport(Pageable page) {
-        String email = authenticationFacade.getUserEmail();;
+        String email = authenticationFacade.getUserEmail();
 
-        Page<UserReport> reportPage = userReportRepository.findAllByUserEmail(email, page);
+        boolean isRejected = false;
+
+        Page<UserReport> reportPage = userReportRepository.findAllByUserEmailOrderByReportIdDesc(email, page);
 
         List<MyPageReportResponse> myPageReportResponses = new ArrayList<>();
 
-        for(UserReport userReport : reportPage){
+        for(UserReport userReport : reportPage) {
             Report report = reportRepository.findById(userReport.getReportId())
                     .orElseThrow(ReportNotFoundException::new);
+
+            if(report.getComment() != null)
+                isRejected = true;
 
             myPageReportResponses.add(
                     MyPageReportResponse.builder()
@@ -44,9 +48,11 @@ public class MyPageReportServiceImpl implements MyPageReportService{
                             .createdAt(report.getCreatedAt())
                             .isSubmitted(report.getIsSubmitted())
                             .isAccepted(report.getIsAccepted())
+                            .isRejected(isRejected)
                             .build()
             );
         }
+
         return ProfileReportListResponse.builder()
                 .totalElements((int)reportPage.getTotalElements())
                 .totalPages(reportPage.getTotalPages())

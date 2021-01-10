@@ -30,7 +30,7 @@ public class ProfileReportServiceImpl implements ProfileReportService {
         userRepository.findByEmail(userEmail)
                 .orElseThrow(UserNotFoundException::new);
 
-        Page<UserReport> userReportPage = userReportRepository.findAllByUserEmail(userEmail,page);
+        Page<UserReport> userReportPage = userReportRepository.findAllByUserEmailOrderByReportIdDesc(userEmail,page);
         List<ProfileReportResponse> profileReportResponses = new ArrayList<>();
 
         for(UserReport userReport : userReportPage){

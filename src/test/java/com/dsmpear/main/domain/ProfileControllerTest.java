@@ -100,6 +100,7 @@ class ProfileControllerTest {
     @AfterEach
     public void after () {
         reportRepository.deleteAll();
+        memberRepository.deleteAll();
         userRepository.deleteAll();
         userReportRepository.deleteAll();
     }
@@ -107,21 +108,21 @@ class ProfileControllerTest {
     @Test
     public void getProfile () throws Exception {
         mvc.perform(get("/profile?user-email=test@dsm.hs.kr"))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(username = "test@dsm.hs.kr",password = "1234")
     public void getProfile_login () throws Exception {
         mvc.perform(get("/profile?user-email=test@dsm.hs.kr"))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(username = "test@dsm.hs.kr",password = "1234")
     public void getProfile_noUser () throws Exception {
         mvc.perform(get("/profile"))
-                .andExpect(status().isBadRequest()).andDo(print());
+                .andExpect(status().isBadRequest());
     }
 
     //보고서 목록
@@ -136,7 +137,7 @@ class ProfileControllerTest {
 
 
         mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=2&page=1")).andDo(print())
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -150,7 +151,7 @@ class ProfileControllerTest {
         addReport_sub_true_("tset@dsm.hs.kr");
 
         mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=2&page=1"))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -163,7 +164,7 @@ class ProfileControllerTest {
         addReport_sub_true_("tset@dsm.hs.kr");
 
         mvc.perform(get("/profile/report?user-email=lalalalala@dsm.hs.kr&size=2&page=1"))
-                .andExpect(status().isNotFound()).andDo(print());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -176,7 +177,7 @@ class ProfileControllerTest {
         addReport_sub_true_("tset@dsm.hs.kr");
 
         mvc.perform(get("/profile/report?user-email=lalalalal@dsm.hs.kr&size=2&page=1"))
-                .andExpect(status().isNotFound()).andDo(print());
+                .andExpect(status().isNotFound());
     }
 
     private void addReport_sub_false(String email) {

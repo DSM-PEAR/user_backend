@@ -64,6 +64,7 @@ public class ReportServiceImpl implements ReportService{
                         .type(reportRequest.getType())
                         .isAccepted(false)
                         .isSubmitted(reportRequest.getIsSubmitted())
+                        .comment(null)
                         .fileName(reportRequest.getFileName())
                         .github(reportRequest.getGithub())
                         .languages(reportRequest.getLanguages())

@@ -9,7 +9,7 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 
 public interface UserReportRepository extends CrudRepository<UserReport,Integer> {
-    Page<UserReport> findAllByUserEmail(String userEmail, Pageable page);
+    Page<UserReport> findAllByUserEmailOrderByReportIdDesc(String userEmail, Pageable page);
     Optional<UserReport> findByReportIdAndUserEmail(Integer reportId, String userEmail);
 
     @Transactional
