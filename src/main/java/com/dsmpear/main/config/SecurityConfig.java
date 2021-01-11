@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,28 +36,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .sessionManagement().disable()
                 .formLogin().disable()
                 .authorizeRequests()
-                    .antMatchers(HttpMethod.GET, "/report").authenticated()
-                    .antMatchers(HttpMethod.POST, "/comment").authenticated()
-                    .antMatchers(HttpMethod.POST, "/member").authenticated()
-                    .antMatchers(HttpMethod.GET, "/member/**").authenticated()
-                    .antMatchers(HttpMethod.DELETE, "/member/**").authenticated()
-                    .antMatchers(HttpMethod.GET, "/user/profile").authenticated()
-                    .antMatchers(HttpMethod.PUT, "/user/profile").authenticated()
-                    .antMatchers(HttpMethod.PUT, "/user/profile/report").authenticated()
+                    .antMatchers("/auth").permitAll()
+                    .antMatchers("/email").permitAll()
+                    .antMatchers("/email/**").permitAll()
+                    .antMatchers("/account").permitAll()
+                    .antMatchers(HttpMethod.GET, "/report").permitAll()
+                    .antMatchers(HttpMethod.POST, "/question").permitAll()
+                    .antMatchers(HttpMethod.GET, "/notice").permitAll()
+                    .antMatchers(HttpMethod.GET, "/notice/{noticeId}").permitAll()
+                    .antMatchers(HttpMethod.GET, "/user/profile/report").permitAll()
+                    .antMatchers(HttpMethod.GET, "/profile/report").permitAll()
+                    .antMatchers(HttpMethod.GET, "/profile/report/{userEmail}").permitAll()
+                    .antMatchers(HttpMethod.GET, "/member/{reportId}").permitAll()
+                    .antMatchers(HttpMethod.GET, "/profile/{userEmail}").permitAll()
+                    .anyRequest().authenticated()
                 .and()
                     .apply(new JwtConfigurer(jwtTokenProvider));
     }
 
     @Override
-    public void configure(WebSecurity webSecurity) {
-        webSecurity.ignoring()
-                .antMatchers("/**");
-    }
-
-    @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*");
+                .allowedOrigins("*")
+                .allowedMethods("*");
     }
 
     @Bean
