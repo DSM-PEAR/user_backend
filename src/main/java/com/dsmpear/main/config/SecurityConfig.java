@@ -50,8 +50,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                     .antMatchers(HttpMethod.GET, "/profile/report/{userEmail}").permitAll()
                     .antMatchers(HttpMethod.GET, "/member/{reportId}").permitAll()
                     .antMatchers(HttpMethod.GET, "/profile/{userEmail}").permitAll()
+                    .anyRequest().authenticated()
                 .and()
-                .apply(new JwtConfigurer(jwtTokenProvider));
+                    .apply(new JwtConfigurer(jwtTokenProvider));
     }
 
     @Override
