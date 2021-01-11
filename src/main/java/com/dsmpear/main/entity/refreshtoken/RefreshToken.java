@@ -27,8 +27,7 @@ public class RefreshToken implements Serializable {
     @TimeToLive
     private Long refreshExp;
 
-    public RefreshToken update(String refreshToken, Long refreshExp) {
-        this.refreshToken = refreshToken;
+    public RefreshToken update(Long refreshExp) {
         this.refreshExp = refreshExp;
         return this;
     }
