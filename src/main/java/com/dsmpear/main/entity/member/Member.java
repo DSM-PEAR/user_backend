@@ -2,6 +2,7 @@ package com.dsmpear.main.entity.member;
 
 import com.dsmpear.main.entity.report.Report;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +29,7 @@ public class Member {
     private String userEmail;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonManagedReference
     @JoinColumn(name = "report")
     private Report report;
 
