@@ -48,7 +48,7 @@ class QuestionControllerTest {
                 .content(new ObjectMapper()
                         .writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -62,7 +62,7 @@ class QuestionControllerTest {
                 .content(new ObjectMapper()
                         .writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest()).andDo(print());
+                .andExpect(status().isBadRequest());
     }
 
     @Test

@@ -24,9 +24,8 @@ public class TokenFilter extends GenericFilterBean {
         if (token != null && jwtTokenProvider.validateToken(token) && jwtTokenProvider.isEmailAuthenticated(token)) {
             Authentication auth = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
-        } else {
-            throw new InvalidTokenException();
         }
+
         chain.doFilter(request, response);
     }
 

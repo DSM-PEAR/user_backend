@@ -27,7 +27,6 @@ import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -152,26 +151,9 @@ class MyPageControllerTest {
         addReport_rejected_true("test@dsm.hs.kr");
         addReport_accepted_true("tset@dsm.hs.kr");
 
-
         mvc.perform(get("/user/profile/report"))
                 .andExpect(status().isOk());
     }
-//
-//    @Test
-//    @WithMockUser(value = "test@dsm.hs.kr", password = "1111")
-//    public void  getReportList_tset() throws Exception{
-//
-//        addReport_sub_false("tset@dsm.hs.kr");
-//        addReport_sub_true("tset@dsm.hs.kr");
-//        addReport_accepted_true("tset@dsm.hs.kr");
-//        addReport_rejected_true("tset@dsm.hs.kr");
-//        addReport_accepted_true("test@dsm.hs.kr");
-//
-//        mvc.perform(get("/user/profile/report"))
-//                .andExpect(status().isOk()).andDo(print());
-//    }
-
-
 
     private Integer addReport_sub_false(String email) {
         Integer reportId = reportRepository.save(

@@ -26,10 +26,10 @@ public class Notice {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(length = 50)
+    @Column(length = 50, name = "file_name")
     private String fileName;
 
 }

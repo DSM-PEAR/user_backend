@@ -55,7 +55,7 @@ class NoticeControllerTest {
         createNotice("notice4");
 
         mvc.perform(get("/notice"))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -64,7 +64,7 @@ class NoticeControllerTest {
         Integer noticeId = createNotice("notice");
 
         mvc.perform(get("/notice/"+noticeId))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -73,7 +73,7 @@ class NoticeControllerTest {
         createNotice("notice1");
 
         mvc.perform(get("/notice/"+10000))
-                .andExpect(status().isNotFound()).andDo(print());
+                .andExpect(status().isNotFound());
     }
 
     private Integer createNotice(String str){
