@@ -32,7 +32,6 @@ public class ProfileReportServiceImpl implements ProfileReportService {
                 .orElseThrow(UserNotFoundException::new);
 
         Page<UserReport> userReportPage = userReportRepository.findAllByUserEmail(Access.EVERY, userEmail, page);
-
         List<ProfileReportResponse> profileReportResponses = new ArrayList<>();
 
         for(UserReport userReport : userReportPage){
@@ -45,6 +44,16 @@ public class ProfileReportServiceImpl implements ProfileReportService {
                             .createdAt(report.getCreatedAt())
                             .build()
             );
+
+            if(report.getIsAccepted() && report.getIsSubmitted()){
+                profileReportResponses.add(
+                        ProfileReportResponse.builder()
+                                .reportId(userReport.getReportId())
+                                .title(report.getTitle())
+                                .createdAt(report.getCreatedAt())
+                                .build()
+                );
+            }
         }
 
         return ProfileReportListResponse.builder()

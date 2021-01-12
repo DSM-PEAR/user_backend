@@ -2,7 +2,6 @@ package com.dsmpear.main.entity.userreport;
 
 
 import com.dsmpear.main.entity.report.Access;
-import com.dsmpear.main.entity.report.Report;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

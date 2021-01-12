@@ -151,7 +151,6 @@ class MyPageControllerTest {
         addReport_rejected_true("test@dsm.hs.kr");
         addReport_accepted_true("tset@dsm.hs.kr");
 
-
         mvc.perform(get("/user/profile/report"))
                 .andExpect(status().isOk());
     }
