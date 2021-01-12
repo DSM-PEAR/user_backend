@@ -77,7 +77,7 @@ public class Report {
     @JsonBackReference
     private List<Member> members;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "report")
+    @OneToMany(cascade=CascadeType.ALL, mappedBy = "report")
     @JsonBackReference
     private List<UserReport> userReports;
 
