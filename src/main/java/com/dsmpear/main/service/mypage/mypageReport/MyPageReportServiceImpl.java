@@ -34,7 +34,7 @@ public class MyPageReportServiceImpl implements MyPageReportService{
 
         List<MyPageReportResponse> myPageReportResponses = new ArrayList<>();
 
-        for(UserReport userReport : reportPage){
+        for(UserReport userReport : reportPage) {
             Report report = reportRepository.findById(userReport.getReportId())
                     .orElseThrow(ReportNotFoundException::new);
 
