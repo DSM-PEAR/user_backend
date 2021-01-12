@@ -139,6 +139,7 @@ public class ReportServiceImpl implements ReportService{
                             .userEmail(co.getUserEmail())
                             .userName(userRepository.findByEmail(co.getUserEmail()).get().getName())
                             .isMine(commentWriter.getEmail().equals(authenticationFacade.getUserEmail()))
+                            .commentId(co.getId())
                             .build()
             );
         }
