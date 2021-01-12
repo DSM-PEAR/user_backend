@@ -46,3 +46,4 @@ server:
 
 secret:
   key: ${SERVER_KEY}
+
