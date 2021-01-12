@@ -1,14 +1,14 @@
 package com.dsmpear.main.entity.user;
 
+import com.dsmpear.main.entity.userreport.UserReport;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Builder
@@ -35,6 +35,10 @@ public class User {
 
     @Column(name = "auth_status", nullable = false)
     private Boolean authStatus;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonBackReference
+    private List<UserReport> userReport;
 
     public void authenticatedSuccess() {
         this.authStatus = true;

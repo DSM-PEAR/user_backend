@@ -25,7 +25,6 @@ import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -100,6 +99,7 @@ class ProfileControllerTest {
     @AfterEach
     public void after () {
         reportRepository.deleteAll();
+        memberRepository.deleteAll();
         userRepository.deleteAll();
         userReportRepository.deleteAll();
     }
@@ -127,36 +127,31 @@ class ProfileControllerTest {
     //보고서 목록
     @Test
     public void getReportList() throws Exception{
-
         addReport_sub_false("test@dsm.hs.kr");
         addReport_sub_true("test@dsm.hs.kr");
         addReport_accepted_true("test@dsm.hs.kr");
         addReport_rejected_true("test@dsm.hs.kr");
         addReport_accepted_true("tset@dsm.hs.kr");
         addReport_accepted_true("test@dsm.hs.kr");
-
-
-        mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=2&page=0"))
-                .andExpect(status().isOk()).andDo(print());
-    }
-
-    @Test
-    @WithMockUser(username = "test@dsm.hs.kr",password = "1234")
-    public void  getReportList_isLogin() throws Exception{
-
-        addReport_sub_false("test@dsm.hs.kr");
-        addReport_sub_true("test@dsm.hs.kr");
-        addReport_accepted_true("test@dsm.hs.kr");
-        addReport_rejected_true("test@dsm.hs.kr");
-        addReport_accepted_true("tset@dsm.hs.kr");
 
         mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=2&page=0"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void  getReportList_notFound() throws Exception{
+    @WithMockUser(username = "test@dsm.hs.kr",password = "1234")
+    public void  getReportList_isLogin() throws Exception{
+        addReport_sub_false("test@dsm.hs.kr");
+        addReport_sub_true("test@dsm.hs.kr");
+        addReport_accepted_true("test@dsm.hs.kr");
+        addReport_rejected_true("test@dsm.hs.kr");
+        addReport_accepted_true("tset@dsm.hs.kr");
 
+        mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=2&page=0"));
+    }
+
+    @Test
+    public void  getReportList_notFound() throws Exception{
         addReport_sub_false("test@dsm.hs.kr");
         addReport_sub_true("test@dsm.hs.kr");
         addReport_accepted_true("test@dsm.hs.kr");
@@ -169,7 +164,6 @@ class ProfileControllerTest {
 
     @Test
     public void getReportList_notFound_isLogin() throws Exception{
-
         addReport_sub_false("test@dsm.hs.kr");
         addReport_sub_true("test@dsm.hs.kr");
         addReport_accepted_true("test@dsm.hs.kr");
