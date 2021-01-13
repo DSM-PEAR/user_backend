@@ -115,7 +115,7 @@ class UserControllerTest {
         mvc.perform(post("/account").content(new ObjectMapper()
                 .writeValueAsString(new RegisterRequest("smoothbear", "1111", "smoothbear@dsm.hs.kr")))
                 .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isCreated()).andDo(print());
+        ).andExpect(status().isCreated());
     }
 
     @Test
@@ -123,7 +123,7 @@ class UserControllerTest {
         mvc.perform(post("/account").content(new ObjectMapper()
                 .writeValueAsString(new RegisterRequest("smoothbear", "1111", "smoothbear@naver.com")))
                 .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isForbidden()).andDo(print());
+        ).andExpect(status().isForbidden());
     }
 
     @Test
@@ -131,7 +131,7 @@ class UserControllerTest {
         mvc.perform(post("/account").content(new ObjectMapper()
                 .writeValueAsString(new RegisterRequest("alreadyuser", "1111", "alreadyuser@dsm.hs.kr")))
                 .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isBadRequest()).andDo(print());
+        ).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -139,7 +139,7 @@ class UserControllerTest {
         mvc.perform(post("/account").content(new ObjectMapper()
                 .writeValueAsString(new RegisterRequest("smoothbear", "1111", "smoo@dsm.hs.kr")))
                 .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isNotFound()).andDo(print());
+        ).andExpect(status().isNotFound());
     }
 
     @Test

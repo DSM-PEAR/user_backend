@@ -94,27 +94,27 @@ public class AuthControllerTest {
 
         mvc.perform(post("/auth").content(new ObjectMapper().writeValueAsString(signInRequest))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk());
     }
 
     @Test
     void refreshTokenTest() throws Exception {
         mvc.perform(put("/auth")
             .header("X-Refresh-Token", "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDc4NjY1OTQsInN1YiI6ImFhYWFAZHNtLmhzLmtyIiwiZXhwIjoxNjA3ODgxNTk0LCJ0eXBlIjoicmVmcmVzaF90b2tlbiJ9.PaFogQhIeAo-PvyqQTxmPE3HCDyJSTknME0LwfefNsg")
-        ).andExpect(status().isOk()).andDo(print());
+        ).andExpect(status().isOk());
     }
 
     @Test
     void refreshTokenTestWithExpect() throws Exception {
         mvc.perform(put("/auth")
                 .header("X-Refresh-Token", "apple")
-        ).andExpect(status().isUnauthorized()).andDo(print());
+        ).andExpect(status().isUnauthorized());
     }
 
     @Test
     void refreshTokenTestWithIsNotRefreshTokenExcept() throws Exception {
         mvc.perform(put("/auth")
                 .header("X-Refresh-Token", accessToken)
-        ).andExpect(status().isUnauthorized()).andDo(print());
+        ).andExpect(status().isUnauthorized());
     }
 }
