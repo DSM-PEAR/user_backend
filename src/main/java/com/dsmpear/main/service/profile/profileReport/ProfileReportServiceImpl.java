@@ -44,16 +44,6 @@ public class ProfileReportServiceImpl implements ProfileReportService {
                             .createdAt(report.getCreatedAt())
                             .build()
             );
-
-            if(report.getIsAccepted() && report.getIsSubmitted()){
-                profileReportResponses.add(
-                        ProfileReportResponse.builder()
-                                .reportId(userReport.getReportId())
-                                .title(report.getTitle())
-                                .createdAt(report.getCreatedAt())
-                                .build()
-                );
-            }
         }
 
         return ProfileReportListResponse.builder()
