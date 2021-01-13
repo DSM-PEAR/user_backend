@@ -58,7 +58,7 @@ public class EmailControllerTest {
     public void authNumEmailTestWithBadRequest() throws Exception {
         mvc.perform(get("/email/auth")
                 .param("email", "smoothbear")
-        ).andExpect(status().isBadRequest()).andDo(print());
+        ).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -68,7 +68,7 @@ public class EmailControllerTest {
                         writeValueAsString(new EmailVerifyRequest("1111", "smoothbear@dsm.hs.kr"))
                 )
                 .contentType(MediaType.APPLICATION_JSON)
-                ).andExpect(status().isOk()).andDo(print());
+                ).andExpect(status().isOk());
     }
 
     @Test
@@ -78,7 +78,7 @@ public class EmailControllerTest {
                         writeValueAsString(new EmailVerifyRequest("1234", "smoothbear@dsm.hs.kr"))
                 )
                 .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isForbidden()).andDo(print());
+        ).andExpect(status().isForbidden());
     }
 
     @Test
@@ -87,7 +87,7 @@ public class EmailControllerTest {
                 .content(new ObjectMapper().writeValueAsString(new NotificationRequest("1000", "smoothbear@dsm.hs.kr", "",true))
                 ).contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "abcabc")
-        ).andExpect(status().isOk()).andDo(print());
+        ).andExpect(status().isOk());
     }
 
     @Test
@@ -96,6 +96,6 @@ public class EmailControllerTest {
                 .content(new ObjectMapper().writeValueAsString(NotificationRequest.builder().body("안됨").email("smoothbear@dsm.hs.kr").build())
                 ).contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "abcabc")
-        ).andExpect(status().isBadRequest()).andDo(print());
+        ).andExpect(status().isBadRequest());
     }
 }

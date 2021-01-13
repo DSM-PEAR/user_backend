@@ -51,6 +51,7 @@ public class MyPageReportServiceImpl implements MyPageReportService{
                             .isRejected(isRejected)
                             .build()
             );
+            isRejected = false;
         }
 
         return ProfileReportListResponse.builder()
