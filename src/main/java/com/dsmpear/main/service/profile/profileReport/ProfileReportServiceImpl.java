@@ -37,6 +37,7 @@ public class ProfileReportServiceImpl implements ProfileReportService {
         for(UserReport userReport : userReportPage){
             Report report = reportRepository.findById(userReport.getReportId())
                     .orElseThrow(ReportNotFoundException::new);
+            
             profileReportResponses.add(
                     ProfileReportResponse.builder()
                             .reportId(userReport.getReportId())
