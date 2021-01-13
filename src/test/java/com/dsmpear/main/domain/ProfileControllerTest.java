@@ -142,7 +142,7 @@ class ProfileControllerTest {
 
 
         mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=10&page=0"))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk());
     }
 
     @Test
