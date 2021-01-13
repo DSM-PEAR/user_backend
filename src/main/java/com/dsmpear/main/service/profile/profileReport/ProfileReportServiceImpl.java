@@ -39,7 +39,6 @@ public class ProfileReportServiceImpl implements ProfileReportService {
             Report report = reportRepository.findById(userReport.getReportId())
                     .orElseThrow(ReportNotFoundException::new);
 
-            if(report.getIsAccepted() && report.getIsSubmitted()){
                 profileReportResponses.add(
                         ProfileReportResponse.builder()
                                 .reportId(userReport.getReportId())
@@ -47,7 +46,6 @@ public class ProfileReportServiceImpl implements ProfileReportService {
                                 .createdAt(report.getCreatedAt())
                                 .build()
                 );
-            }
         }
 
         return ProfileReportListResponse.builder()

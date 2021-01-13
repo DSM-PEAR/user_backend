@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
-import org.springframework.data.redis.core.TimeToLive;
 import org.springframework.data.redis.core.index.Indexed;
 
 import java.io.Serializable;
@@ -24,7 +23,7 @@ public class RefreshToken implements Serializable {
     @Indexed
     private String refreshToken;
 
-    @TimeToLive
+    @Indexed
     private Long refreshExp;
 
     public RefreshToken update(Long refreshExp) {
