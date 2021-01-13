@@ -23,7 +23,7 @@ public class UserReport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "user_email", nullable = false)
     private String userEmail;
 
     @Column(name = "report_id", nullable = false)
@@ -31,12 +31,12 @@ public class UserReport {
 
     @ManyToOne
     @JsonManagedReference
-    @JoinColumn(name="user")
+    @JoinColumn(name = "user")
     private User user;
 
     @ManyToOne
     @JsonManagedReference
-    @JoinColumn(name="report")
+    @JoinColumn(name = "report")
     private Report report;
 
 }

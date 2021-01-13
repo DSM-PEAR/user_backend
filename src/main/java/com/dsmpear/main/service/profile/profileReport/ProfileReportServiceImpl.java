@@ -32,20 +32,19 @@ public class ProfileReportServiceImpl implements ProfileReportService {
                 .orElseThrow(UserNotFoundException::new);
 
         Page<UserReport> userReportPage = userReportRepository.findAllByUserEmail(Access.EVERY, userEmail, page);
-        
         List<ProfileReportResponse> profileReportResponses = new ArrayList<>();
 
         for(UserReport userReport : userReportPage){
             Report report = reportRepository.findById(userReport.getReportId())
                     .orElseThrow(ReportNotFoundException::new);
-
-                profileReportResponses.add(
-                        ProfileReportResponse.builder()
-                                .reportId(userReport.getReportId())
-                                .title(report.getTitle())
-                                .createdAt(report.getCreatedAt())
-                                .build()
-                );
+            
+            profileReportResponses.add(
+                    ProfileReportResponse.builder()
+                            .reportId(userReport.getReportId())
+                            .title(report.getTitle())
+                            .createdAt(report.getCreatedAt())
+                            .build()
+            );
         }
 
         return ProfileReportListResponse.builder()

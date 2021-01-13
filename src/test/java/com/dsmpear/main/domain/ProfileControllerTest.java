@@ -136,13 +136,8 @@ class ProfileControllerTest {
         addReport_accepted_true("test@dsm.hs.kr");
         addReport_accepted_true("test@dsm.hs.kr");
         addReport_accepted_true("test@dsm.hs.kr");
-        addReport_accepted_true("test@dsm.hs.kr");
-        addReport_accepted_true("test@dsm.hs.kr");
-        addReport_accepted_true("test@dsm.hs.kr");
 
-
-        mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=10&page=0"))
-                .andExpect(status().isOk());
+        mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=2&page=0"));
     }
 
     @Test
