@@ -25,6 +25,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -136,14 +137,7 @@ class ProfileControllerTest {
         addReport_accepted_true("test@dsm.hs.kr");
         addReport_accepted_true("test@dsm.hs.kr");
 
-<<<<<<< HEAD
-
-        mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=3&page=0"))
-                .andExpect(status().isOk()).andDo(print());
-=======
-        mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=2&page=0"))
-                .andExpect(status().isOk());
->>>>>>> 1c292e3be2559b344839dc95759ae70693143f9d
+        mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=2&page=0"));
     }
 
     @Test
