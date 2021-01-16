@@ -214,15 +214,7 @@ public class ReportServiceImpl implements ReportService{
         List<ReportResponse> reportResponses = new ArrayList<>();
         Page<Report> reportPage;
 
-        if(type == null && field == null) {
-            reportPage = reportRepository.findAllByAccessAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, grade, page);
-        }else if(type == null) {
-            reportPage = reportRepository.findAllByAccessAndFieldAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, field, grade, page);
-        }else if(field == null) {
-            reportPage = reportRepository.findAllByAccessAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, type, grade, page);
-        }else {
-            reportPage = reportRepository.findAllByAccessAndFieldAndTypeAndGradeAndIsAcceptedTrueAndIsSubmittedTrueOrderByCreatedAtDesc(Access.EVERY, field, type, grade, page);
-        }
+        reportPage = reportRepository.findAllByAccessAndGradeAndFieldAndType(Access.EVERY, grade, field, type, page);
 
         for(Report report : reportPage) {
             reportResponses.add(
