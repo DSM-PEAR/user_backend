@@ -11,6 +11,7 @@ import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
+import com.dsmpear.main.exceptions.UserNotFoundException;
 import com.dsmpear.main.payload.request.CommentRequest;
 import com.dsmpear.main.payload.request.ReportRequest;
 import com.dsmpear.main.payload.response.ReportContentResponse;
@@ -557,12 +558,11 @@ class ReportControllerTest {
 
     }
 
-    private Integer addMember(Integer reportId) {
+    private Integer addMember(Report report) {
         return memberRepository.save(
                 Member.builder()
-                        .reportId(reportId)
+                        .report(report)
                         .userEmail("test@dsm.hs.kr")
-                        .report(reportRepository.findById(reportId).get())
                         .build()
         ).getId();
     }
@@ -644,18 +644,20 @@ class ReportControllerTest {
                         .build()
         );
 
+        User user = userRepository.findByEmail("test@dsm.hs.kr")
+                .orElseThrow(UserNotFoundException::new);
+
         userReportRepository.save(
                 UserReport.builder()
-                        .userEmail("test@dsm.hs.kr")
-                        .reportId(report.getId())
+                        .user(user)
+                        .report(report)
                         .build()
         );
 
         memberRepository.save(
                 Member.builder()
                         .report(report)
-                        .reportId(report.getId())
-                        .userEmail("test@dsm.hs.kr")
+                        .userEmail(user.getEmail())
                         .build()
         );
         return report.getId();
@@ -682,17 +684,19 @@ class ReportControllerTest {
                         .build()
         );
 
+        User user = userRepository.findByEmail("test@dsm.hs.kr")
+                .orElseThrow(UserNotFoundException::new);
+
         userReportRepository.save(
                 UserReport.builder()
-                        .userEmail("test@dsm.hs.kr")
-                        .reportId(report.getId())
+                        .user(user)
+                        .report(report)
                         .build()
         );
 
         memberRepository.save(
                 Member.builder()
                         .report(report)
-                        .reportId(report.getId())
                         .userEmail("test@dsm.hs.kr")
                         .build()
         );
@@ -721,17 +725,19 @@ class ReportControllerTest {
                         .build()
         );
 
+        User user = userRepository.findByEmail("test@dsm.hs.kr")
+                .orElseThrow(UserNotFoundException::new);
+
         userReportRepository.save(
                 UserReport.builder()
-                        .userEmail("test@dsm.hs.kr")
-                        .reportId(report.getId())
+                        .user(user)
+                        .report(report)
                         .build()
         );
 
         memberRepository.save(
                 Member.builder()
                         .report(report)
-                        .reportId(report.getId())
                         .userEmail("test@dsm.hs.kr")
                         .build()
         );

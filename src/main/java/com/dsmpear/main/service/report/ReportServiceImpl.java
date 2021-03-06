@@ -49,9 +49,12 @@ public class ReportServiceImpl implements ReportService{
         if(!authenticationFacade.isLogin()) {
             throw new UserNotFoundException();
         }
+
+        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
+
         String teamName = reportRequest.getTeamName().equals("")?
-                userRepository.findByEmail(authenticationFacade.getUserEmail()).get().getName()
-                :reportRequest.getTeamName();
+                user.getName():reportRequest.getTeamName();
 
         Report report = reportRepository.save(
                 Report.builder()
@@ -75,15 +78,15 @@ public class ReportServiceImpl implements ReportService{
 
         memberRepository.save(
             Member.builder()
-                    .reportId(report.getId())
-                    .userEmail(authenticationFacade.getUserEmail())
+                    .report(report)
+                    .userEmail(user.getEmail())
                     .build()
         );
 
         userReportRepository.save(
                 UserReport.builder()
-                    .userEmail(authenticationFacade.getUserEmail())
-                    .reportId(report.getId())
+                    .report(report)
+                    .user(user)
                     .build()
         );
     }
@@ -161,15 +164,15 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public Integer updateReport(Integer reportId, ReportRequest reportRequest) {
-        if(authenticationFacade.isLogin()) {
-            memberRepository.findByReportIdAndUserEmail(reportId, authenticationFacade.getUserEmail())
-                    .orElseThrow(UserNotFoundException::new);
-        }else {
+        if(!authenticationFacade.isLogin()) {
             throw new UserNotFoundException();
         }
 
         Report report = reportRepository.findById(reportId).
                 orElseThrow(ReportNotFoundException::new);
+
+        memberRepository.findByReportAndUserEmail(report, authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
 
         reportRepository.save(report.update(reportRequest));
 
@@ -180,19 +183,19 @@ public class ReportServiceImpl implements ReportService{
     public void deleteReport(Integer reportId) {
         User user = null;
 
-        if(authenticationFacade.isLogin()) {
-            user = userRepository.findByEmail(authenticationFacade.getUserEmail())
-                    .orElseThrow(UserNotFoundException::new);
-            memberRepository.findByReportIdAndUserEmail(reportId, authenticationFacade.getUserEmail())
-                    .orElseThrow(UserNotFoundException::new);
-        }else {
+        if(!authenticationFacade.isLogin()) {
             throw new UserNotFoundException();
         }
-
-        userReportRepository.findByReportIdAndUserEmail(reportId,user.getEmail())
-                .orElseThrow(ReportNotFoundException::new);
+        user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
 
         Report report = reportRepository.findById(reportId)
+                .orElseThrow(ReportNotFoundException::new);
+
+        memberRepository.findByReportAndUserEmail(report, user.getEmail())
+                .orElseThrow(UserNotFoundException::new);
+
+        userReportRepository.findByReportAndUser(report,user)
                 .orElseThrow(ReportNotFoundException::new);
 
         for(Comment comment : commentRepository.findAllByReportIdOrderByCreatedAtDesc(reportId)) {
