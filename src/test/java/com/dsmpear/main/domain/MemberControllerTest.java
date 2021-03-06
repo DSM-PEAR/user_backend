@@ -8,6 +8,7 @@ import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
+import com.dsmpear.main.exceptions.UserNotFoundException;
 import com.dsmpear.main.payload.request.MemberRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
@@ -109,7 +110,7 @@ class MemberControllerTest {
 
     @Test
     public void getMember() throws Exception {
-        Integer reportId = addReport();
+        Integer reportId = addReport().getId();
 
         mvc.perform(get("/member/"+reportId+"?size=1&page=1"))
                 .andExpect(status().isOk());
@@ -126,7 +127,7 @@ class MemberControllerTest {
     @Order(1)
     @WithMockUser(username = "test@dsm.hs.kr",password = "1111")
     public void addMember() throws Exception {
-        int reportId = addReport();
+        int reportId = addReport().getId();
 
         MemberRequest request = new MemberRequest(reportId,"flower@dsm.hs.kr");
 
@@ -140,7 +141,7 @@ class MemberControllerTest {
     @Order(1)
     @WithMockUser(username = "test@dsm.hs.kr",password = "1111")
     public void addMember_already() throws Exception {
-        int reportId = addReport();
+        int reportId = addReport().getId();
 
         MemberRequest request = new MemberRequest(reportId,"tset@dsm.hs.kr");
 
@@ -154,7 +155,7 @@ class MemberControllerTest {
     @Order(1)
     @WithMockUser(username = "dms@dsm.hs.kr",password = "1111")
     public void addMember_notmember() throws Exception {
-        int reportId = addReport();
+        int reportId = addReport().getId();
         MemberRequest request = new MemberRequest(reportId,"flower@dsm.hs.kr");
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
@@ -166,7 +167,7 @@ class MemberControllerTest {
     @Order(1)
     @WithMockUser()
     public void addMember_noLogin() throws Exception {
-        int reportId = addReport();
+        int reportId = addReport().getId();
         MemberRequest request = new MemberRequest(reportId,"dsm@dsm.hs.kr");
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
@@ -177,7 +178,7 @@ class MemberControllerTest {
     @Order(1)
     @WithMockUser(username = "test@dsm.hs.kr",password = "1111")
     public void addMember_exist_member() throws Exception {
-        int reportId = addReport();
+        int reportId = addReport().getId();
         MemberRequest request = new MemberRequest(reportId,"tset@dsm.hs.kr");
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
@@ -216,8 +217,8 @@ class MemberControllerTest {
     //로그인하지 않았을 때
 
 
-    private Integer addReport() {
-        Integer reportId = reportRepository.save(
+    private Report addReport() {
+        Report report = reportRepository.save(
                 Report.builder()
                         .title("hello")
                         .description("hihello")
@@ -233,43 +234,47 @@ class MemberControllerTest {
                         .fileName("나는야 천재")
                         .teamName("룰루랄라")
                         .build()
-        ).getId();
+        );
+
 
         Member member = memberRepository.save(
                 Member.builder()
-                        .reportId(reportId)
+                        .report(report)
                         .userEmail("test@dsm.hs.kr")
                         .build()
         );
 
         Member member1 = memberRepository.save(
                 Member.builder()
-                        .reportId(reportId)
+                        .report(report)
                         .userEmail("tset@dsm.hs.kr")
+                        .build()
+        );
+
+        User user = userRepository.findByEmail("test@dsm.hs.kr")
+                .orElseThrow(UserNotFoundException::new);
+
+        User user1 = userRepository.findByEmail("tset@dsm.hs.kr")
+                .orElseThrow(UserNotFoundException::new);
+
+        userReportRepository.save(
+                UserReport.builder()
+                        .user(user)
+                        .report(report)
                         .build()
         );
 
         userReportRepository.save(
                 UserReport.builder()
-                        .userEmail("test@dsm.hs.kr")
-                        .reportId(reportId)
+                        .user(user1)
+                        .report(report)
                         .build()
         );
-
-        userReportRepository.save(
-                UserReport.builder()
-                        .userEmail("tset@dsm.hs.kr")
-                        .reportId(reportId)
-                        .build()
-        );
-
-        System.out.println(member.getId());
-        System.out.println(member1.getId());
-        return reportId;
+        return report;
     }
 
     private Integer check_member() {
-        Integer reportId = reportRepository.save(
+        Report report = reportRepository.save(
                 Report.builder()
                         .title("hello")
                         .description("hihello")
@@ -285,38 +290,42 @@ class MemberControllerTest {
                         .fileName("나는야 천재")
                         .teamName("룰루랄라")
                         .build()
-        ).getId();
+        );
 
         Member member = memberRepository.save(
                 Member.builder()
-                        .reportId(reportId)
+                        .report(report)
                         .userEmail("test@dsm.hs.kr")
                         .build()
         );
 
         Member member1 = memberRepository.save(
                 Member.builder()
-                        .reportId(reportId)
+                        .report(report)
                         .userEmail("tset@dsm.hs.kr")
+                        .build()
+        );
+
+        User user = userRepository.findByEmail("test@dsm.hs.kr")
+                .orElseThrow(UserNotFoundException::new);
+
+        User user1 = userRepository.findByEmail("tset@dsm.hs.kr")
+                .orElseThrow(UserNotFoundException::new);
+
+        userReportRepository.save(
+                UserReport.builder()
+                        .user(user)
+                        .report(report)
                         .build()
         );
 
         userReportRepository.save(
                 UserReport.builder()
-                        .userEmail("test@dsm.hs.kr")
-                        .reportId(reportId)
+                        .user(user1)
+                        .report(report)
                         .build()
         );
 
-        userReportRepository.save(
-                UserReport.builder()
-                        .userEmail("tset@dsm.hs.kr")
-                        .reportId(reportId)
-                        .build()
-        );
-
-        System.out.println(member.getId());
-        System.out.println(member1.getId());
 
         return member.getId();
     }

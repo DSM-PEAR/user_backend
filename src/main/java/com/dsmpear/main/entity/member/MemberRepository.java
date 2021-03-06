@@ -1,5 +1,6 @@
 package com.dsmpear.main.entity.member;
 
+import com.dsmpear.main.entity.report.Report;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
@@ -10,6 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends CrudRepository<Member,Integer> {
-    Page<Member> findAllByReportId(Integer reportId, Pageable page);
-    Optional<Member> findByReportIdAndUserEmail(Integer reportId, String userEmail);
+    Page<Member> findAllByReport(Report report, Pageable page);
+    Optional<Member> findByReportAndUserEmail(Report report, String userEmail);
 }

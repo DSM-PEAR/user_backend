@@ -22,9 +22,6 @@ public class Member {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, name="report_id")
-    private Integer reportId;
-
     @Column(length = 30,nullable = false, name= "user_email")
     private String userEmail;
 
