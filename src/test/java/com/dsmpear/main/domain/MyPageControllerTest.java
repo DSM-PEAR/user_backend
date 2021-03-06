@@ -8,6 +8,7 @@ import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
+import com.dsmpear.main.exceptions.UserNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -143,7 +144,7 @@ class MyPageControllerTest {
     //보고서 목록
     @Test
     @WithMockUser(value = "tset@dsm.hs.kr", password = "1111")
-    public void  getReportList_tset() throws Exception{
+    public void getReportList_tset() throws Exception{
 
         addReport_sub_false("test@dsm.hs.kr");
         addReport_sub_true("test@dsm.hs.kr");
@@ -155,8 +156,8 @@ class MyPageControllerTest {
                 .andExpect(status().isOk());
     }
 
-    private Integer addReport_sub_false(String email) {
-        Integer reportId = reportRepository.save(
+    private Report addReport_sub_false(String email) {
+        Report report = reportRepository.save(
                 Report.builder()
                         .title("hello")
                         .description("hihello")
@@ -173,27 +174,30 @@ class MyPageControllerTest {
                         .fileName("안녕한가파일")
                         .teamName("룰루랄라")
                         .build()
-        ).getId();
+        );
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
 
         memberRepository.save(
                 Member.builder()
-                        .reportId(reportId)
-                        .userEmail(email)
+                        .report(report)
+                        .userEmail(user.getEmail())
                         .build()
         );
 
         userReportRepository.save(
                 UserReport.builder()
-                        .userEmail(email)
-                        .reportId(reportId)
+                        .user(user)
+                        .report(report)
                         .build()
         );
 
-        return reportId;
+        return report;
     }
 
-    private Integer addReport_sub_true(String email) {
-        Integer reportId = reportRepository.save(
+    private Report addReport_sub_true(String email) {
+        Report report = reportRepository.save(
                 Report.builder()
                         .title("hello")
                         .description("hihello")
@@ -210,27 +214,30 @@ class MyPageControllerTest {
                         .fileName("안녕한가파일")
                         .teamName("룰루랄라")
                         .build()
-        ).getId();
+        );
 
         memberRepository.save(
                 Member.builder()
-                        .reportId(reportId)
+                        .report(report)
                         .userEmail(email)
                         .build()
         );
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
 
         userReportRepository.save(
                 UserReport.builder()
-                        .userEmail(email)
-                        .reportId(reportId)
+                        .user(user)
+                        .report(report)
                         .build()
         );
 
-        return reportId;
+        return report;
     }
 
-    private Integer addReport_accepted_true(String email) {
-        Integer reportId = reportRepository.save(
+    private Report addReport_accepted_true(String email) {
+        Report report = reportRepository.save(
                 Report.builder()
                         .title("hello")
                         .description("hihello")
@@ -247,27 +254,30 @@ class MyPageControllerTest {
                         .fileName("안녕한가파일")
                         .teamName("룰루랄라")
                         .build()
-        ).getId();
+        );
 
         memberRepository.save(
                 Member.builder()
-                        .reportId(reportId)
+                        .report(report)
                         .userEmail(email)
                         .build()
         );
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
 
         userReportRepository.save(
                 UserReport.builder()
-                        .userEmail(email)
-                        .reportId(reportId)
+                        .user(user)
+                        .report(report)
                         .build()
         );
 
-        return reportId;
+        return report;
     }
 
-    private Integer addReport_rejected_true(String email) {
-        Integer reportId = reportRepository.save(
+    private Report addReport_rejected_true(String email) {
+        Report report = reportRepository.save(
                 Report.builder()
                         .title("hello")
                         .description("hihello")
@@ -284,23 +294,26 @@ class MyPageControllerTest {
                         .fileName("안녕한가파일")
                         .teamName("룰루랄라")
                         .build()
-        ).getId();
+        );
 
         memberRepository.save(
                 Member.builder()
-                        .reportId(reportId)
+                        .report(report)
                         .userEmail(email)
                         .build()
         );
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
 
         userReportRepository.save(
                 UserReport.builder()
-                        .userEmail(email)
-                        .reportId(reportId)
+                        .report(report)
+                        .user(user)
                         .build()
         );
 
-        return reportId;
+        return report;
     }
 
 }

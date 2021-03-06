@@ -23,7 +23,6 @@ import java.util.List;
 public class ProfileReportServiceImpl implements ProfileReportService {
 
     private final UserRepository userRepository;
-    private final ReportRepository reportRepository;
     private final UserReportRepository userReportRepository;
 
     @Override
@@ -35,12 +34,11 @@ public class ProfileReportServiceImpl implements ProfileReportService {
         List<ProfileReportResponse> profileReportResponses = new ArrayList<>();
 
         for(UserReport userReport : userReportPage){
-            Report report = reportRepository.findById(userReport.getReportId())
-                    .orElseThrow(ReportNotFoundException::new);
+            Report report = userReport.getReport();
             
             profileReportResponses.add(
                     ProfileReportResponse.builder()
-                            .reportId(userReport.getReportId())
+                            .reportId(report.getId())
                             .title(report.getTitle())
                             .createdAt(report.getCreatedAt())
                             .build()

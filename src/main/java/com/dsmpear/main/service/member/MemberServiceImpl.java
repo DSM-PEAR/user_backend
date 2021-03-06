@@ -33,7 +33,10 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberListResponse getMember(Integer reportId, Pageable page) {
-        Page<Member> memberPage = memberRepository.findAllByReportId(reportId, page);
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(ReportNotFoundException::new);
+
+        Page<Member> memberPage = memberRepository.findAllByReport(report, page);
 
         List<MemberResponse> memberResponses = new ArrayList<>();
 
@@ -68,18 +71,17 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(UserNotFoundException::new);
 
         //요청한 user가 팀 멤버인지 확인하기
-        memberRepository.findByReportIdAndUserEmail(report.getId(), email)
+        memberRepository.findByReportAndUserEmail(report, email)
                 .orElseThrow(UserNotMemberException::new);
 
         //팀 아이디랑 유저 이메일로 찾기
-        memberRepository.findByReportIdAndUserEmail(report.getId(), memberRequest.getUserEmail())
+        memberRepository.findByReportAndUserEmail(report, memberRequest.getUserEmail())
                 .ifPresent(m -> {
                     throw new MemberAlreadyIncludeException();
                 });
 
         memberRepository.save(
                 Member.builder()
-                        .reportId(report.getId())
                         .userEmail(memberRequest.getUserEmail())
                         .report(reportRepository.findById(report.getId()).get())
                         .build()
@@ -87,8 +89,8 @@ public class MemberServiceImpl implements MemberService {
 
         userReportRepository.save(
                 UserReport.builder()
-                        .reportId(report.getId())
-                        .userEmail(user.getEmail())
+                        .report(report)
+                        .user(user)
                         .build()
         );
     }
@@ -97,17 +99,19 @@ public class MemberServiceImpl implements MemberService {
     public void deleteMember(Integer memberId) {
         String email = authenticationFacade.getUserEmail();
 
-        Member member=memberRepository.findById(memberId)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(UserNotMemberException::new);
 
-        Report report = reportRepository.findById(member.getReportId())
-                .orElseThrow(ReportNotFoundException::new);
+        User user = userRepository.findByEmail(member.getUserEmail())
+                .orElseThrow(UserNotAccessibleException::new);
+
+        Report report = member.getReport();
 
         //요청한 user가 팀 멤버인지 확인하기
-        memberRepository.findByReportIdAndUserEmail(report.getId(), email)
+        memberRepository.findByReportAndUserEmail(report, email)
                 .orElseThrow(UserNotMemberException::new);
 
-        UserReport userReport = userReportRepository.findByReportIdAndUserEmail(report.getId(), member.getUserEmail())
+        UserReport userReport = userReportRepository.findByReportAndUser(report, user)
                 .orElseThrow(UserNotMemberException::new);
 
         if(email.equals(member.getUserEmail())){
