@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends CrudRepository<Comment, Integer> {
     List<Comment> findAllByReportIdOrderByCreatedAtDesc(Integer reportId);
+    void deleteAllByReportId(Integer reportId);
 }
