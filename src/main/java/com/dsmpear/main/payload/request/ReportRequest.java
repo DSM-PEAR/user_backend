@@ -45,7 +45,6 @@ public class ReportRequest {
     @NotNull
     private String fileName;
 
-    @NotNull
     private String github;
 
     private String teamName;
