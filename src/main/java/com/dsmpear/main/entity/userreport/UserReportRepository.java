@@ -21,5 +21,5 @@ public interface UserReportRepository extends CrudRepository<UserReport,Integer>
     Page<UserReport> findAllByUserEmail(@Param("access") Access access, @Param("userEmail") String email, Pageable page);
 
     @Transactional
-    Optional<UserReport> deleteAllByReportId(Integer ReportId);
+    void deleteAllByReportId(Integer ReportId);
 }

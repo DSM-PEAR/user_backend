@@ -18,8 +18,8 @@ public class ReportController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void writeReport(@RequestBody @Valid ReportRequest reportRequest) {
-        reportService.writeReport(reportRequest);
+    public Integer writeReport(@RequestBody @Valid ReportRequest reportRequest) {
+        return reportService.writeReport(reportRequest);
     }
 
     @GetMapping("/{reportId}")

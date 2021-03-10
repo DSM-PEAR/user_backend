@@ -39,13 +39,12 @@ public class ReportServiceImpl implements ReportService{
     private final AuthenticationFacade authenticationFacade;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
-    private final CommentService commentService;
     private final UserReportRepository userReportRepository;
 
     // 보고서 작성
     @Override
     @Transactional
-    public void writeReport(ReportRequest reportRequest) {
+    public Integer writeReport(ReportRequest reportRequest) {
         if(!authenticationFacade.isLogin()) {
             throw new UserNotFoundException();
         }
@@ -89,6 +88,8 @@ public class ReportServiceImpl implements ReportService{
                     .user(user)
                     .build()
         );
+
+        return report.getId();
     }
 
     // 보고서 보기
@@ -115,9 +116,8 @@ public class ReportServiceImpl implements ReportService{
 
             // 보고서를 볼 때 보는 보고서의 access가 ADMIN인지, 만약 admin이라면  현재 유저가 글쓴이가 맞는지 검사
             if (!isMine) {
-                if (!(report.getAccess().equals(Access.EVERY))) {
-                    throw new PermissionDeniedException();
-                }else if(!report.getIsAccepted() || !report.getIsSubmitted()) {
+                if (!(report.getAccess().equals(Access.EVERY)) ||
+                !report.getIsAccepted() || !report.getIsSubmitted()) {
                     throw new PermissionDeniedException();
                 }
             }
@@ -140,7 +140,7 @@ public class ReportServiceImpl implements ReportService{
                             .content(co.getContent())
                             .createdAt(co.getCreatedAt())
                             .userEmail(co.getUserEmail())
-                            .userName(userRepository.findByEmail(co.getUserEmail()).get().getName())
+                            .userName(commentWriter.getName())
                             .isMine(commentWriter.getEmail().equals(authenticationFacade.getUserEmail()))
                             .commentId(co.getId())
                             .build()
@@ -159,6 +159,7 @@ public class ReportServiceImpl implements ReportService{
                 .description(report.getDescription())
                 .isMine(isMine)
                 .comments(commentsResponses)
+                .teamName(report.getTeamName())
                 .build();
     }
 
@@ -180,13 +181,13 @@ public class ReportServiceImpl implements ReportService{
     }
 
     @Override
+    @Transactional
     public void deleteReport(Integer reportId) {
-        User user = null;
-
         if(!authenticationFacade.isLogin()) {
             throw new UserNotFoundException();
         }
-        user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+
+        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
         Report report = reportRepository.findById(reportId)
@@ -195,16 +196,9 @@ public class ReportServiceImpl implements ReportService{
         memberRepository.findByReportAndUserEmail(report, user.getEmail())
                 .orElseThrow(UserNotFoundException::new);
 
-        userReportRepository.findByReportAndUser(report,user)
-                .orElseThrow(ReportNotFoundException::new);
+        commentRepository.deleteAllByReportId(reportId);
 
-        for(Comment comment : commentRepository.findAllByReportIdOrderByCreatedAtDesc(reportId)) {
-            commentService.deleteComment(comment.getId());
-        }
-
-        for(Member member : report.getMembers()) {
-            memberRepository.deleteById(member.getId());
-        }
+        memberRepository.deleteAllByReport(report);
 
         userReportRepository.deleteAllByReportId(reportId);
 
@@ -215,9 +209,7 @@ public class ReportServiceImpl implements ReportService{
     public ReportListResponse getReportList(Pageable page, Type type, Field field, Grade grade) {
 
         List<ReportResponse> reportResponses = new ArrayList<>();
-        Page<Report> reportPage;
-
-        reportPage = reportRepository.findAllByAccessAndGradeAndFieldAndType(Access.EVERY, grade, field, type, page);
+        Page<Report> reportPage = reportRepository.findAllByAccessAndGradeAndFieldAndType(Access.EVERY, grade, field, type, page);
 
         for(Report report : reportPage) {
             reportResponses.add(

@@ -421,7 +421,6 @@ class ReportControllerTest {
 
         CommentRequest request = CommentRequest.builder()
                 .reportId(reportId)
-                .userEmail("test@dsm.hs.kr")
                 .content("아이야아이야")
                 .build();
 
@@ -440,7 +439,6 @@ class ReportControllerTest {
 
         CommentRequest request = CommentRequest.builder()
                 .reportId(reportId)
-                .userEmail("test@dsm.hs.kr")
                 .content("아이야아이야")
                 .build();
 
@@ -748,9 +746,9 @@ class ReportControllerTest {
         return commentRepository.save(
                 Comment.builder()
                         .reportId(reportId)
-                        .userEmail("test@dsm.hs.kr")
                         .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                         .content("아이야아이야")
+                        .userEmail("test@dsm.hs.kr")
                         .build()
         ).getId();
     }

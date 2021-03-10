@@ -153,7 +153,7 @@ class MemberControllerTest {
 
     @Test
     @Order(1)
-    @WithMockUser(username = "dms@dsm.hs.kr",password = "1111")
+    @WithMockUser(username = "dsm@dsm.hs.kr",password = "1111")
     public void addMember_notmember() throws Exception {
         int reportId = addReport().getId();
         MemberRequest request = new MemberRequest(reportId,"flower@dsm.hs.kr");
@@ -172,7 +172,7 @@ class MemberControllerTest {
         mvc.perform(post("/member").
                 content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isNotFound());
     }
     @Test
     @Order(1)
@@ -211,7 +211,7 @@ class MemberControllerTest {
         Integer memberId = check_member();
 
         mvc.perform(delete("/member/"+memberId))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isNotFound());
     }
 
     //로그인하지 않았을 때

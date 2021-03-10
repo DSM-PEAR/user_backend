@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,17 +62,23 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public void addMember(MemberRequest memberRequest) {
-        String email = authenticationFacade.getUserEmail();
+        if(!authenticationFacade.isLogin()) {
+            throw new PermissionDeniedException();
+        }
+
+        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
 
         Report report = reportRepository.findById(memberRequest.getReportId())
                 .orElseThrow(ReportNotFoundException::new);
 
-        User user = userRepository.findByEmail(memberRequest.getUserEmail())
+        User addUser = userRepository.findByEmail(memberRequest.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
         //요청한 user가 팀 멤버인지 확인하기
-        memberRepository.findByReportAndUserEmail(report, email)
+        memberRepository.findByReportAndUserEmail(report, user.getEmail())
                 .orElseThrow(UserNotMemberException::new);
 
         //팀 아이디랑 유저 이메일로 찾기
@@ -83,38 +90,42 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(
                 Member.builder()
                         .userEmail(memberRequest.getUserEmail())
-                        .report(reportRepository.findById(report.getId()).get())
+                        .report(report)
                         .build()
         );
 
         userReportRepository.save(
                 UserReport.builder()
                         .report(report)
-                        .user(user)
+                        .user(addUser)
                         .build()
         );
     }
 
     @Override
     public void deleteMember(Integer memberId) {
-        String email = authenticationFacade.getUserEmail();
+        if(!authenticationFacade.isLogin()) {
+            throw new PermissionDeniedException();
+        }
+        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(UserNotMemberException::new);
 
-        User user = userRepository.findByEmail(member.getUserEmail())
+        User findUser = userRepository.findByEmail(member.getUserEmail())
                 .orElseThrow(UserNotAccessibleException::new);
 
         Report report = member.getReport();
 
         //요청한 user가 팀 멤버인지 확인하기
-        memberRepository.findByReportAndUserEmail(report, email)
+        memberRepository.findByReportAndUserEmail(report, user.getEmail())
                 .orElseThrow(UserNotMemberException::new);
 
-        UserReport userReport = userReportRepository.findByReportAndUser(report, user)
+        UserReport userReport = userReportRepository.findByReportAndUser(report, findUser)
                 .orElseThrow(UserNotMemberException::new);
 
-        if(email.equals(member.getUserEmail())){
+        if(user.getEmail().equals(member.getUserEmail())){
             throw new UserEqualsMemberException();
         }
 

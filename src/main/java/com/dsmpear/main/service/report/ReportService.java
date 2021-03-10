@@ -9,7 +9,7 @@ import com.dsmpear.main.payload.response.ReportListResponse;
 import org.springframework.data.domain.Pageable;
 
 public interface ReportService {
-    void writeReport(ReportRequest reportRequest);
+    Integer writeReport(ReportRequest reportRequest);
     ReportContentResponse viewReport(Integer reportId);
     Integer updateReport(Integer reportId, ReportRequest reportRequest);
     void deleteReport(Integer reportId);
