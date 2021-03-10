@@ -17,9 +17,6 @@ public class CommentRequest {
     private Integer reportId;
 
     @NotNull
-    private String userEmail;
-
-    @NotNull
     private String content;
 
 }
