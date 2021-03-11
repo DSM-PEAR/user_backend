@@ -109,21 +109,6 @@ class MemberControllerTest {
     }
 
     @Test
-    public void getMember() throws Exception {
-        Integer reportId = addReport().getId();
-
-        mvc.perform(get("/member/"+reportId+"?size=1&page=1"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void getMember_no_report() throws Exception {
-
-        mvc.perform(get("/member/1?size=1&page=1"))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
     @Order(1)
     @WithMockUser(username = "test@dsm.hs.kr",password = "1111")
     public void addMember() throws Exception {

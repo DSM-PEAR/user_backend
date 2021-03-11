@@ -257,7 +257,7 @@ class ReportControllerTest {
 
         mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()).andDo(print());
     }
 
 
@@ -656,6 +656,20 @@ class ReportControllerTest {
                 Member.builder()
                         .report(report)
                         .userEmail(user.getEmail())
+                        .build()
+        );
+
+        Member member = memberRepository.save(
+                Member.builder()
+                        .report(report)
+                        .userEmail("test@dsm.hs.kr")
+                        .build()
+        );
+
+        Member member1 = memberRepository.save(
+                Member.builder()
+                        .report(report)
+                        .userEmail("tset@dsm.hs.kr")
                         .build()
         );
         return report.getId();

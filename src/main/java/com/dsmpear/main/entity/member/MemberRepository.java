@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends CrudRepository<Member,Integer> {
-    Page<Member> findAllByReport(Report report, Pageable page);
+    Page<Member> findAllByReport(Report report);
     Optional<Member> findByReportAndUserEmail(Report report, String userEmail);
     void deleteAllByReport(Report report);
 }

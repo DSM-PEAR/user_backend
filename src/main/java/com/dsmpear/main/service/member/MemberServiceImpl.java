@@ -33,35 +33,6 @@ public class MemberServiceImpl implements MemberService {
     private final UserReportRepository userReportRepository;
 
     @Override
-    public MemberListResponse getMember(Integer reportId, Pageable page) {
-        Report report = reportRepository.findById(reportId)
-                .orElseThrow(ReportNotFoundException::new);
-
-        Page<Member> memberPage = memberRepository.findAllByReport(report, page);
-
-        List<MemberResponse> memberResponses = new ArrayList<>();
-
-        reportRepository.findById(reportId)
-                .orElseThrow(ReportNotFoundException::new);
-
-        for(Member member:memberPage){
-            memberResponses.add(
-              MemberResponse.builder()
-                      .memberId(member.getId())
-                      .memberEmail(member.getUserEmail())
-                      .memberName(member.getUserEmail())
-                      .build()
-            );
-        }
-
-        return MemberListResponse.builder()
-                .totalElements((int)memberPage.getTotalElements())
-                .totalPages(memberPage.getTotalPages())
-                .memberResponses(memberResponses)
-                .build();
-    }
-
-    @Override
     @Transactional
     public void addMember(MemberRequest memberRequest) {
         if(!authenticationFacade.isLogin()) {
