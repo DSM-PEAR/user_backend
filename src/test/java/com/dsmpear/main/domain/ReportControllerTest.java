@@ -257,7 +257,7 @@ class ReportControllerTest {
 
         mvc.perform(get("/report/"+reportId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()).andDo(print());
     }
 
 
@@ -621,7 +621,7 @@ class ReportControllerTest {
         Assert.assertEquals(3, response.getTotalElements());
     }
 
-    private Integer createReport(String title) throws Exception {
+    private Integer createReport(String title) throws Exception { 
 
         Report report = reportRepository.save(
                  Report.builder()
@@ -658,6 +658,7 @@ class ReportControllerTest {
                         .userEmail(user.getEmail())
                         .build()
         );
+
         return report.getId();
     }
 
@@ -733,12 +734,6 @@ class ReportControllerTest {
                         .build()
         );
 
-        memberRepository.save(
-                Member.builder()
-                        .report(report)
-                        .userEmail("test@dsm.hs.kr")
-                        .build()
-        );
         return report.getId();
     }
 
