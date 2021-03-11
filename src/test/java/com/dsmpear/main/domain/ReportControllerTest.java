@@ -750,7 +750,7 @@ class ReportControllerTest {
         memberRepository.save(
                 Member.builder()
                         .report(report)
-                        .userEmail("test@dsm.hs.kr")
+                        .userEmail("test1@dsm.hs.kr")
                         .build()
         );
         return report.getId();
