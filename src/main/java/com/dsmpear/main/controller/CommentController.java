@@ -14,9 +14,9 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping
-    public void writeComment(@RequestBody @Valid CommentRequest commentRequest) {
-        commentService.createComment(commentRequest);
+    @PostMapping("/{reportId}")
+    public void writeComment(@RequestBody CommentRequest commentRequest, @PathVariable Integer reportId) {
+        commentService.createComment(commentRequest, reportId);
     }
 
     @DeleteMapping("/{commentId}")

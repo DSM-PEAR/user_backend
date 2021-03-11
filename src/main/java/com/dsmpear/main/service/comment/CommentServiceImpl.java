@@ -28,14 +28,14 @@ public class CommentServiceImpl implements CommentService {
     private final UserRepository userRepository;
 
     @Override
-    public void createComment(CommentRequest commentRequest) {
+    public void createComment(CommentRequest commentRequest, Integer reportId) {
         if(!authenticationFacade.isLogin()) {
             throw new PermissionDeniedException();
         }
         User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
-        reportRepository.findById(commentRequest.getReportId())
+        reportRepository.findById(reportId)
                 .orElseThrow(ReportNotFoundException::new);
 
         commentRepository.save(
