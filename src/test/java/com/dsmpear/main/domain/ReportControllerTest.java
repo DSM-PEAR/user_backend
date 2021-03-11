@@ -621,7 +621,7 @@ class ReportControllerTest {
         Assert.assertEquals(3, response.getTotalElements());
     }
 
-    private Integer createReport(String title) throws Exception { // 밥먹자
+    private Integer createReport(String title) throws Exception { 
 
         Report report = reportRepository.save(
                  Report.builder()
