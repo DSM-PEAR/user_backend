@@ -659,19 +659,13 @@ class ReportControllerTest {
                         .build()
         );
 
-        Member member = memberRepository.save(
+        memberRepository.save(
                 Member.builder()
                         .report(report)
                         .userEmail("test@dsm.hs.kr")
                         .build()
         );
 
-        Member member1 = memberRepository.save(
-                Member.builder()
-                        .report(report)
-                        .userEmail("tset@dsm.hs.kr")
-                        .build()
-        );
         return report.getId();
     }
 
@@ -747,12 +741,6 @@ class ReportControllerTest {
                         .build()
         );
 
-        memberRepository.save(
-                Member.builder()
-                        .report(report)
-                        .userEmail("test1@dsm.hs.kr")
-                        .build()
-        );
         return report.getId();
     }
 
