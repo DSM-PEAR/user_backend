@@ -71,7 +71,6 @@ public class ReportServiceImpl implements ReportService{
                         .build()
         );
 
-
         memberRepository.save(
             Member.builder()
                     .report(report)
@@ -158,7 +157,7 @@ public class ReportServiceImpl implements ReportService{
                 .comments(commentsResponses)
                 .teamName(report.getTeamName())
                 .comment(report.getComment())
-                .member(getMember(report))
+                .member(getMember(report).getMemberResponses())
                 .build();
     }
 
@@ -229,7 +228,7 @@ public class ReportServiceImpl implements ReportService{
     }
 
     private MemberListResponse getMember(Report report) {
-        Page<Member> memberPage = memberRepository.findAllByReport(report);
+        List<Member> memberPage = memberRepository.findAllByReport(report);
 
         List<MemberResponse> memberResponses = new ArrayList<>();
 
@@ -241,14 +240,12 @@ public class ReportServiceImpl implements ReportService{
                     MemberResponse.builder()
                             .memberId(member.getId())
                             .memberEmail(member.getUserEmail())
-                            .memberName(member.getUserEmail())
+                            .memberName(userRepository.findByEmail(member.getUserEmail()).get().getName())
                             .build()
             );
         }
 
         return MemberListResponse.builder()
-                .totalElements((int)memberPage.getTotalElements())
-                .totalPages(memberPage.getTotalPages())
                 .memberResponses(memberResponses)
                 .build();
     }

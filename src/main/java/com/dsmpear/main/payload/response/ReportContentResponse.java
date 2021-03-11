@@ -44,6 +44,6 @@ public class ReportContentResponse {
 
     private String comment;
 
-    private MemberListResponse member;
+    private List<MemberResponse> member;
 
 }
