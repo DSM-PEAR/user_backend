@@ -126,7 +126,7 @@ public class ReportServiceImpl implements ReportService{
         List<Comment> comment = commentRepository.findAllByReportIdOrderByCreatedAtDesc(reportId);
         List<ReportCommentsResponse> commentsResponses = new ArrayList<>();
 
-        // 댓글 하나하나 담기ㅣ
+        // 댓글 하나하나 담기
         for (Comment co : comment) {
             User commentWriter;
             commentWriter = userRepository.findByEmail(co.getUserEmail())
