@@ -32,7 +32,6 @@ public class MemberServiceImpl implements MemberService {
     private final ReportRepository reportRepository;
     private final UserReportRepository userReportRepository;
 
-    @Override
     @Transactional
     public void addMember(MemberRequest memberRequest) {
         if(!authenticationFacade.isLogin()) {

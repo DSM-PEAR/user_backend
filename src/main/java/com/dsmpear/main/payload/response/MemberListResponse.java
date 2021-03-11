@@ -6,14 +6,9 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class MemberListResponse extends PageResponse{
+@Builder
+public class MemberListResponse {
 
     private List<MemberResponse> memberResponses;
-
-    @Builder
-    public MemberListResponse(int totalElements, int totalPages, List<MemberResponse> memberResponses) {
-        super(totalElements, totalPages);
-        this.memberResponses = memberResponses;
-    }
 
 }
