@@ -42,4 +42,6 @@ public class ReportContentResponse {
 
     private String teamName;
 
+    private String comment;
+
 }
