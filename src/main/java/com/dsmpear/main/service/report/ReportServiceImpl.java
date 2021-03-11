@@ -13,10 +13,7 @@ import com.dsmpear.main.exceptions.PermissionDeniedException;
 import com.dsmpear.main.exceptions.ReportNotFoundException;
 import com.dsmpear.main.exceptions.UserNotFoundException;
 import com.dsmpear.main.payload.request.ReportRequest;
-import com.dsmpear.main.payload.response.ReportCommentsResponse;
-import com.dsmpear.main.payload.response.ReportContentResponse;
-import com.dsmpear.main.payload.response.ReportListResponse;
-import com.dsmpear.main.payload.response.ReportResponse;
+import com.dsmpear.main.payload.response.*;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import com.dsmpear.main.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -161,6 +158,7 @@ public class ReportServiceImpl implements ReportService{
                 .comments(commentsResponses)
                 .teamName(report.getTeamName())
                 .comment(report.getComment())
+                .member(getMember(report))
                 .build();
     }
 
@@ -227,6 +225,31 @@ public class ReportServiceImpl implements ReportService{
                 .totalElements((int) reportPage.getTotalElements())
                 .totalPages(reportPage.getTotalPages())
                 .reportResponses(reportResponses)
+                .build();
+    }
+
+    private MemberListResponse getMember(Report report) {
+        Page<Member> memberPage = memberRepository.findAllByReport(report);
+
+        List<MemberResponse> memberResponses = new ArrayList<>();
+
+        reportRepository.findById(report.getId())
+                .orElseThrow(ReportNotFoundException::new);
+
+        for(Member member:memberPage){
+            memberResponses.add(
+                    MemberResponse.builder()
+                            .memberId(member.getId())
+                            .memberEmail(member.getUserEmail())
+                            .memberName(member.getUserEmail())
+                            .build()
+            );
+        }
+
+        return MemberListResponse.builder()
+                .totalElements((int)memberPage.getTotalElements())
+                .totalPages(memberPage.getTotalPages())
+                .memberResponses(memberResponses)
                 .build();
     }
 
