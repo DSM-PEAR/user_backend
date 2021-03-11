@@ -28,7 +28,7 @@ public class CommentServiceImpl implements CommentService {
     private final UserRepository userRepository;
 
     @Override
-    public void createComment(CommentRequest commentRequest, Integer reportId) { 
+    public void createComment(CommentRequest commentRequest, Integer reportId) {
         if(!authenticationFacade.isLogin()) {
             throw new PermissionDeniedException();
         }

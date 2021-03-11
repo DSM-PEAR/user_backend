@@ -424,7 +424,7 @@ class ReportControllerTest {
                 .content("아이야아이야")
                 .build();
 
-        mvc.perform(post("/comment")
+        mvc.perform(post("/comment/"+reportId)
                 .content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());
@@ -442,7 +442,7 @@ class ReportControllerTest {
                 .content("아이야아이야")
                 .build();
 
-        mvc.perform(post("/comment")
+        mvc.perform(post("/comment/"+reportId)
                 .content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isUnauthorized());
