@@ -16,7 +16,6 @@ import java.util.Optional;
 public interface UserReportRepository extends CrudRepository<UserReport,Integer> {
     Page<UserReport> findAllByUserOrderByIdDesc(User user, Pageable page);
     Optional<UserReport> findByReportAndUser(Report report, User user);
-    User findByUserEmail(String email);
 
     @Query("SELECT a FROM UserReport a INNER JOIN Report b ON b.id = a.report.id AND b.isAccepted = true AND b.isSubmitted = true AND b.access = ?1 INNER JOIN User c ON c.email = a.user.email AND a.user.email = ?2 ORDER BY b.createdAt")
     Page<UserReport> findAllByUserEmail(@Param("access") Access access, @Param("userEmail") String email, Pageable page);

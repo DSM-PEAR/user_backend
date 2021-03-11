@@ -621,7 +621,7 @@ class ReportControllerTest {
         Assert.assertEquals(3, response.getTotalElements());
     }
 
-    private Integer createReport(String title) throws Exception {
+    private Integer createReport(String title) throws Exception { // 밥먹자
 
         Report report = reportRepository.save(
                  Report.builder()
@@ -656,13 +656,6 @@ class ReportControllerTest {
                 Member.builder()
                         .report(report)
                         .userEmail(user.getEmail())
-                        .build()
-        );
-
-        memberRepository.save(
-                Member.builder()
-                        .report(report)
-                        .userEmail("test@dsm.hs.kr")
                         .build()
         );
 
