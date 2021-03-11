@@ -160,6 +160,7 @@ public class ReportServiceImpl implements ReportService{
                 .isMine(isMine)
                 .comments(commentsResponses)
                 .teamName(report.getTeamName())
+                .comment(report.getComment())
                 .build();
     }
 
