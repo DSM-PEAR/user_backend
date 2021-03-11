@@ -240,7 +240,7 @@ public class ReportServiceImpl implements ReportService{
                     MemberResponse.builder()
                             .memberId(member.getId())
                             .memberEmail(member.getUserEmail())
-                            .memberName(member.getUserEmail())
+                            .memberName(userRepository.findByEmail(member.getUserEmail()).get().getName())
                             .build()
             );
         }
