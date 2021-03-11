@@ -15,11 +15,6 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("/{reportId}")
-    public MemberListResponse getMember(@PathVariable Integer reportId, Pageable page) {
-        return memberService.getMember(reportId, page);
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void addMember(@RequestBody MemberRequest memberRequest){

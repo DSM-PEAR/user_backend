@@ -37,14 +37,14 @@ public class MemberServiceImpl implements MemberService {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(ReportNotFoundException::new);
 
-        Page<Member> memberPage = memberRepository.findAllByReport(report, page);
+        List<Member> memberList = memberRepository.findAllByReport(report, page);
 
         List<MemberResponse> memberResponses = new ArrayList<>();
 
         reportRepository.findById(reportId)
                 .orElseThrow(ReportNotFoundException::new);
 
-        for(Member member:memberPage){
+        for(Member member : memberList){
             memberResponses.add(
               MemberResponse.builder()
                       .memberId(member.getId())
@@ -55,8 +55,6 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return MemberListResponse.builder()
-                .totalElements((int)memberPage.getTotalElements())
-                .totalPages(memberPage.getTotalPages())
                 .memberResponses(memberResponses)
                 .build();
     }
