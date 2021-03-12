@@ -11,7 +11,7 @@ public class NoticeListResponse extends PageResponse {
     private List<NoticeResponse> noticeResponses;
 
     @Builder
-    public NoticeListResponse(int totalElements, int totalPages, List<NoticeResponse> noticeResponses) {
+    public NoticeListResponse(Long totalElements, int totalPages, List<NoticeResponse> noticeResponses) {
         super(totalElements, totalPages);
         this.noticeResponses = noticeResponses;
     }

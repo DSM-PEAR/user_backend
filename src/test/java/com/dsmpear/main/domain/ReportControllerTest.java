@@ -576,7 +576,7 @@ class ReportControllerTest {
 
         MvcResult result = mvc.perform(get("/report/filter?field=WEB&type=TEAM&grade=GRADE1&size=10&page=0")).andReturn();
         ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
-        Assert.assertEquals(3, response.getTotalElements());
+        Assert.assertEquals(3L, response.getTotalElements().longValue());
     }
 
     // 보고서 목록(타입 없음)
@@ -590,7 +590,7 @@ class ReportControllerTest {
 
         MvcResult result = mvc.perform(get("/report/filter?field=WEB&type=TEAM&grade=GRADE1&size=10&page=0")).andReturn();
         ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
-        Assert.assertEquals(3, response.getTotalElements());
+        Assert.assertEquals(3, response.getTotalElements().longValue());
     }
 
 
@@ -605,7 +605,7 @@ class ReportControllerTest {
 
         MvcResult result = mvc.perform(get("/report/filter?field=WEB&type=TEAM&grade=GRADE1&size=10&page=0")).andReturn();
         ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
-        Assert.assertEquals(3, response.getTotalElements());
+        Assert.assertEquals(3, response.getTotalElements().longValue());
     }
 
     // 보고서 목록 성공(필터 없음)
@@ -618,7 +618,7 @@ class ReportControllerTest {
 
         MvcResult result = mvc.perform(get("/report/filter?field=&type=&grade=GRADE1&size=10&page=0")).andReturn();
         ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
-        Assert.assertEquals(3, response.getTotalElements());
+        Assert.assertEquals(3, response.getTotalElements().longValue());
     }
 
     private Integer createReport(String title) throws Exception { 
