@@ -40,7 +40,7 @@ public class SearchServiceImpl implements SearchService{
         }
 
         return SearchProfileResponse.builder()
-                .totalElements((int) userPage.getTotalElements())
+                .totalElements(userPage.getTotalElements())
                 .totalPages(userPage.getTotalPages())
                 .userResponses(userResponses)
                 .build();
@@ -64,7 +64,7 @@ public class SearchServiceImpl implements SearchService{
         }
 
         return ReportListResponse.builder()
-                .totalElements((int) reportPage.getTotalElements())
+                .totalElements(reportPage.getTotalElements())
                 .totalPages(reportPage.getTotalPages())
                 .reportResponses(reportResponses)
                 .build();
