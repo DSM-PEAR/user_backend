@@ -13,7 +13,7 @@ public class SearchProfileResponse extends PageResponse {
     private List<UserResponse> userResponses;
 
     @Builder
-    public SearchProfileResponse(int totalElements, int totalPages, List<UserResponse> userResponses) {
+    public SearchProfileResponse(Long totalElements, int totalPages, List<UserResponse> userResponses) {
         super(totalElements, totalPages);
         this.userResponses = userResponses;
     }

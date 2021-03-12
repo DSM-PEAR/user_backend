@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PageResponse {
 
-    private int totalElements;
+    private Long totalElements;
 
     private int totalPages;
 

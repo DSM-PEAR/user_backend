@@ -221,7 +221,7 @@ public class ReportServiceImpl implements ReportService{
         }
 
         return ReportListResponse.builder()
-                .totalElements((int) reportPage.getTotalElements())
+                .totalElements(reportPage.getTotalElements())
                 .totalPages(reportPage.getTotalPages())
                 .reportResponses(reportResponses)
                 .build();
