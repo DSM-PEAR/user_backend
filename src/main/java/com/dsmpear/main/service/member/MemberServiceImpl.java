@@ -33,6 +33,7 @@ public class MemberServiceImpl implements MemberService {
     private final UserReportRepository userReportRepository;
 
     @Transactional
+    @Override
     public void addMember(MemberRequest memberRequest) {
         if(!authenticationFacade.isLogin()) {
             throw new PermissionDeniedException();
@@ -73,6 +74,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public void deleteMember(Integer memberId) {
         if(!authenticationFacade.isLogin()) {
             throw new PermissionDeniedException();
