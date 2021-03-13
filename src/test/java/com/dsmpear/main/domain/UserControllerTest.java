@@ -169,11 +169,5 @@ class UserControllerTest {
         mvc.perform(get("/account?name="))
                 .andExpect(status().isForbidden());
     }
-
-    @Test
-    @WithMockUser(value = "apple@dsm.hs.kr",password = "1111")
-    public void getUser_notFound() throws Exception{
-        mvc.perform(get("/account?name=가랑가랑"))
-                .andExpect(status().isNotFound());
-    }
+    
 }
