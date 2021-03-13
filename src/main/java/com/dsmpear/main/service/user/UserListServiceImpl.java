@@ -29,9 +29,6 @@ public class UserListServiceImpl implements UserListService {
 
         Page<User> userPage = userRepository.findAllByNameContainsOrderByName(name, page); // select * from user where name like ='%%'
 
-        if(userPage.getTotalElements()==0)
-            throw new UserNotFoundException();
-
         List<UserResponse> userResponse = new ArrayList<>();
 
         for (User user : userPage) {
