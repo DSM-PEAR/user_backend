@@ -101,6 +101,15 @@ class UserControllerTest {
                         .build()
         );
 
+        userRepository.save(
+                User.builder()
+                        .email("dear123456@dsm.hs.kr")
+                        .name("강jam")
+                        .password(passwordEncoder.encode("1234"))
+                        .authStatus(false)
+                        .build()
+        );
+
     }
 
     @AfterEach
@@ -146,7 +155,7 @@ class UserControllerTest {
     @WithMockUser(value = "apple@dsm.hs.kr",password = "1111")
     public void getUser() throws Exception{
         mvc.perform(get("/account?name="))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()).andDo(print());
     }
 
     @Test
@@ -169,5 +178,5 @@ class UserControllerTest {
         mvc.perform(get("/account?name="))
                 .andExpect(status().isForbidden());
     }
-    
+
 }
