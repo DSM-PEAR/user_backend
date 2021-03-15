@@ -42,7 +42,7 @@ public class CommentServiceImpl implements CommentService {
                 Comment.builder()
                     .content(commentRequest.getContent())
                     .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                    .reportId(commentRequest.getReportId())
+                    .reportId(reportId)
                     .userEmail(user.getEmail())
                     .build()
         );
