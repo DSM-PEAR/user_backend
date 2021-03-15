@@ -38,6 +38,7 @@ public class CommentServiceImpl implements CommentService {
         reportRepository.findById(reportId)
                 .orElseThrow(ReportNotFoundException::new);
 
+        System.out.println(reportId);
         commentRepository.save(
                 Comment.builder()
                     .content(commentRequest.getContent())
