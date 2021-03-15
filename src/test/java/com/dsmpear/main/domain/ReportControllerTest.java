@@ -420,7 +420,6 @@ class ReportControllerTest {
         Integer commentId1 = createComment(reportId);
 
         CommentRequest request = CommentRequest.builder()
-                .reportId(reportId)
                 .content("아이야아이야")
                 .build();
 
@@ -438,7 +437,6 @@ class ReportControllerTest {
         Integer commentId1 = createComment(reportId);
 
         CommentRequest request = CommentRequest.builder()
-                .reportId(reportId)
                 .content("아이야아이야")
                 .build();
 
