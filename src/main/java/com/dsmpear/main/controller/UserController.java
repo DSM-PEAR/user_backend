@@ -26,8 +26,8 @@ public class UserController {
     }
 
     @GetMapping
-    public UserListResponse getUserList(@RequestParam String name, Pageable page) {
-        return userListService.getUserList(name, page);
+    public UserListResponse getUserList(@RequestParam String name) {
+        return userListService.getUserList(name);
     }
 
 }

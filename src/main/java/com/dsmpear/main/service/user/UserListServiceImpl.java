@@ -23,18 +23,15 @@ public class UserListServiceImpl implements UserListService {
     private final AuthenticationFacade authenticationFacade;
 
     @Override
-    public UserListResponse getUserList(String name, Pageable page) {
+    public UserListResponse getUserList(String name) {
         userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotAccessibleException::new);
 
-        Page<User> userPage = userRepository.findAllByNameContainsOrderByName(name, page); // select * from user where name like ='%%'
-
-        if(userPage.getTotalElements()==0)
-            throw new UserNotFoundException();
+        List<User> userList = userRepository.findAllByNameContainsAndAuthStatusOrderByName(name, true); // select * from user where name like ='%%'
 
         List<UserResponse> userResponse = new ArrayList<>();
 
-        for (User user : userPage) {
+        for (User user : userList) {
             userResponse.add(
                     UserResponse.builder()
                             .name(user.getName())
@@ -44,8 +41,7 @@ public class UserListServiceImpl implements UserListService {
         }
 
         return UserListResponse.builder()
-                .totalElements(userPage.getTotalElements())
-                .totalPages(userPage.getTotalPages())
+                .totalElements(userList.size())
                 .userResponses(userResponse)
                 .build();
     }
