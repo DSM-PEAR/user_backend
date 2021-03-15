@@ -14,9 +14,6 @@ import javax.validation.constraints.NotNull;
 public class CommentRequest {
 
     @NotNull
-    private Integer reportId;
-
-    @NotNull
     private String content;
 
 }
