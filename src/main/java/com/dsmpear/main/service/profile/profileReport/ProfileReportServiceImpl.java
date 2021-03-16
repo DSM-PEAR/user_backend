@@ -40,6 +40,7 @@ public class ProfileReportServiceImpl implements ProfileReportService {
                     ProfileReportResponse.builder()
                             .reportId(report.getId())
                             .title(report.getTitle())
+                            .type(userReport.getReport().getType())
                             .createdAt(report.getCreatedAt())
                             .build()
             );
