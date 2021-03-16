@@ -54,6 +54,7 @@ public class MyPageReportServiceImpl implements MyPageReportService{
                     MyPageReportResponse.builder()
                             .reportId(report.getId())
                             .title(report.getTitle())
+                            .type(report.getType())
                             .createdAt(report.getCreatedAt())
                             .isSubmitted(report.getIsSubmitted())
                             .isAccepted(report.getIsAccepted())

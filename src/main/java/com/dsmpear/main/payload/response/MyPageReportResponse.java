@@ -1,5 +1,6 @@
 package com.dsmpear.main.payload.response;
 
+import com.dsmpear.main.entity.report.Type;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,6 +13,8 @@ public class MyPageReportResponse {
     private Integer reportId;
 
     private String title;
+
+    private Type type; // 팀, 개인, 동아리
 
     private LocalDateTime createdAt;
 
