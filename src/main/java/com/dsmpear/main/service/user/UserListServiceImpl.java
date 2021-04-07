@@ -27,7 +27,7 @@ public class UserListServiceImpl implements UserListService {
         userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotAccessibleException::new);
 
-        List<User> userList = userRepository.findAllByNameContainsAndAuthStatusOrderByName(name, true); // select * from user where name like ='%%'
+        List<User> userList = userRepository.findAllByNameContainsAndAuthStatusOrderByName(name == null ? "" : name, true); // select * from user where name like ='%%'
 
         List<UserResponse> userResponse = new ArrayList<>();
 
