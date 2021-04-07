@@ -7,6 +7,7 @@ import com.dsmpear.main.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,7 +27,7 @@ public class UserController {
     }
 
     @GetMapping
-    public UserListResponse getUserList(@RequestParam String name) {
+    public UserListResponse getUserList(@RequestParam @Nullable String name) {
         return userListService.getUserList(name);
     }
 
