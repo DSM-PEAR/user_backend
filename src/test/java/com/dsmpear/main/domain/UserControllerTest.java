@@ -169,7 +169,7 @@ class UserControllerTest {
     @WithMockUser(value = "apple@dsm.hs.kr",password = "1111")
     public void getUser_bad() throws Exception{
         mvc.perform(get("/account"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk());
     }
 
     @Test
