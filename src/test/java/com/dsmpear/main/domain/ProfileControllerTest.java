@@ -9,7 +9,11 @@ import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.exceptions.UserNotFoundException;
+import com.dsmpear.main.payload.response.ProfileReportListResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -20,12 +24,14 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -130,14 +136,20 @@ class ProfileControllerTest {
     public void getReportList() throws Exception{
         addReport_sub_false("test@dsm.hs.kr");
         addReport_sub_true("test@dsm.hs.kr");
-        addReport_accepted_true("test@dsm.hs.kr");
+        addReport_accepted_true("test@dsm.hs.kr"); // 1
         addReport_rejected_true("test@dsm.hs.kr");
         addReport_accepted_true("tset@dsm.hs.kr");
-        addReport_accepted_true("test@dsm.hs.kr");
-        addReport_accepted_true("test@dsm.hs.kr");
-        addReport_accepted_true("test@dsm.hs.kr");
+        addReport_accepted_true("test@dsm.hs.kr"); // 1
+        addReport_accepted_true("test@dsm.hs.kr"); // 1
+        addReport_accepted_true("test@dsm.hs.kr"); // 1
 
-        mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=2&page=0"));
+        MvcResult result = mvc.perform(get("/profile/report?user-email=test@dsm.hs.kr&size=5&page=0"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        ProfileReportListResponse response = new ObjectMapper().registerModule(new JavaTimeModule()).readValue(result.getResponse().getContentAsString(), ProfileReportListResponse.class);
+
+        Assertions.assertEquals(response.getTotalElements(), 4L);
     }
 
     @Test

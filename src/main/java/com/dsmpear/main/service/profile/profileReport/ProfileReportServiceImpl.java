@@ -3,6 +3,7 @@ package com.dsmpear.main.service.profile.profileReport;
 import com.dsmpear.main.entity.report.Access;
 import com.dsmpear.main.entity.report.Report;
 import com.dsmpear.main.entity.report.ReportRepository;
+import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
@@ -27,10 +28,10 @@ public class ProfileReportServiceImpl implements ProfileReportService {
 
     @Override
     public ProfileReportListResponse getReport(String userEmail, Pageable page) {
-        userRepository.findByEmail(userEmail)
+        User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(UserNotFoundException::new);
 
-        Page<UserReport> userReportPage = userReportRepository.findAllByUserEmail(Access.EVERY, userEmail, page);
+        Page<UserReport> userReportPage = userReportRepository.findAllByUserAndReportIsAcceptedTrueAndReportIsSubmittedTrueAndReportAccessOrderByReportCreatedAtDesc(user, Access.EVERY, page);
         List<ProfileReportResponse> profileReportResponses = new ArrayList<>();
 
         for(UserReport userReport : userReportPage){
