@@ -46,4 +46,6 @@ public class ReportContentResponse {
 
     private List<MemberResponse> member;
 
+    private Long fileId;
+
 }
