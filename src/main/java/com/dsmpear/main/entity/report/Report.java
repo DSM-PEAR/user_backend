@@ -1,6 +1,7 @@
 package com.dsmpear.main.entity.report;
 
 import com.dsmpear.main.entity.member.Member;
+import com.dsmpear.main.entity.reportfile.ReportFile;
 import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.payload.request.ReportRequest;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -80,6 +81,10 @@ public class Report {
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "report")
     @JsonBackReference
     private List<UserReport> userReports;
+
+    @OneToOne(mappedBy = "report", cascade = CascadeType.REMOVE)
+    @JsonBackReference
+    private ReportFile reportFile;
 
     public Report update(ReportRequest reportRequest) {
         this.title = reportRequest.getTitle();
