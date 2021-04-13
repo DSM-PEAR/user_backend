@@ -158,6 +158,7 @@ public class ReportServiceImpl implements ReportService{
                 .teamName(report.getTeamName())
                 .comment(report.getComment())
                 .member(getMember(report).getMemberResponses())
+                .fileId(report.getReportFile() == null ? null : report.getReportFile().getId())
                 .build();
     }
 
