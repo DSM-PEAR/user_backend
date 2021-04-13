@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.junit.jupiter.api.Test;
@@ -389,8 +390,16 @@ class ReportControllerTest {
         createComment(reportId);
         createComment(reportId);
 
-        mvc.perform(delete("/report/{reportId}", Integer.toString(reportId)))
+        mvc.perform(delete("/report/{reportId}", reportId))
                 .andExpect(status().isOk());
+
+        Assertions.assertEquals(memberRepository.findAllBy().size(), 0);
+        Assertions.assertEquals(userReportRepository.findAllBy().size(), 0);
+        commentRepository.findAllBy()
+                .stream().map(Comment::getReportId).forEach(
+                System.out::println
+        );
+        Assertions.assertEquals(commentRepository.findAllBy().size(), 0);
     }
 
     // 보고서 삭제 실패 테스트
