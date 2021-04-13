@@ -9,4 +9,5 @@ import java.util.List;
 public interface CommentRepository extends CrudRepository<Comment, Integer> {
     List<Comment> findAllByReportIdOrderByCreatedAtDesc(Integer reportId);
     void deleteAllByReportId(Integer reportId);
+    List<Comment> findAllBy();
 }
