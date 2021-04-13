@@ -197,9 +197,9 @@ public class ReportServiceImpl implements ReportService{
 
         commentRepository.deleteAllByReportId(reportId);
 
-        memberRepository.deleteAllByReport(report);
+//        memberRepository.deleteAllByReport(report);
 
-        userReportRepository.deleteAllByReportId(reportId);
+//        userReportRepository.deleteAllByReportId(reportId);
 
         reportRepository.deleteById(reportId);
     }
