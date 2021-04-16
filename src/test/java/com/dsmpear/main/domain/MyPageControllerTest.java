@@ -9,7 +9,10 @@ import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
 import com.dsmpear.main.exceptions.UserNotFoundException;
+import com.dsmpear.main.payload.request.SetSelfIntroRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -107,22 +110,40 @@ class MyPageControllerTest {
     @WithMockUser(value = "test@dsm.hs.kr", password = "1111")
     public void modifySelfIntro_test () throws Exception {
 
+        String expectedGithub = "https://github.com/syxxn";
+        String expectedIntro = "introduce";
+        SetSelfIntroRequest request = SetSelfIntroRequest.builder()
+                .github(expectedGithub)
+                .intro(expectedIntro)
+                .build();
+
         mvc.perform(put("/user/profile")
-                .param("intro", "hihihihi")
-                .param("gitHub","https://github.com/syxxn")
+                .content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNoContent());
+
+        Assertions.assertEquals(userRepository.findByEmail("test@dsm.hs.kr").get().getSelfIntro(), expectedIntro);
+        Assertions.assertEquals(userRepository.findByEmail("test@dsm.hs.kr").get().getGitHub(), expectedGithub);
     }
 
     @Test
     @WithMockUser(value = "tset@dsm.hs.kr", password = "1111")
     public void modifySelfIntro_tset () throws Exception {
 
+        String expectedGithub = "https://github.com/syxxn";
+        String expectedIntro = "introduce";
+        SetSelfIntroRequest request = SetSelfIntroRequest.builder()
+                .github(expectedGithub)
+                .intro(expectedIntro)
+                .build();
+
         mvc.perform(put("/user/profile")
-                .param("intro", "hihihihi")
-                .param("gitHub","https://github.com/syxxn")
+                .content(new ObjectMapper().writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNoContent());
+
+        Assertions.assertEquals(userRepository.findByEmail("tset@dsm.hs.kr").get().getSelfIntro(), expectedIntro);
+        Assertions.assertEquals(userRepository.findByEmail("tset@dsm.hs.kr").get().getGitHub(), expectedGithub);
     }
 
     //보고서 목록

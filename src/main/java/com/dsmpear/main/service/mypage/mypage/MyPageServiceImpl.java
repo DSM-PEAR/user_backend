@@ -8,8 +8,9 @@ import com.dsmpear.main.exceptions.UserNotFoundException;
 import com.dsmpear.main.payload.response.ProfilePageResponse;
 import com.dsmpear.main.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +37,7 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
+    @Transactional
     public void setSelfIntro(String intro, String gitHub) {
         if(!authenticationFacade.isLogin()) {
             throw new PermissionDeniedException();
@@ -46,7 +48,6 @@ public class MyPageServiceImpl implements MyPageService {
 
         user.setSelfIntro(intro);
         user.setGitHub(gitHub);
-
     }
 
 }
