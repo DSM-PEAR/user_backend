@@ -1,5 +1,6 @@
 package com.dsmpear.main.controller;
 
+import com.dsmpear.main.payload.request.SetSelfIntroRequest;
 import com.dsmpear.main.payload.response.ProfilePageResponse;
 import com.dsmpear.main.payload.response.ProfileReportListResponse;
 import com.dsmpear.main.service.mypage.mypage.MyPageService;
@@ -24,8 +25,8 @@ public class MyPageController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void setSelfIntro(@RequestParam String intro, @RequestParam String gitHub) {
-        myPageService.setSelfIntro(intro, gitHub);
+    public void setSelfIntro(@RequestBody SetSelfIntroRequest request) {
+        myPageService.setSelfIntro(request.getIntro(), request.getGithub());
     }
 
     @GetMapping("/report")
