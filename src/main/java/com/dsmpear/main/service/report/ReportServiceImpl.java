@@ -5,6 +5,7 @@ import com.dsmpear.main.entity.comment.CommentRepository;
 import com.dsmpear.main.entity.member.Member;
 import com.dsmpear.main.entity.member.MemberRepository;
 import com.dsmpear.main.entity.report.*;
+import com.dsmpear.main.entity.report.repository.ReportCustomRepositoryImpl;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.entity.userreport.UserReport;
@@ -37,6 +38,7 @@ public class ReportServiceImpl implements ReportService{
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final UserReportRepository userReportRepository;
+    private final ReportCustomRepositoryImpl reportCustomRepository;
 
     // 보고서 작성
     @Override
@@ -208,7 +210,7 @@ public class ReportServiceImpl implements ReportService{
     public ReportListResponse getReportList(Pageable page, Type type, Field field, Grade grade) {
 
         List<ReportResponse> reportResponses = new ArrayList<>();
-        Page<Report> reportPage = reportRepository.findAllByAccessAndGradeAndFieldAndType(Access.EVERY, grade, field, type, page);
+        Page<Report> reportPage = reportCustomRepository.findAllByAccessAndGradeAndFieldAndType(Access.EVERY, grade, field, type, page);
 
         for(Report report : reportPage) {
             reportResponses.add(
