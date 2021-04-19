@@ -11,6 +11,8 @@ plugins {
     id 'jacoco'
 }
 
+apply plugin: "io.spring.dependency-management"
+
 group = 'com.dsm-pear'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
