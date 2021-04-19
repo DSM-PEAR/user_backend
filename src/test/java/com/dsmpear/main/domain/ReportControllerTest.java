@@ -395,10 +395,6 @@ class ReportControllerTest {
 
         Assertions.assertEquals(memberRepository.findAllBy().size(), 0);
         Assertions.assertEquals(userReportRepository.findAllBy().size(), 0);
-        commentRepository.findAllBy()
-                .stream().map(Comment::getReportId).forEach(
-                System.out::println
-        );
         Assertions.assertEquals(commentRepository.findAllBy().size(), 0);
     }
 
@@ -580,6 +576,8 @@ class ReportControllerTest {
         Integer reportId = createReport("제에목");
         Integer reportId1 = createReport("제에에에목");
         Integer reportId2 = createReport("제에에에에에ㅔ에목");
+        Integer reportId3 = createReportNotSubmitted("제에에에에ㅔ에에에목");
+        Integer reportId4 = createReportAdmin("제에에에에ㅔ에에에목");
 
         MvcResult result = mvc.perform(get("/report/filter?field=WEB&type=TEAM&grade=GRADE1&size=10&page=0")).andReturn();
         ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
@@ -594,8 +592,10 @@ class ReportControllerTest {
         Integer reportId = createReport("제에목");
         Integer reportId1 = createReport("제에에에목");
         Integer reportId2 = createReport("제에에에에ㅔ에에에목");
+        Integer reportId3 = createReportNotSubmitted("제에에에에ㅔ에에에목");
+        Integer reportId4 = createReportAdmin("제에에에에ㅔ에에에목");
 
-        MvcResult result = mvc.perform(get("/report/filter?field=WEB&type=TEAM&grade=GRADE1&size=10&page=0")).andReturn();
+            MvcResult result = mvc.perform(get("/report/filter?field=WEB&type=TEAM&grade=GRADE1&size=10&page=0")).andReturn();
         ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
         Assert.assertEquals(3, response.getTotalElements().longValue());
     }
@@ -609,6 +609,8 @@ class ReportControllerTest {
         Integer reportId = createReport("제에목");
         Integer reportId1 = createReport("제에엥목");
         Integer reportId2 = createReport("제에에에ㅔ에에목");
+        Integer reportId3 = createReportNotSubmitted("제에에에에ㅔ에에에목");
+        Integer reportId4 = createReportAdmin("제에에에에ㅔ에에에목");
 
         MvcResult result = mvc.perform(get("/report/filter?field=WEB&type=TEAM&grade=GRADE1&size=10&page=0")).andReturn();
         ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
@@ -622,6 +624,8 @@ class ReportControllerTest {
         Integer reportId = createReport("제에목");
         Integer reportId1 = createReport("제에에에ㅔ에목");
         Integer reportId2 = createReport("제에에에에ㅔ에에목");
+        Integer reportId3 = createReportNotSubmitted("제에에에에ㅔ에에에목");
+        Integer reportId4 = createReportAdmin("제에에에에ㅔ에에에목");
 
         MvcResult result = mvc.perform(get("/report/filter?field=&type=&grade=GRADE1&size=10&page=0")).andReturn();
         ReportListResponse response = objectMapperConfiguration.objectMapper().readValue(result.getResponse().getContentAsString(), ReportListResponse.class);
