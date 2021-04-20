@@ -48,8 +48,7 @@ public class ReportServiceImpl implements ReportService{
             throw new UserNotFoundException();
         }
 
-        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotFoundException::new);
+        User user = getUser(authenticationFacade.getUserEmail());
 
         String teamName = reportRequest.getTeamName().equals("")?
                 user.getName():reportRequest.getTeamName();
@@ -105,12 +104,11 @@ public class ReportServiceImpl implements ReportService{
         List<Member> members = report.getMembers();
 
         if(isLogined) {
-            for (Member member : members) {
-                if (member.getUserEmail().equals(authenticationFacade.getUserEmail())) {
-                    isMine = true;
-                    break;
-                }
-            }
+            isMine = members.stream()
+                    .filter(member -> member.getUserEmail().equals(authenticationFacade.getUserEmail()))
+                    .findFirst()
+                    .isPresent();
+
 
             // 보고서를 볼 때 보는 보고서의 access가 ADMIN인지, 만약 admin이라면  현재 유저가 글쓴이가 맞는지 검사
             if (!isMine) {
@@ -119,7 +117,7 @@ public class ReportServiceImpl implements ReportService{
                     throw new PermissionDeniedException();
                 }
             }
-        }else {
+        } else {
             if(report.getAccess().equals(Access.ADMIN)) {
                 throw new PermissionDeniedException();
             }
@@ -131,8 +129,7 @@ public class ReportServiceImpl implements ReportService{
         // 댓글 하나하나 담기
         for (Comment co : comment) {
             User commentWriter;
-            commentWriter = userRepository.findByEmail(co.getUserEmail())
-                    .orElseThrow(UserNotFoundException::new);
+            commentWriter = getUser(co.getUserEmail());
             commentsResponses.add(
                     ReportCommentsResponse.builder()
                             .content(co.getContent())
@@ -170,13 +167,7 @@ public class ReportServiceImpl implements ReportService{
             throw new UserNotFoundException();
         }
 
-        Report report = reportRepository.findById(reportId).
-                orElseThrow(ReportNotFoundException::new);
-
-        memberRepository.findByReportAndUserEmail(report, authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotFoundException::new);
-
-        reportRepository.save(report.update(reportRequest));
+        validateMember(reportId);
 
         return reportId;
     }
@@ -188,20 +179,7 @@ public class ReportServiceImpl implements ReportService{
             throw new UserNotFoundException();
         }
 
-        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotFoundException::new);
-
-        Report report = reportRepository.findById(reportId)
-                .orElseThrow(ReportNotFoundException::new);
-
-        memberRepository.findByReportAndUserEmail(report, user.getEmail())
-                .orElseThrow(UserNotFoundException::new);
-
-        commentRepository.deleteAllByReportId(reportId);
-
-//        memberRepository.deleteAllByReport(report);
-
-//        userReportRepository.deleteAllByReportId(reportId);
+        validateMember(reportId);
 
         reportRepository.deleteById(reportId);
     }
@@ -243,7 +221,7 @@ public class ReportServiceImpl implements ReportService{
                     MemberResponse.builder()
                             .memberId(member.getId())
                             .memberEmail(member.getUserEmail())
-                            .memberName(userRepository.findByEmail(member.getUserEmail()).get().getName())
+                            .memberName(getUser(member.getUserEmail()).getName())
                             .build()
             );
         }
@@ -251,6 +229,18 @@ public class ReportServiceImpl implements ReportService{
         return MemberListResponse.builder()
                 .memberResponses(memberResponses)
                 .build();
+    }
+
+    private User getUser(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+    }
+
+    private void validateMember(Integer reportId) {
+        reportRepository.findById(reportId)
+                .map(report -> memberRepository.findByReportAndUserEmail(report, authenticationFacade.getUserEmail())
+                        .orElseThrow(UserNotFoundException::new))
+                .orElseThrow(ReportNotFoundException::new);
     }
 
 }

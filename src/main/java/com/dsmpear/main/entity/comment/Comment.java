@@ -1,5 +1,7 @@
 package com.dsmpear.main.entity.comment;
 
+import com.dsmpear.main.entity.report.Report;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,8 +23,10 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, name="report_id")
-    private Integer reportId;
+    @ManyToOne
+    @JoinColumn(name = "report_id")
+    @JsonManagedReference
+    private Report report;
 
     @Column(nullable = false, name="user_email")
     private String userEmail;
