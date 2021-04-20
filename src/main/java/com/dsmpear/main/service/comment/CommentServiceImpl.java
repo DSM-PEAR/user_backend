@@ -2,6 +2,7 @@ package com.dsmpear.main.service.comment;
 
 import com.dsmpear.main.entity.comment.Comment;
 import com.dsmpear.main.entity.comment.CommentRepository;
+import com.dsmpear.main.entity.report.Report;
 import com.dsmpear.main.entity.report.ReportRepository;
 import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
@@ -14,6 +15,7 @@ import com.dsmpear.main.security.auth.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -35,14 +37,14 @@ public class CommentServiceImpl implements CommentService {
         User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
                 .orElseThrow(UserNotFoundException::new);
 
-        reportRepository.findById(reportId)
+        Report report = reportRepository.findById(reportId)
                 .orElseThrow(ReportNotFoundException::new);
 
         commentRepository.save(
                 Comment.builder()
                     .content(commentRequest.getContent())
                     .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                    .reportId(reportId)
+                    .report(report)
                     .userEmail(user.getEmail())
                     .build()
         );
@@ -50,6 +52,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public Integer updateComment(Integer commentId, String content) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
@@ -64,7 +67,7 @@ public class CommentServiceImpl implements CommentService {
             throw new PermissionDeniedException();
         }
 
-        commentRepository.save(comment.updateContent(content));
+        comment.updateContent(content);
 
         return commentId;
     }

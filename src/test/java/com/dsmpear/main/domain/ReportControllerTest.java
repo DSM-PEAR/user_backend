@@ -11,6 +11,7 @@ import com.dsmpear.main.entity.user.User;
 import com.dsmpear.main.entity.user.UserRepository;
 import com.dsmpear.main.entity.userreport.UserReport;
 import com.dsmpear.main.entity.userreport.UserReportRepository;
+import com.dsmpear.main.exceptions.ReportNotFoundException;
 import com.dsmpear.main.exceptions.UserNotFoundException;
 import com.dsmpear.main.payload.request.CommentRequest;
 import com.dsmpear.main.payload.request.ReportRequest;
@@ -228,15 +229,13 @@ class ReportControllerTest {
         Integer reportId = createReport(expected);
         Integer reportId2 = createReport("이건 정상적이게 비슷");
 
-        createComment(reportId);
-        createComment(reportId);
-        createComment(reportId);
-        createComment(reportId1);
-        createComment(reportId);
-        createComment(reportId);
-        createComment(reportId);
-        createComment(reportId2);
-        createComment(reportId2);
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(ReportNotFoundException::new);
+
+        createComment(report);
+        createComment(report);
+        createComment(report);
+        createComment(report);
 
 
         MvcResult mvcResult = mvc.perform(get("/report/"+reportId)
@@ -386,9 +385,11 @@ class ReportControllerTest {
     @WithMockUser(value = "test@dsm.hs.kr",password="1234")
     public void deleteReportTest() throws Exception {
         Integer reportId = createReport("testetsetesstest");
-        createComment(reportId);
-        createComment(reportId);
-        createComment(reportId);
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(ReportNotFoundException::new);
+        createComment(report);
+        createComment(report);
+        createComment(report);
 
         mvc.perform(delete("/report/{reportId}", reportId))
                 .andExpect(status().isOk());
@@ -422,7 +423,11 @@ class ReportControllerTest {
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
     public void createComment() throws Exception {
         Integer reportId = createReport("흹");
-        Integer commentId1 = createComment(reportId);
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(ReportNotFoundException::new);
+        createComment(report);
+        createComment(report);
+        createComment(report);
 
         CommentRequest request = CommentRequest.builder()
                 .content("아이야아이야")
@@ -439,7 +444,11 @@ class ReportControllerTest {
     @Test
     public void createComment1() throws Exception {
         Integer reportId = createReport("쭯");
-        Integer commentId1 = createComment(reportId);
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(ReportNotFoundException::new);
+        createComment(report);
+        createComment(report);
+        createComment(report);
 
         CommentRequest request = CommentRequest.builder()
                 .content("아이야아이야")
@@ -457,8 +466,11 @@ class ReportControllerTest {
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
     public void updateComment() throws Exception {
         Integer reportId = createReport("똷");
-        Integer commentId1 = createComment(reportId);
-        Integer commentId2 = createComment(reportId);
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(ReportNotFoundException::new);
+        createComment(report);
+        createComment(report);
+        Integer commentId1 = createComment(report);
 
         mvc.perform(patch("/comment/"+commentId1)
                 .param("content", "content"))
@@ -470,8 +482,11 @@ class ReportControllerTest {
     @WithMockUser(value = "test22@dsm.hs.kr", password = "1234")
     public void updateComment2() throws Exception {
         Integer reportId = createReport("끫");
-        Integer commentId1 = createComment(reportId);
-        Integer commentId2 = createComment(reportId);
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(ReportNotFoundException::new);
+        createComment(report);
+        createComment(report);
+        Integer commentId1 = createComment(report);
 
         mvc.perform(patch("/comment/"+commentId1)
                 .param("content", "content"))
@@ -484,8 +499,11 @@ class ReportControllerTest {
     @Test
     public void updateComment1() throws Exception {
         Integer reportId = createReport("제엥ㅁ냐ㅐ럼니ㅏㅇ");
-        Integer commentId1 = createComment(reportId);
-        Integer commentId2 = createComment(reportId);
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(ReportNotFoundException::new);
+        createComment(report);
+        createComment(report);
+        Integer commentId1 = createComment(report);
 
         mvc.perform(patch("/comment/"+commentId1)
                 .param("content", "content"))
@@ -498,8 +516,11 @@ class ReportControllerTest {
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
     public void updateComment3() throws Exception {
         Integer reportId = createReport("제엥ㅁ냐ㅐ럼니ㅏㅇ");
-        Integer commentId1 = createComment(reportId);
-        Integer commentId2 = createComment(reportId);
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(ReportNotFoundException::new);
+        createComment(report);
+        createComment(report);
+        Integer commentId1 = createComment(report);
 
         mvc.perform(patch("/comment/"+200)
                 .param("content", "content"))
@@ -512,8 +533,11 @@ class ReportControllerTest {
     @WithMockUser(value = "test2@dsm.hs.kr", password = "1234")
     public void updateComment4() throws Exception {
         Integer reportId = createReport("제엥ㅁ냐ㅐ럼니ㅏㅇ");
-        Integer commentId1 = createComment(reportId);
-        Integer commentId2 = createComment(reportId);
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(ReportNotFoundException::new);
+        createComment(report);
+        createComment(report);
+        Integer commentId1 = createComment(report);
 
         mvc.perform(patch("/comment/"+reportId)
                 .param("content", "content"))
@@ -526,8 +550,11 @@ class ReportControllerTest {
     @WithMockUser(value = "test@dsm.hs.kr", password = "1234")
     public void deleteComment() throws Exception {
         Integer reportId = createReport("제에에에에에ㅔ에에목");
-        Integer commentId1 = createComment(reportId);
-        Integer commentId2 = createComment(reportId);
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(ReportNotFoundException::new);
+        createComment(report);
+        createComment(report);
+        Integer commentId1 = createComment(report);
 
         mvc.perform(delete("/comment/{commentId}", Integer.toString(commentId1)))
                 .andExpect(status().isOk());
@@ -539,8 +566,11 @@ class ReportControllerTest {
     @WithMockUser(value = "test1@dsm.hs.kr", password = "1234")
     public void deleteComment1() throws Exception {
         Integer reportId = createReport("제에에에목");
-        Integer commentId1 = createComment(reportId);
-        Integer commentId2 = createComment(reportId);
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(ReportNotFoundException::new);
+        createComment(report);
+        createComment(report);
+        Integer commentId1 = createComment(report);
 
         mvc.perform(delete("/comment/"+commentId1))
                 .andExpect(status().isUnauthorized());
@@ -551,8 +581,11 @@ class ReportControllerTest {
     @Test
     public void deleteComment2() throws Exception {
         Integer reportId = createReport("제에목");
-        Integer commentId1 = createComment(reportId);
-        Integer commentId2 = createComment(reportId);
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(ReportNotFoundException::new);
+        createComment(report);
+        createComment(report);
+        Integer commentId1 = createComment(report);
 
         mvc.perform(delete("/comment/"+commentId1))
                 .andExpect(status().isUnauthorized());
@@ -748,10 +781,10 @@ class ReportControllerTest {
         return report.getId();
     }
 
-    private Integer createComment(Integer reportId) throws Exception {
+    private Integer createComment(Report report) throws Exception {
         return commentRepository.save(
                 Comment.builder()
-                        .reportId(reportId)
+                        .report(report)
                         .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                         .content("아이야아이야")
                         .userEmail("test@dsm.hs.kr")

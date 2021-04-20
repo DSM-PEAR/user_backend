@@ -1,5 +1,6 @@
 package com.dsmpear.main.entity.report;
 
+import com.dsmpear.main.entity.comment.Comment;
 import com.dsmpear.main.entity.member.Member;
 import com.dsmpear.main.entity.reportfile.ReportFile;
 import com.dsmpear.main.entity.userreport.UserReport;
@@ -85,6 +86,10 @@ public class Report {
     @OneToOne(mappedBy = "report", cascade = CascadeType.REMOVE)
     @JsonBackReference
     private ReportFile reportFile;
+
+    @OneToMany(mappedBy = "report", cascade = CascadeType.REMOVE)
+    @JsonBackReference
+    private List<Comment> comments;
 
     public Report update(ReportRequest reportRequest) {
         this.title = reportRequest.getTitle();
