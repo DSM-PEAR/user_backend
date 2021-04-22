@@ -127,6 +127,23 @@ class MyPageControllerTest {
     }
 
     @Test
+    @WithMockUser(value = "test1sdjfk@dsm.hs.kr", password = "1111")
+    public void modifySelfIntro_usernotfound () throws Exception {
+
+        String expectedGithub = "https://github.com/syxxn";
+        String expectedIntro = "introduce";
+        SetSelfIntroRequest request = SetSelfIntroRequest.builder()
+                .github(expectedGithub)
+                .intro(expectedIntro)
+                .build();
+
+        mvc.perform(put("/user/profile")
+                .content(new ObjectMapper().writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     @WithMockUser(value = "tset@dsm.hs.kr", password = "1111")
     public void modifySelfIntro_tset () throws Exception {
 
