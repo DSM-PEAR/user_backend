@@ -44,10 +44,12 @@ public class MyPageServiceImpl implements MyPageService {
         }
 
         User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
-                .orElseThrow(UserNotAccessibleException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         user.setSelfIntro(intro);
         user.setGitHub(gitHub);
+
+        userRepository.save(user);
     }
 
 }
